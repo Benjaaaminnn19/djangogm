@@ -1,0 +1,1495 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Gimnasio Leblon - Tu centro de fitness premium con equipos de última generación y entrenadores profesionales">
+    <title>Gimnasio Leblon - Transforma tu cuerpo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+</head>
+<body>
+    <!-- Logo -->
+    <img src="{% static 'img/logo.jpg' %}" alt="Logo Gimnasio Leblon" class="logo-absolute">
+
+    <!-- Header -->
+       <header class="spartan-hero-section" style="
+           background: url('{% static 'img/img3.png' %}');
+           background-size: cover;
+           background-position: center;
+           background-repeat: no-repeat;
+           height: 70vh;
+           max-height: 70vh;
+           display: flex;
+           align-items: center;
+           position: relative;
+           overflow: hidden;
+       ">
+        <div class="container text-center">
+            <h1 class="display-3 fw-bold mb-4 text-white" style="
+                font-family: 'Arial Black', sans-serif;
+                text-shadow: 3px 3px 6px rgba(0,0,0,0.8);
+                letter-spacing: 2px;
+            ">GIMNASIO LEBLON</h1>
+            <p class="lead mb-4 text-white" style="
+                font-size: 1.2rem;
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+                font-weight: 300;
+            ">Transforma tu cuerpo, transforma tu vida</p>
+            <div class="d-flex justify-content-center gap-4 flex-wrap">
+                <a href="#planes" class="btn btn-lg px-5 py-3" style="
+                    background: linear-gradient(45deg, #8B4513, #A0522D);
+                    border: 2px solid #D2691E;
+                    color: white;
+                    border-radius: 8px;
+                    font-weight: 600;
+                    box-shadow: 0 4px 15px rgba(139,69,19,0.4);
+                    transition: all 0.3s ease;
+                " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(139,69,19,0.6)'" 
+                   onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(139,69,19,0.4)'">
+                    <i class="fas fa-dumbbell me-2"></i>Ver Planes
+                </a>
+                <a href="#contacto" class="btn btn-lg px-5 py-3" style="
+                    background: linear-gradient(45deg, #2F4F4F, #3A5F5F);
+                    border: 2px solid #4682B4;
+                    color: white;
+                    border-radius: 8px;
+                    font-weight: 600;
+                    box-shadow: 0 4px 15px rgba(47,79,79,0.4);
+                    transition: all 0.3s ease;
+                " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(47,79,79,0.6)'" 
+                   onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(47,79,79,0.4)'">
+                    <i class="fas fa-phone me-2"></i>Contactar
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top modern-navbar">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <i class="fas fa-dumbbell me-2 text-primary"></i>
+                <span class="fw-bold">LEBLON FITNESS</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="menu">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="#inicio">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#promociones">Promociones</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#clases">Clases</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#entrenadores">Entrenadores</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#planes">Planes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
+                    <li class="nav-item"><a class="nav-link btn btn-outline-primary ms-2 px-3" href="{% url 'tienda' %}">Tienda</a></li>
+                </ul>
+            </div>                
+        </div>
+    </nav>
+    <!-- Sección Inicio -->
+    <section id="inicio" class="py-5 bg-light">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 animate-slide-in-left">
+                    <h2 class="display-4 fw-bold mb-4">¡Bienvenido a Leblon Fitness!</h2>
+                    <p class="lead mb-4">Somos más que un gimnasio, somos tu compañero en el camino hacia una vida más saludable y fuerte.</p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <div class="d-flex align-items-center animate-fade-in-up" style="animation-delay: 0.2s;">
+                            <i class="fas fa-check-circle text-success me-2 animate-pulse"></i>
+                            <span>Equipos modernos</span>
+                        </div>
+                        <div class="d-flex align-items-center animate-fade-in-up" style="animation-delay: 0.4s;">
+                            <i class="fas fa-check-circle text-success me-2 animate-pulse"></i>
+                            <span>Instructores certificados</span>
+                        </div>
+                        <div class="d-flex align-items-center animate-fade-in-up" style="animation-delay: 0.6s;">
+                            <i class="fas fa-check-circle text-success me-2 animate-pulse"></i>
+                            <span>Ambiente motivador</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 animate-slide-in-right">
+                    <img src="{% static 'img/img4.png' %}" class="img-fluid rounded shadow-lg animate-float" alt="Gimnasio Leblon">
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+<!-- Sección Promociones -->
+<section id="promociones" class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5 animate-fade-in-up">🔥 PROMOCIONES ESPECIALES</h2>
+        <div class="row justify-content-center mb-5">
+            <div class="col-lg-8 text-center">
+                <p class="lead text-muted">Productos premium para potenciar tu entrenamiento</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 shadow-sm border-0 producto-promo bg-white">
+                    <div class="card-img-top text-center p-4" style="background: white;">
+                        <img src="{% static 'img/img5.png' %}" alt="Strong Wrist Wrap" class="img-fluid" style="max-height: 200px;">
+                    </div>
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-primary">Strong Wrist Wrap</h5>
+                        <p class="card-text text-muted">Ideal para press y movimientos de empuje</p>
+                        <div class="mb-3">
+                            <span class="h4 text-success">$20.000</span>
+                            <small class="text-muted ms-2">-15% OFF</small>
+                        </div>
+                        <a href="/tienda/" class="btn btn-primary">Ver en Tienda</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 shadow-sm border-0 producto-promo bg-white">
+                    <div class="card-img-top text-center p-4" style="background: white;">
+                        <img src="{% static 'img/img6.jpg' %}" alt="BLEND WHEY STRONGEST" class="img-fluid" style="max-height: 200px;">
+                    </div>
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-primary">BLEND WHEY STRONGEST</h5>
+                        <p class="card-text text-muted">Proteína premium para desarrollo muscular</p>
+                        <div class="mb-3">
+                            <span class="h4 text-success">$20.000</span>
+                            <small class="text-muted ms-2">-20% OFF</small>
+                        </div>
+                        <a href="/tienda/" class="btn btn-primary">Ver en Tienda</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 shadow-sm border-0 producto-promo bg-white">
+                    <div class="card-img-top text-center p-4" style="background: white;">
+                        <img src="{% static 'img/img7.jpg' %}" alt="WHEY BLEND STRONG 900G" class="img-fluid" style="max-height: 200px;">
+                    </div>
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-primary">WHEY BLEND STRONG 900G</h5>
+                        <p class="card-text text-muted">Proteína formulada para fortalecer masa muscular</p>
+                        <div class="mb-3">
+                            <span class="h4 text-success">$15.000</span>
+                            <small class="text-muted ms-2">-25% OFF</small>
+                        </div>
+                        <a href="/tienda/" class="btn btn-primary">Ver en Tienda</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-5">
+            <a href="/tienda/" class="btn btn-lg btn-primary px-5 py-3">
+                <i class="fas fa-shopping-cart me-2"></i>VER TODOS LOS PRODUCTOS
+            </a>
+        </div>
+    </div>
+</section>
+
+
+<!-- Sección Clases -->
+<section id="clases" class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5 animate-fade-in-up">Nuestras Clases</h2>
+        <div class="row">
+            <div class="col-md-3 mb-4 animate-slide-in-left" style="animation-delay: 0.2s;">
+                <div class="text-center p-4 animate-hover-lift">
+                    <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3 animate-pulse" style="width: 80px; height: 80px;">
+                        <i class="fas fa-dumbbell fa-2x"></i>
+                    </div>
+                    <h5>Clases Dirigidas</h5>
+                    <p class="text-muted">Entrenamientos guiados por instructores certificados para maximizar tus resultados.</p>
+                    <button class="btn btn-outline-primary btn-sm animate-bounce" onclick="abrirModalClase('Clases Dirigidas')">
+                        <i class="fas fa-calendar-plus me-1"></i>Agendar
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4 animate-slide-in-left" style="animation-delay: 0.4s;">
+                <div class="text-center p-4 animate-hover-lift">
+                    <div class="bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3 animate-pulse" style="width: 80px; height: 80px;">
+                        <i class="fas fa-bicycle fa-2x"></i>
+                    </div>
+                    <h5>Spinning</h5>
+                    <p class="text-muted">Clases de ciclismo indoor con música energizante para quemar calorías.</p>
+                    <button class="btn btn-outline-warning btn-sm animate-bounce" onclick="abrirModalClase('Spinning')">
+                        <i class="fas fa-calendar-plus me-1"></i>Agendar
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4 animate-slide-in-left" style="animation-delay: 0.6s;">
+                <div class="text-center p-4 animate-hover-lift">
+                    <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3 animate-pulse" style="width: 80px; height: 80px;">
+                        <i class="fas fa-chart-line fa-2x"></i>
+                    </div>
+                    <h5>Evaluación Corporal</h5>
+                    <p class="text-muted">Evaluación mensual de tu composición corporal y progreso.</p>
+                    <button class="btn btn-outline-success btn-sm animate-bounce" onclick="abrirModalClase('Evaluación Corporal')">
+                        <i class="fas fa-calendar-plus me-1"></i>Agendar
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4 animate-slide-in-left" style="animation-delay: 0.8s;">
+                <div class="text-center p-4 animate-hover-lift">
+                    <div class="bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3 animate-pulse" style="width: 80px; height: 80px;">
+                        <i class="fas fa-list-alt fa-2x"></i>
+                    </div>
+                    <h5>Rutinas Personalizadas</h5>
+                    <p class="text-muted">Rutinas de ejercicios diseñadas específicamente para tus objetivos.</p>
+                    <button class="btn btn-outline-info btn-sm animate-bounce" onclick="abrirModalClase('Rutinas Personalizadas')">
+                        <i class="fas fa-calendar-plus me-1"></i>Agendar
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Horarios de Clases -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <h3 class="text-center mb-4">Horarios de Clases</h3>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead style="background: linear-gradient(135deg, #2F4F4F, #3A5F5F); color: white;">
+                            <tr>
+                                <th>Hora</th>
+                                <th>Lunes</th>
+                                <th>Martes</th>
+                                <th>Miércoles</th>
+                                <th>Jueves</th>
+                                <th>Viernes</th>
+                                <th>Sábado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>06:00</strong></td>
+                                <td>Clases Dirigidas</td>
+                                <td>Spinning</td>
+                                <td>Clases Dirigidas</td>
+                                <td>Spinning</td>
+                                <td>Clases Dirigidas</td>
+                                <td>Spinning</td>
+                            </tr>
+                            <tr>
+                                <td><strong>18:00</strong></td>
+                                <td>Spinning</td>
+                                <td>Clases Dirigidas</td>
+                                <td>Spinning</td>
+                                <td>Clases Dirigidas</td>
+                                <td>Spinning</td>
+                                <td>Clases Dirigidas</td>
+                            </tr>
+                            <tr>
+                                <td><strong>19:00</strong></td>
+                                <td>Clases Dirigidas</td>
+                                <td>Spinning</td>
+                                <td>Clases Dirigidas</td>
+                                <td>Spinning</td>
+                                <td>Clases Dirigidas</td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<!-- Sección Planes -->
+<section id="planes" class="py-5">
+  <div class="container">
+    <h2 class="text-center mb-5 section-title animate-fade-in-up">NUESTROS PLANES</h2>
+    <div class="row justify-content-center">
+      <!-- Plan Azul -->
+      <div class="col-lg-4 col-md-6 mb-4 animate-slide-in-left" style="animation-delay: 0.2s;">
+        <div class="card plan-card plan-azul h-100 animate-hover-lift">
+          <div class="card-header text-center">
+            <h4 class="plan-title">PLAN AZUL</h4>
+            <div class="plan-price">
+              <span class="currency">$</span>
+              <span class="amount">29.000</span>
+              <span class="period">/ mes</span>
+            </div>
+            <div class="plan-matricula">Matrícula: $14.000</div>
+          </div>
+          <div class="card-body">
+            <ul class="plan-features">
+              <li><i class="fas fa-clock"></i> Acceso todos los días hasta las 15:00 hrs</li>
+              <li><i class="fas fa-dumbbell"></i> Clases dirigidas incluidas (excepto Spinning)</li>
+              <li><i class="fas fa-chart-line"></i> Evaluación corporal mensual</li>
+              <li><i class="fas fa-list-alt"></i> Rutinas de ejercicios</li>
+            </ul>
+          </div>
+          <div class="card-footer text-center">
+            <a href="#contacto" class="btn btn-primary">
+              <i class="fas fa-check me-2"></i>Elegir Plan
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Plan Amarillo -->
+      <div class="col-lg-4 col-md-6 mb-4 animate-slide-in-left" style="animation-delay: 0.4s;">
+        <div class="card plan-card plan-amarillo h-100 animate-hover-lift">
+          <div class="card-header text-center">
+            <h4 class="plan-title">PLAN AMARILLO</h4>
+            <div class="plan-price">
+              <span class="currency">$</span>
+              <span class="amount">32.000</span>
+              <span class="period">/ mes</span>
+            </div>
+            <div class="plan-matricula">Matrícula: $14.000</div>
+          </div>
+          <div class="card-body">
+            <ul class="plan-features">
+              <li><i class="fas fa-calendar-week"></i> 3 veces por semana, cualquier horario</li>
+              <li><i class="fas fa-dumbbell"></i> Clases dirigidas incluidas (excepto Spinning)</li>
+              <li><i class="fas fa-chart-line"></i> Evaluación corporal mensual</li>
+              <li><i class="fas fa-list-alt"></i> Rutinas de ejercicios</li>
+            </ul>
+          </div>
+          <div class="card-footer text-center">
+            <a href="#contacto" class="btn btn-warning">
+              <i class="fas fa-check me-2"></i>Elegir Plan
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Plan Verde -->
+      <div class="col-lg-4 col-md-6 mb-4 animate-slide-in-left" style="animation-delay: 0.6s;">
+        <div class="card plan-card plan-verde h-100 animate-hover-lift">
+          <div class="card-header text-center">
+            <h4 class="plan-title">PLAN VERDE</h4>
+            <div class="plan-price">
+              <span class="currency">$</span>
+              <span class="amount">38.000</span>
+              <span class="period">/ mes</span>
+            </div>
+            <div class="plan-matricula">Matrícula: $14.000</div>
+          </div>
+          <div class="card-body">
+            <ul class="plan-features">
+              <li><i class="fas fa-crown"></i> Plan FULL - Todos los días, cualquier horario</li>
+              <li><i class="fas fa-dumbbell"></i> Clases dirigidas incluidas (excepto Spinning)</li>
+              <li><i class="fas fa-chart-line"></i> Evaluación corporal mensual</li>
+              <li><i class="fas fa-list-alt"></i> Rutinas de ejercicios</li>
+              <li><i class="fas fa-user-tie"></i> Apoyo de instructor de sala</li>
+            </ul>
+          </div>
+          <div class="card-footer text-center">
+            <a href="#contacto" class="btn btn-success">
+              <i class="fas fa-check me-2"></i>Elegir Plan
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="tienda"></section>
+
+
+
+
+    
+
+    <!-- Beneficios -->
+    <section id="beneficios" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center section-title">POR QUÉ ELEGIRNOS</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100 text-center p-4 hover-effect">
+                        <div class="card-body">
+                            <i class="fas fa-dumbbell feature-icon"></i>
+                            <h4 class="card-title">EQUIPO PREMIUM</h4>
+                            <p class="card-text">Tecnología fitness de última generación para maximizar tus resultados y comodidad.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 text-center p-4 hover-effect">
+                        <div class="card-body">
+                            <i class="fas fa-users feature-icon"></i>
+                            <h4 class="card-title">ENTRENADORES EXPERTOS</h4>
+                            <p class="card-text">Profesionales certificados con amplia experiencia en transformación física.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 text-center p-4 hover-effect">
+                        <div class="card-body">
+                            <i class="fas fa-calendar-alt feature-icon"></i>
+                            <h4 class="card-title">HORARIO EXTENDIDO</h4>
+                            <p class="card-text">Abierto de 9:00 am a 11:00 pm para adaptarnos a tu rutina diaria.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sobre nosotros -->
+    <section id="inicio" class="py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <h2 class="section-title">SOBRE NOSOTROS</h2>
+                    <p class="lead">En <strong>Gimnasio Leblon</strong> llevamos más de 10 años transformando vidas a través del fitness.</p>
+                    <p>Nuestro centro de 2,000 m² está diseñado para ofrecerte la mejor experiencia de entrenamiento.</p>
+                    <p>No somos solo un gimnasio, somos una comunidad comprometida con tu salud y bienestar.</p>
+                    <div class="d-flex mt-4">
+                        <div class="pe-4 text-center">
+                            <h3 class="text-primary">10+</h3>
+                            <p>Años de experiencia</p>
+                        </div>
+                        <div class="pe-4 text-center">
+                            <h3 class="text-primary">200+</h3>
+                            <p>Miembros activos</p>
+                        </div>
+                        <div class="text-center">
+                            <h3 class="text-primary">40+</h3>
+                            <p>Clases semanales</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="ratio ratio-16x9 rounded overflow-hidden shadow hover-effect">
+                        <img src="{% static 'img/img2.jpg' %}" alt="Interior del gimnasio" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+   
+
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <img src="{% static 'img/logo.jpg' %}" alt="Logo" width="120" class="mb-3">
+                    <p>Transformando vidas a través del fitness desde 2019.</p>
+                    <div class="social-icons">
+                        <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-tiktok"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <h5 class="mb-3">HORARIO</h5>
+                    <ul class="list-unstyled footer-links">
+                        <li class="mb-2"><strong>Lunes-Viernes:</strong> 9:00 - 23:00 hrs</li>
+                        <li class="mb-2"><strong>Sábados:</strong> 9:00 - 22:00 hrs</li>
+                        <li><strong>Domingos:</strong> 9:00 - 13:00 hrs</li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <h5 class="mb-3">CONTACTO</h5>
+                    <ul class="list-unstyled footer-links">
+                        <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i> Av. Granaderos 3037, 1393024 Calama, Antofagasta </li>
+                        <li class="mb-2"><i class="fas fa-phone-alt me-2"></i> +56 9 4953 1978</li>
+                        <li><i class="fas fa-envelope me-2"></i> contacto@gimnasioleblon.cl</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4 bg-light">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="small mb-0">&copy; 2023 Gimnasio Leblon. Todos los derechos reservados.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <p class="small mb-0">Desarrollado por Benjamin Rojas</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Sección Contacto -->
+<section id="contacto" class="py-5 bg-light">
+  <div class="container">
+    <h2 class="text-center mb-4">Contáctanos</h2>
+    <div class="row">
+      <div class="col-md-6">
+        <form>
+          <div class="mb-3">
+            <input type="text" class="form-control" placeholder="Nombre" required>
+          </div>
+          <div class="mb-3">
+            <input type="email" class="form-control" placeholder="Correo electrónico" required>
+          </div>
+          <div class="mb-3">
+            <textarea class="form-control" rows="4" placeholder="Mensaje" required></textarea>
+          </div>
+          <button class="btn btn-warning" type="submit">Enviar</button>
+        </form>
+      </div>
+      <div class="col-md-6">
+        <h5>Ubicación</h5>
+        <p>Av. Granaderos 3037, 1393024 Calama, Antofagasta</p>
+        <h5>Teléfono</h5>
+        <p>+56 9 4953 1978</p>
+        <h5>Email</h5>
+        <p>contacto@leblonfitness.cl</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+    <!-- WhatsApp -->
+    <a href="https://wa.me/56949531978" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+    <script>
+  document.querySelectorAll('a.nav-link[href^="#"]').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const destino = document.querySelector(link.getAttribute('href'));
+      if (destino) destino.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+</script>
+
+<!-- En tu archivo principal (index.html), justo antes de cerrar </body> -->
+<script>
+  document.querySelectorAll('a[href="tienda.html"]').forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      document.body.classList.add('fade-out');
+      setTimeout(() => {
+        window.location.href = this.href;
+      }, 500); // tiempo igual al de la animación
+    });
+  });
+</script>
+
+<style>
+  body {
+    background: #e8e9ea !important;
+  }
+
+  .bg-light {
+    background-color: #e8e9ea !important;
+  }
+
+  section {
+    background-color: #e8e9ea !important;
+  }
+
+  .py-5 {
+    background-color: #e8e9ea !important;
+  }
+
+  .producto-promo {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .producto-promo:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+  }
+
+  /* Asegurar que la imagen del header se mantenga estática */
+  .spartan-hero-section {
+    height: 70vh !important;
+    max-height: 70vh !important;
+    min-height: 70vh !important;
+    overflow: hidden !important;
+    position: relative !important;
+  }
+
+  .spartan-hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: inherit;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    z-index: -1;
+  }
+
+  .fade-out {
+    opacity: 0;
+    transition: opacity 0.5s ease-in;
+  }
+
+  /* Estilos para el header con imagen de guerrero */
+  .spartan-hero-section {
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    height: 70vh;
+    max-height: 70vh;
+  }
+
+
+  .spartan-hero-section .container {
+    position: relative;
+    z-index: 2;
+  }
+
+  .spartan-hero-section h1 {
+    animation: fadeInUp 1s ease-out;
+  }
+
+  .spartan-hero-section p {
+    animation: fadeInUp 1s ease-out 0.3s both;
+  }
+
+  .spartan-hero-section .d-flex {
+    animation: fadeInUp 1s ease-out 0.6s both;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Animaciones adicionales */
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+      transform: translateY(0);
+    }
+    40% {
+      transform: translateY(-10px);
+    }
+    60% {
+      transform: translateY(-5px);
+    }
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes glow {
+    0%, 100% {
+      box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+    }
+    50% {
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.6), 0 0 30px rgba(255, 255, 255, 0.4);
+    }
+  }
+
+  /* Clases de animación */
+  .animate-slide-in-left {
+    animation: slideInLeft 1s ease-out both;
+  }
+
+  .animate-slide-in-right {
+    animation: slideInRight 1s ease-out both;
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 1s ease-out both;
+  }
+
+  .animate-pulse {
+    animation: pulse 2s infinite;
+  }
+
+  .animate-bounce {
+    animation: bounce 2s infinite;
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .animate-rotate {
+    animation: rotate 4s linear infinite;
+  }
+
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite;
+  }
+
+  .animate-hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .animate-hover-lift:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2) !important;
+  }
+
+  /* Animaciones de scroll */
+  .animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s ease;
+  }
+
+  .animate-on-scroll.animated {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Efectos especiales */
+  .animate-text-glow {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    animation: glow 2s ease-in-out infinite;
+  }
+
+  .animate-border-glow {
+    border: 2px solid transparent;
+    background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+    background-size: 400% 400%;
+    animation: gradientShift 3s ease infinite;
+  }
+
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* Efectos de hover mejorados para botones */
+  .spartan-hero-section .btn {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .spartan-hero-section .btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+  }
+
+  .spartan-hero-section .btn:hover::before {
+    left: 100%;
+  }
+
+  /* Responsive para móviles */
+  @media (max-width: 768px) {
+    .spartan-hero-section {
+      background-attachment: scroll;
+      min-height: 80vh;
+    }
+    
+    .spartan-hero-section h1 {
+      font-size: 2.5rem !important;
+      letter-spacing: 2px !important;
+    }
+    
+    .spartan-hero-section p {
+      font-size: 1.2rem !important;
+    }
+    
+    .spartan-hero-section .d-flex {
+      flex-direction: column;
+      gap: 1rem !important;
+    }
+    
+    .spartan-hero-section .btn {
+      width: 100%;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+  }
+
+  .modern-navbar {
+    background: linear-gradient(135deg, rgba(255, 152, 0, 0.9), rgba(255, 193, 7, 0.9));
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .modern-navbar .navbar-brand {
+    color: white !important;
+    font-size: 1.5rem;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+  }
+
+  .modern-navbar .nav-link {
+    color: rgba(255, 255, 255, 0.95) !important;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+  }
+
+  .modern-navbar .nav-link:hover {
+    color: white !important;
+    transform: translateY(-1px);
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  }
+
+  .modern-navbar .nav-link.active {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-radius: 5px;
+    color: white !important;
+  }
+
+  /* Estilos para las secciones con transición gradual */
+  .section {
+    padding: 80px 0;
+    transition: all 0.6s ease;
+    position: relative;
+  }
+
+  .section:nth-child(even) {
+    background: linear-gradient(135deg, rgba(47, 79, 79, 0.05) 0%, rgba(70, 130, 180, 0.03) 100%);
+    backdrop-filter: blur(5px);
+  }
+
+  .section:nth-child(odd) {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(248, 249, 250, 1) 100%);
+    backdrop-filter: blur(5px);
+  }
+
+  /* Transición gradual desde el header */
+  .section:first-of-type {
+    background: linear-gradient(135deg, 
+      rgba(255, 152, 0, 0.08) 0%, 
+      rgba(255, 193, 7, 0.04) 30%, 
+      rgba(255, 255, 255, 1) 70%,
+      rgba(255, 255, 255, 1) 100%);
+    padding-top: 80px;
+  }
+
+  /* Estilos para botones armoniosos */
+  .btn-primary {
+    background: linear-gradient(135deg, #8B4513, #A0522D);
+    border: 2px solid #D2691E;
+    border-radius: 50px;
+    padding: 12px 30px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(139, 69, 19, 0.4);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(139, 69, 19, 0.6);
+    background: linear-gradient(135deg, #A0522D, #8B4513);
+    border-color: #CD853F;
+    color: white;
+  }
+
+  .btn-outline-primary {
+    border: 2px solid #8B4513;
+    color: #8B4513;
+    border-radius: 50px;
+    padding: 10px 28px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .btn-outline-primary:hover {
+    background: linear-gradient(135deg, #8B4513, #A0522D);
+    color: white;
+    border-color: #D2691E;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(139, 69, 19, 0.4);
+  }
+
+  /* Estilos para los planes modernos */
+  .plan-card {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .plan-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+  }
+
+  .plan-card .card-header {
+    padding: 25px 20px;
+    border: none;
+    position: relative;
+  }
+
+  .plan-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+  }
+
+  .plan-price {
+    margin-bottom: 10px;
+  }
+
+  .plan-price .currency {
+    font-size: 1.2rem;
+    font-weight: 600;
+    vertical-align: top;
+  }
+
+  .plan-price .amount {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .plan-price .period {
+    font-size: 1rem;
+    font-weight: 500;
+    opacity: 0.8;
+  }
+
+  .plan-matricula {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    font-weight: 500;
+  }
+
+  .plan-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .plan-features li {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+  }
+
+  .plan-features li:last-child {
+    border-bottom: none;
+  }
+
+  .plan-features i {
+    margin-right: 10px;
+    font-size: 1rem;
+    width: 16px;
+    text-align: center;
+  }
+
+  .plan-card .card-footer {
+    border: none;
+    background: transparent;
+    padding: 20px;
+  }
+
+  /* Colores de planes */
+  .plan-azul .card-header {
+    background: linear-gradient(135deg, #ff9800 0%, #ffc107 100%);
+    color: white;
+  }
+
+  .plan-amarillo .card-header {
+    background: linear-gradient(135deg, #ffc107 0%, #ffeb3b 100%);
+    color: white;
+  }
+
+  .plan-verde .card-header {
+    background: linear-gradient(135deg, #ff9800 0%, #ff5722 100%);
+    color: white;
+  }
+</style>
+
+
+
+    <!-- Modal para Agendar Clases -->
+    <div class="modal fade" id="modalAgendarClase" tabindex="-1" aria-labelledby="modalAgendarClaseLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="modalAgendarClaseLabel">
+                        <i class="fas fa-calendar-plus me-2"></i>Agendar Clase
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formAgendarClase">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="nombreClase" class="form-label">Clase Seleccionada</label>
+                                    <input type="text" class="form-control" id="nombreClase" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="fechaClase" class="form-label">Fecha</label>
+                                    <input type="date" class="form-control" id="fechaClase" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="horaClase" class="form-label">Hora</label>
+                                    <select class="form-select" id="horaClase" required>
+                                        <option value="">Seleccionar hora</option>
+                                        <option value="06:00">06:00</option>
+                                        <option value="18:00">18:00</option>
+                                        <option value="19:00">19:00</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="planCliente" class="form-label">Plan</label>
+                                    <select class="form-select" id="planCliente" required>
+                                        <option value="">Seleccionar plan</option>
+                                        <option value="Plan Azul">Plan Azul</option>
+                                        <option value="Plan Amarillo">Plan Amarillo</option>
+                                        <option value="Plan Verde">Plan Verde</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="nombreCliente" class="form-label">Nombre Completo</label>
+                                    <input type="text" class="form-control" id="nombreCliente" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="telefonoCliente" class="form-label">Teléfono</label>
+                                    <input type="tel" class="form-control" id="telefonoCliente" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="emailCliente" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="emailCliente" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="comentariosClase" class="form-label">Comentarios Adicionales (Opcional)</label>
+                            <textarea class="form-control" id="comentariosClase" rows="3" placeholder="Cuéntanos sobre tus objetivos o cualquier información relevante..."></textarea>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Importante:</strong> Una vez enviada tu solicitud, te contactaremos para confirmar tu reserva. 
+                            Las clases tienen cupos limitados, así que te recomendamos reservar con anticipación.
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="enviarSolicitudClase()">
+                        <i class="fas fa-paper-plane me-2"></i>Enviar Solicitud
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Función para abrir el modal de agendar clase
+        function abrirModalClase(nombreClase) {
+            document.getElementById('nombreClase').value = nombreClase;
+            
+            // Establecer fecha mínima como hoy
+            const hoy = new Date().toISOString().split('T')[0];
+            document.getElementById('fechaClase').min = hoy;
+            
+            // Limpiar formulario
+            document.getElementById('formAgendarClase').reset();
+            document.getElementById('nombreClase').value = nombreClase;
+            
+            // Mostrar modal
+            const modal = new bootstrap.Modal(document.getElementById('modalAgendarClase'));
+            modal.show();
+        }
+
+        // Función para enviar la solicitud de clase
+        function enviarSolicitudClase() {
+            const form = document.getElementById('formAgendarClase');
+            const formData = new FormData(form);
+            
+            // Validar formulario
+            if (!form.checkValidity()) {
+                form.classList.add('was-validated');
+                return;
+            }
+
+            // Recopilar datos
+            const datosClase = {
+                clase: document.getElementById('nombreClase').value,
+                fecha: document.getElementById('fechaClase').value,
+                hora: document.getElementById('horaClase').value,
+                plan: document.getElementById('planCliente').value,
+                nombre: document.getElementById('nombreCliente').value,
+                telefono: document.getElementById('telefonoCliente').value,
+                email: document.getElementById('emailCliente').value,
+                comentarios: document.getElementById('comentariosClase').value
+            };
+
+            // Simular envío (aquí podrías integrar con tu backend)
+            console.log('Solicitud de clase:', datosClase);
+            
+            // Mostrar mensaje de confirmación
+            alert('¡Solicitud enviada exitosamente!\n\nTe contactaremos pronto para confirmar tu reserva.\n\nGracias por elegir Leblon Fitness.');
+            
+            // Cerrar modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('modalAgendarClase'));
+            modal.hide();
+            
+            // Limpiar formulario
+            form.reset();
+        }
+
+        // Configurar fecha mínima cuando se abre el modal
+        document.addEventListener('DOMContentLoaded', function() {
+            const fechaInput = document.getElementById('fechaClase');
+            if (fechaInput) {
+                const hoy = new Date().toISOString().split('T')[0];
+                fechaInput.min = hoy;
+            }
+
+            // Animaciones de scroll
+            initScrollAnimations();
+            
+            // Efectos dinámicos adicionales
+            initDynamicEffects();
+        });
+
+        // Función para animaciones de scroll
+        function initScrollAnimations() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animated');
+                    }
+                });
+            }, observerOptions);
+
+            // Observar elementos con animación de scroll
+            document.querySelectorAll('.animate-on-scroll').forEach(el => {
+                observer.observe(el);
+            });
+        }
+
+        // Efectos dinámicos adicionales
+        function initDynamicEffects() {
+            // Efecto parallax en el header
+            window.addEventListener('scroll', () => {
+              const scrolled = window.pageYOffset;
+              const header = document.querySelector('.spartan-hero-section');
+              if (header) {
+                header.style.backgroundPositionY = `${scrolled * 0.4}px`;
+              }
+            });
+
+            // Efecto de rotación en iconos al hacer hover
+            document.querySelectorAll('.fas').forEach(icon => {
+                icon.addEventListener('mouseenter', () => {
+                    icon.style.animation = 'rotate 0.5s ease-in-out';
+                });
+                icon.addEventListener('animationend', () => {
+                    icon.style.animation = '';
+                });
+            });
+
+            // Efecto de pulso en botones
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.addEventListener('mouseenter', () => {
+                    btn.style.animation = 'pulse 0.5s ease-in-out';
+                });
+                btn.addEventListener('mouseleave', () => {
+                    btn.style.animation = '';
+                });
+            });
+
+            // Efecto de glow en títulos
+            document.querySelectorAll('h1, h2, h3').forEach(title => {
+                title.addEventListener('mouseenter', () => {
+                    title.classList.add('animate-text-glow');
+                });
+                title.addEventListener('mouseleave', () => {
+                    title.classList.remove('animate-text-glow');
+                });
+            });
+        }
+    </script>
+
+    <!-- Popup de Registro de Leads -->
+    <div class="modal fade" id="popupRegistro" tabindex="-1" aria-labelledby="popupRegistroLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content" style="border: none; border-radius: 15px; overflow: hidden;">
+                <div class="modal-header" style="border: none; padding: 0; position: relative;">
+                    <button type="button" class="btn-close" style="position: absolute; top: 15px; right: 15px; z-index: 1000;" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="padding: 40px;">
+                    <div class="row align-items-center">
+                        <!-- Columna Izquierda - Texto -->
+                        <div class="col-md-6">
+                            <div class="text-left">
+                                <h1 style="font-size: 3.5rem; font-weight: 900; color: #dc3545; margin-bottom: 0; line-height: 0.8;">
+                                    SÚMATE
+                                </h1>
+                                <h2 style="font-size: 1.8rem; font-weight: 600; color: #000; margin-bottom: 20px;">
+                                    AL ESTILO DE VIDA
+                                </h2>
+                                <div style="font-size: 2rem; font-weight: 800; color: #000; margin-bottom: 30px; letter-spacing: 2px;">
+                                    LEBLON FITNESS
+                                </div>
+                                
+                                <p style="color: #666; font-size: 1rem; margin-bottom: 20px;">
+                                    DEJA TUS DATOS Y RECIBE NUESTRO
+                                </p>
+                                
+                                <div style="background: #dc3545; color: white; padding: 15px 20px; border-radius: 8px; font-size: 1.2rem; font-weight: bold; margin-bottom: 20px; text-align: center;">
+                                    SEMÁFORO NUTRICIONAL
+                                </div>
+                                
+                                <p style="color: #666; font-size: 0.9rem; margin-bottom: 15px;">
+                                    ADEMÁS TODOS LOS MESES ESTAREMOS SORTEANDO
+                                </p>
+                                
+                                <div style="margin-bottom: 30px;">
+                                    <div style="font-size: 1.8rem; font-weight: bold; color: #000; margin-bottom: 5px;">
+                                        6 MESES DE GIMNASIO
+                                    </div>
+                                    <div style="font-size: 1.8rem; font-weight: bold; color: #dc3545;">
+                                        GRATIS
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Columna Derecha - Imagen y Formulario -->
+                        <div class="col-md-6">
+                            <!-- Imagen de alimentos -->
+                            <div style="text-align: center; margin-bottom: 30px;">
+                                <div style="position: relative; display: inline-block;">
+                                    <div style="width: 200px; height: 200px; border-radius: 50%; background: linear-gradient(45deg, #ffd700, #ffed4e); display: flex; align-items: center; justify-content: center; position: relative;">
+                                        <div style="font-size: 3rem;">🥗</div>
+                                    </div>
+                                    <div style="position: absolute; top: -10px; right: -10px; width: 40px; height: 40px; background: #dc3545; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                                        ✓
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Formulario -->
+                            <form id="formRegistroLead">
+                                <div class="mb-3">
+                                    <input type="text" class="form-control form-control-lg" id="nombreLead" placeholder="Ingrese su nombre" style="border-radius: 8px; border: 2px solid #e0e0e0; padding: 15px;" required>
+                                </div>
+                                <div class="mb-4">
+                                    <input type="email" class="form-control form-control-lg" id="emailLead" placeholder="Ingrese su correo electrónico" style="border-radius: 8px; border: 2px solid #e0e0e0; padding: 15px;" required>
+                                </div>
+                                <button type="submit" class="btn w-100 btn-lg" style="background: #dc3545; color: white; border: none; border-radius: 8px; padding: 15px; font-weight: bold; font-size: 1.1rem;">
+                                    SÚMATE AQUÍ
+                                </button>
+                                <div class="text-center mt-3">
+                                    <a href="#" style="color: #666; text-decoration: none; font-size: 0.9rem;">
+                                        Ver Términos y Condiciones
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notificaciones personalizadas -->
+    <div id="notificationContainer" style="position: fixed; top: 20px; right: 20px; z-index: 10000;"></div>
+
+    <script>
+        // Función para mostrar notificaciones personalizadas
+        function mostrarNotificacion(mensaje, tipo = 'success') {
+            const container = document.getElementById('notificationContainer');
+            const notification = document.createElement('div');
+            
+            const bgColor = tipo === 'success' ? '#28a745' : '#dc3545';
+            const icon = tipo === 'success' ? '✓' : '✗';
+            
+            notification.style.cssText = `
+                background: ${bgColor};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                margin-bottom: 10px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+                max-width: 350px;
+                font-weight: 500;
+            `;
+            
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center;">
+                    <span style="margin-right: 10px; font-size: 1.2rem;">${icon}</span>
+                    <span>${mensaje}</span>
+                </div>
+            `;
+            
+            container.appendChild(notification);
+            
+            // Animar entrada
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // Remover después de 5 segundos
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 5000);
+        }
+
+        // Función para enviar registro de lead
+        async function enviarRegistroLead(event) {
+            event.preventDefault();
+            
+            const nombre = document.getElementById('nombreLead').value.trim();
+            const email = document.getElementById('emailLead').value.trim();
+            
+            if (!nombre || !email) {
+                mostrarNotificacion('Por favor completa todos los campos', 'error');
+                return;
+            }
+            
+            if (!email.includes('@')) {
+                mostrarNotificacion('Por favor ingresa un email válido', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/registrar-lead/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || ''
+                    },
+                    body: JSON.stringify({
+                        nombre: nombre,
+                        email: email
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    mostrarNotificacion(data.message, 'success');
+                    // Cerrar popup después de 2 segundos
+                    setTimeout(() => {
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('popupRegistro'));
+                        if (modal) {
+                            modal.hide();
+                        }
+                    }, 2000);
+                } else {
+                    mostrarNotificacion(data.message, 'error');
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                mostrarNotificacion('Error al enviar el registro. Intenta nuevamente.', 'error');
+            }
+        }
+
+        // Mostrar popup después de 3 segundos de cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar si ya se mostró el popup en esta sesión
+            const popupMostrado = sessionStorage.getItem('popupRegistroMostrado');
+            
+            if (!popupMostrado) {
+                setTimeout(() => {
+                    const popup = new bootstrap.Modal(document.getElementById('popupRegistro'));
+                    popup.show();
+                    sessionStorage.setItem('popupRegistroMostrado', 'true');
+                }, 3000);
+            }
+            
+            // Configurar formulario
+            document.getElementById('formRegistroLead').addEventListener('submit', enviarRegistroLead);
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

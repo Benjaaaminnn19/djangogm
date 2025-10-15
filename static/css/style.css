@@ -1,0 +1,304 @@
+:root {
+    --primary-color: #f57c00;   /* Naranjo */
+    --secondary-color: #212121; /* Negro casi puro */
+    --light-color: #ffffff;     /* Blanco */
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--dark-text);
+}
+
+/* Logo */
+.logo-absolute {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: 80px;
+    height: auto;
+    z-index: 100;
+    border-radius: 50%;
+}
+
+/* Hero */
+.hero-section {
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 120px 0 80px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('img/gym-pattern.png') repeat;
+    opacity: 0.1;
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--primary-color) !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.nav-link {
+    font-weight: 500;
+    padding: 8px 15px !important;
+    border-radius: 4px;
+    margin: 0 3px;
+}
+
+.nav-link:hover, .nav-link.active {
+    background-color: rgba(255,255,255,0.15);
+    color: white !important;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+section {
+  scroll-margin-top: 70px; /* Ajusta según el alto real de tu navbar */
+}
+
+
+/* Botones */
+.btn-primary {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+.btn-primary:hover {
+    background-color: #9a1a1a;
+    border-color: #9a1a1a;
+}
+
+.btn-outline-primary {
+    color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+/* Títulos */
+.section-title {
+    position: relative;
+    margin-bottom: 50px;
+    color: var(--primary-color);
+}
+
+.section-title::after {
+    content: "";
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: var(--secondary-color);
+}
+
+/* Cards */
+.card {
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.card-header {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 600;
+}
+
+/* Iconos */
+.feature-icon {
+    font-size: 2.5rem;
+    color: var(--secondary-color);
+    margin-bottom: 15px;
+}
+
+/* Footer */
+footer {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 40px 0 20px;
+}
+
+.footer-links a {
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.footer-links a:hover {
+    color: white;
+    padding-left: 5px;
+}
+.mb-3{
+    border-radius: 50%;
+}
+
+/* WhatsApp */
+.whatsapp-float {
+    position: fixed;
+    width: 50px;
+    height: 50px;
+    bottom: 30px;
+    right: 30px;
+    background-color: #25d366;
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 24px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Efectos */
+.hover-effect {
+    transition: all 0.3s ease;
+}
+
+.hover-effect:hover {
+    transform: scale(1.03);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .logo-absolute {
+        width: 60px;
+        top: 10px;
+        left: 10px;
+    }
+
+    .hero-section {
+        padding: 100px 0 60px;
+    }
+}
+
+.tienda-section {
+  background-color: #f9f9f9;
+  padding: 60px 0;
+}
+
+.tienda-header {
+  background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('img/tienda-banner.jpg');
+  background-size: cover;
+  background-position: center;
+  color: white;
+  padding: 80px 0;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.producto-card {
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+  background: white;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.producto-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.producto-img {
+  height: 200px;
+  object-fit: cover;
+}
+
+.producto-body {
+  padding: 20px;
+}
+
+.producto-precio {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--secondary-color);
+}
+
+.producto-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: var(--accent-color);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.btn-comprar {
+  background-color: var(--secondary-color);
+  color: white;
+  font-weight: 600;
+  width: 100%;
+}
+
+.btn-comprar:hover {
+  background-color: #9a1a1a;
+  color: white;
+}
+
+.categoria-filtros {
+  margin-bottom: 30px;
+}
+
+.categoria-btn {
+  border: 2px solid var(--primary-color);
+  color: var(--primary-color);
+  font-weight: 600;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.categoria-btn:hover, .categoria-btn.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+
+/* Estilos para la sección promocional */
+#promo-leblon {
+    border-radius: 10px;
+    margin: 2rem auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+#promo-leblon .form-control {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid #444;
+    color: white;
+}
+
+#promo-leblon .form-control::placeholder {
+    color: #ccc;
+}
+
+#promo-leblon .btn-warning {
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}

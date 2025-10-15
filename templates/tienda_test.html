@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Tienda</title>
+</head>
+<body>
+    <h1>Test de Tienda</h1>
+    <p>Productos encontrados: {{ productos|length }}</p>
+    
+    {% if productos %}
+        <h2>Lista de Productos:</h2>
+        <ul>
+            {% for producto in productos %}
+                <li>{{ producto.nombre }} - ${{ producto.precio }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay productos disponibles</p>
+    {% endif %}
+</body>
+</html>
+
+
