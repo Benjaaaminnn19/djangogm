@@ -25,6 +25,9 @@ urlpatterns = [
     path('tienda/', include('tienda.urls')),
 ]
 
-# Servir archivos media en desarrollo
+# Servir archivos media y static en desarrollo
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    # Servir archivos estáticos
+    from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+    urlpatterns += staticfiles_urlpatterns()

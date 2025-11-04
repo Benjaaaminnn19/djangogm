@@ -11,10 +11,9 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     
 </head>
-<body>
-    <!-- Logo -->
-    <img src="{% static 'img/logo.jpg' %}" alt="Logo Gimnasio Leblon" class="logo-absolute">
+<body style="margin: 0; padding: 0;">
 
+  
     <!-- Header -->
        <header class="spartan-hero-section" style="
            background: url('{% static 'img/img3.png' %}');
@@ -27,16 +26,24 @@
            align-items: center;
            position: relative;
            overflow: hidden;
+           margin: 0;
+           padding: 0;
+           width: 100%;
+           left: 0;
+           right: 0;
        ">
-        <div class="container text-center">
+       <!-- Logo -->
+       <img src="{% static 'img/logo.jpg' %}" alt="Logo Gimnasio Leblon" class="logo-absolute">
+       
+        <div class="container text-center" style="position: relative; z-index: 2;">
             <h1 class="display-3 fw-bold mb-4 text-white" style="
                 font-family: 'Arial Black', sans-serif;
-                text-shadow: 3px 3px 6px rgba(0,0,0,0.8);
+                text-shadow: 3px 3px 8px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.5);
                 letter-spacing: 2px;
             ">GIMNASIO LEBLON</h1>
             <p class="lead mb-4 text-white" style="
                 font-size: 1.2rem;
-                text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+                text-shadow: 2px 2px 6px rgba(0,0,0,0.9), 0 0 15px rgba(0,0,0,0.5);
                 font-weight: 300;
             ">Transforma tu cuerpo, transforma tu vida</p>
             <div class="d-flex justify-content-center gap-4 flex-wrap">
@@ -79,14 +86,24 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="menu">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
                     <li class="nav-item"><a class="nav-link active" href="#inicio">Inicio</a></li>
                     <li class="nav-item"><a class="nav-link" href="#promociones">Promociones</a></li>
                     <li class="nav-item"><a class="nav-link" href="#clases">Clases</a></li>
                     <li class="nav-item"><a class="nav-link" href="#entrenadores">Entrenadores</a></li>
                     <li class="nav-item"><a class="nav-link" href="#planes">Planes</a></li>
                     <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
-                    <li class="nav-item"><a class="nav-link btn btn-outline-primary ms-2 px-3" href="{% url 'tienda' %}">Tienda</a></li>
+                    <li class="nav-item ms-lg-3 d-flex">
+                        <div class="navbar-icons d-flex align-items-center gap-3">
+                            <a href="#" class="icon-btn" title="Mi cuenta">
+                                <i class="far fa-user"></i>
+                            </a>
+                            <a href="{% url 'tienda' %}" class="icon-btn position-relative" title="Carrito">
+                                <i class="far fa-shopping-bag"></i>
+                                <span class="cart-badge" id="cartCount">0</span>
+                            </a>
+                        </div>
+                    </li>
                 </ul>
             </div>                
         </div>
@@ -764,8 +781,42 @@
 </script>
 
 <style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100%;
+    overflow-x: hidden;
+  }
+
   body {
     background: #e8e9ea !important;
+  }
+
+  /* Eliminar márgenes y padding del header */
+  .spartan-hero-section {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 70vh !important;
+    max-height: 70vh !important;
+    min-height: 70vh !important;
+    overflow: hidden !important;
+    position: relative !important;
+    left: 0 !important;
+    right: 0 !important;
+  }
+
+  /* Asegurar que el contenedor dentro del header no agregue padding */
+  .spartan-hero-section .container {
+    padding-left: 15px;
+    padding-right: 15px;
   }
 
   .bg-light {
@@ -780,6 +831,93 @@
     background-color: #e8e9ea !important;
   }
 
+  /* Arreglar el contraste del texto en secciones con fondo claro */
+  #inicio h2,
+  #inicio p,
+  #inicio .lead,
+  #inicio span,
+  #promociones h2,
+  #promociones p,
+  #promociones .lead,
+  section.bg-light h2,
+  section.bg-light p,
+  section.bg-light .lead,
+  section.bg-light span,
+  section.bg-light h5,
+  section:not(.spartan-hero-section) h2,
+  section:not(.spartan-hero-section) p,
+  section:not(.spartan-hero-section) .lead {
+    color: #212529 !important;
+  }
+
+  /* Asegurar que el texto en secciones sin fondo oscuro sea oscuro */
+  section.py-5:not(.spartan-hero-section) h2,
+  section.py-5:not(.spartan-hero-section) p,
+  section.py-5:not(.spartan-hero-section) .lead {
+    color: #212529 !important;
+  }
+
+  /* Asegurar que el footer tenga texto blanco visible */
+  footer {
+    background-color: #f57c00 !important;
+    color: white !important;
+  }
+
+  footer * {
+    color: white !important;
+  }
+
+  footer h5,
+  footer p,
+  footer li,
+  footer .footer-links,
+  footer .footer-links li,
+  footer .small,
+  footer i,
+  footer strong {
+    color: white !important;
+  }
+
+  footer .social-icons a {
+    color: white !important;
+  }
+
+  footer .social-icons a:hover {
+    color: rgba(255,255,255,0.8) !important;
+  }
+
+  /* Logo más pequeño */
+  .logo-absolute {
+    position: absolute !important;
+    width: 50px !important;
+    height: 50px !important;
+    max-width: 50px !important;
+    max-height: 50px !important;
+    top: 8px !important;
+    left: 8px !important;
+    right: auto !important;
+    object-fit: contain !important;
+    z-index: 1000 !important;
+    border-radius: 50% !important;
+  }
+
+  /* Forzar color oscuro en textos de secciones con fondo claro */
+  #inicio h2, #inicio h3, #inicio h4, #inicio h5, #inicio h6,
+  #inicio p, #inicio .lead, #inicio span:not(.text-success):not(.text-danger):not(.text-warning):not(.text-info),
+  #promociones h2, #promociones h3, #promociones h4, #promociones h5, #promociones h6,
+  #promociones p, #promociones .lead,
+  section.bg-light h2, section.bg-light h3, section.bg-light h4, section.bg-light h5, section.bg-light h6,
+  section.bg-light p, section.bg-light .lead,
+  section.py-5:not(.spartan-hero-section) h2,
+  section.py-5:not(.spartan-hero-section) h3,
+  section.py-5:not(.spartan-hero-section) h4,
+  section.py-5:not(.spartan-hero-section) h5,
+  section.py-5:not(.spartan-hero-section) h6,
+  section.py-5:not(.spartan-hero-section) p,
+  section.py-5:not(.spartan-hero-section) .lead {
+    color: #212529 !important;
+  }
+
   .producto-promo {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
@@ -789,14 +927,7 @@
     box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
   }
 
-  /* Asegurar que la imagen del header se mantenga estática */
-  .spartan-hero-section {
-    height: 70vh !important;
-    max-height: 70vh !important;
-    min-height: 70vh !important;
-    overflow: hidden !important;
-    position: relative !important;
-  }
+  /* Estilos adicionales del header (ya consolidados arriba) */
 
   .spartan-hero-section::before {
     content: '';
@@ -809,7 +940,18 @@
     background-size: cover !important;
     background-position: center !important;
     background-repeat: no-repeat !important;
-    z-index: -1;
+    z-index: 0;
+  }
+
+  .spartan-hero-section::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
   }
 
   .fade-out {
@@ -1083,6 +1225,44 @@
     background: rgba(255, 255, 255, 0.2) !important;
     border-radius: 5px;
     color: white !important;
+  }
+
+  /* Iconos navbar (usuario y carrito) */
+  .navbar-icons .icon-btn {
+    color: rgba(255,255,255,0.95);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.25);
+    transition: all 0.2s ease;
+  }
+
+  .navbar-icons .icon-btn:hover {
+    color: #fff;
+    background: rgba(255,255,255,0.12);
+    transform: translateY(-1px);
+  }
+
+  .navbar-icons .icon-btn i {
+    font-size: 18px;
+  }
+
+  .navbar-icons .cart-badge {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    background: #d32f2f;
+    color: #fff;
+    font-weight: 700;
+    font-size: 11px;
+    line-height: 1;
+    padding: 4px 6px;
+    border-radius: 999px;
+    border: 2px solid rgba(0,0,0,0.15);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
   }
 
   /* Estilos para las secciones con transición gradual */
