@@ -45,20 +45,75 @@ class RegistrarLeadView(View):
             return JsonResponse({'success': False, 'message': 'Error interno del servidor'})
         
 def agendar_clase(request, clase_id):
-    clase = Clase.objects.get(id=clase_id)
+    try:
+        clase = Clase.objects.get(id=clase_id)
+    except Clase.DoesNotExist:
+        return render(request, 'error.html', {'mensaje': 'La clase no existe'})
 
     if request.method == 'POST':
-        nombre = request.POST['nombre']
-        correo = request.POST['correo']
+        nombre = request.POST.get('nombre')
+        correo = request.POST.get('correo')
+
+        if not nombre or not correo:
+            return render(request, 'agendar.html', {
+                'clase': clase,
+                'error': 'Por favor completa todos los campos'
+            })
 
         # Contar reservas aprobadas o en espera
         reservas_existentes = Reserva.objects.filter(clase=clase).count()
+        cupos_disponibles = clase.cupos - reservas_existentes
 
         if reservas_existentes >= clase.cupos:
-            return render(request, 'sin_cupos.html', {'clase': clase})
+            # No hay cupos disponibles - solo mostrar página sin enviar correo
+            return render(request, 'sin_cupos.html', {
+                'clase': clase,
+                'cupos_disponibles': 0
+            })
 
         # Crear la reserva (por aprobar)
-        Reserva.objects.create(clase=clase, nombre=nombre, correo=correo)
-        return render(request, 'reserva_pendiente.html', {'clase': clase})
+        reserva = Reserva.objects.create(clase=clase, nombre=nombre, correo=correo)
+        
+        # Enviar correo confirmando que la reserva está pendiente
+        try:
+            send_mail(
+                subject=f'Reserva pendiente - {clase.nombre}',
+                message=f'''Hola {nombre},
 
-    return render(request, 'agendar.html', {'clase': clase})
+¡Gracias por agendar tu clase!
+
+Tu reserva para la clase "{clase.nombre}" programada para el {clase.fecha.strftime('%d/%m/%Y a las %H:%M')} ha sido registrada y está pendiente de aprobación.
+
+Detalles de tu reserva:
+- Clase: {clase.nombre}
+- Fecha y hora: {clase.fecha.strftime('%d/%m/%Y a las %H:%M')}
+- Cupos disponibles: {cupos_disponibles - 1} de {clase.cupos}
+
+Recibirás un correo de confirmación una vez que tu reserva sea aprobada por nuestro equipo.
+
+¡Nos vemos pronto en Leblon Gym! 💪
+
+Saludos,
+Equipo Leblon Gym''',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[correo],
+                fail_silently=False,
+            )
+        except Exception as e:
+            # Si falla el envío de correo, continuar con el flujo
+            pass
+
+        return render(request, 'reserva_pendiente.html', {
+            'clase': clase,
+            'reserva': reserva,
+            'cupos_disponibles': cupos_disponibles - 1
+        })
+
+    # Contar cupos disponibles para mostrar en el formulario
+    reservas_existentes = Reserva.objects.filter(clase=clase).count()
+    cupos_disponibles = clase.cupos - reservas_existentes
+    
+    return render(request, 'agendar.html', {
+        'clase': clase,
+        'cupos_disponibles': cupos_disponibles
+    })
