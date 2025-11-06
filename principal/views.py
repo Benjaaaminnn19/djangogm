@@ -84,45 +84,48 @@ def agendar_clase(request, clase_id):
         })
 
     if request.method == 'POST':
-        nombre = request.POST.get('nombre')
-        correo = request.POST.get('correo')
-
-        if not nombre or not correo:
-            return render(request, 'agendar.html', {
-                'clase': clase,
-                'error': 'Por favor completa todos los campos'
-            })
-
-        # Contar reservas aprobadas o en espera
-        reservas_existentes = Reserva.objects.filter(clase=clase).count()
-        cupos_disponibles = clase.cupos - reservas_existentes
-
-        if reservas_existentes >= clase.cupos:
-            # No hay cupos disponibles - solo mostrar página sin enviar correo
-            return render(request, 'sin_cupos.html', {
-                'clase': clase,
-                'cupos_disponibles': 0
-            })
-
-        # Crear la reserva (por aprobar)
         try:
-            reserva = Reserva.objects.create(clase=clase, nombre=nombre, correo=correo)
-        except Exception as e:
-            logger.error(f"Error al crear reserva: {str(e)}")
-            return render(request, 'agendar.html', {
-                'clase': clase,
-                'error': 'Hubo un error al crear la reserva. Por favor intenta nuevamente.'
-            })
-        
-        # Enviar correo confirmando que la reserva está pendiente
-        correo_enviado = False
-        try:
-            # Usar el email configurado o uno por defecto
-            from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@gimnasioleblon.com')
+            nombre = request.POST.get('nombre', '').strip()
+            correo = request.POST.get('correo', '').strip()
+
+            if not nombre or not correo:
+                return render(request, 'agendar.html', {
+                    'clase': clase,
+                    'cupos_disponibles': clase.cupos - Reserva.objects.filter(clase=clase).count(),
+                    'error': 'Por favor completa todos los campos'
+                })
+
+            # Contar reservas aprobadas o en espera
+            reservas_existentes = Reserva.objects.filter(clase=clase).count()
+            cupos_disponibles = clase.cupos - reservas_existentes
+
+            if reservas_existentes >= clase.cupos:
+                # No hay cupos disponibles - solo mostrar página sin enviar correo
+                return render(request, 'sin_cupos.html', {
+                    'clase': clase,
+                    'cupos_disponibles': 0
+                })
+
+            # Crear la reserva (por aprobar)
+            try:
+                reserva = Reserva.objects.create(clase=clase, nombre=nombre, correo=correo)
+            except Exception as e:
+                logger.error(f"Error al crear reserva: {str(e)}", exc_info=True)
+                return render(request, 'agendar.html', {
+                    'clase': clase,
+                    'cupos_disponibles': cupos_disponibles,
+                    'error': f'Hubo un error al crear la reserva: {str(e)}'
+                })
             
-            send_mail(
-                subject=f'Reserva pendiente - {clase.nombre}',
-                message=f'''Hola {nombre},
+            # Enviar correo confirmando que la reserva está pendiente
+            correo_enviado = False
+            try:
+                # Usar el email configurado o uno por defecto
+                from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@gimnasioleblon.com')
+                
+                send_mail(
+                    subject=f'Reserva pendiente - {clase.nombre}',
+                    message=f'''Hola {nombre},
 
 ¡Gracias por agendar tu clase!
 
@@ -139,27 +142,39 @@ Recibirás un correo de confirmación una vez que tu reserva sea aprobada por nu
 
 Saludos,
 Equipo Leblon Gym''',
-                from_email=from_email,
-                recipient_list=[correo],
-                fail_silently=True,  # No falla si hay error de correo
-            )
-            correo_enviado = True
-            logger.info(f"Correo enviado exitosamente a {correo} para reserva {reserva.id}")
-        except Exception as e:
-            # Si falla el envío de correo, registrar el error pero continuar
-            logger.error(f"Error al enviar correo a {correo}: {str(e)}")
-            correo_enviado = False
+                    from_email=from_email,
+                    recipient_list=[correo],
+                    fail_silently=True,  # No falla si hay error de correo
+                )
+                correo_enviado = True
+                logger.info(f"Correo enviado exitosamente a {correo} para reserva {reserva.id}")
+            except Exception as e:
+                # Si falla el envío de correo, registrar el error pero continuar
+                logger.error(f"Error al enviar correo a {correo}: {str(e)}", exc_info=True)
+                correo_enviado = False
 
-        return render(request, 'reserva_pendiente.html', {
-            'clase': clase,
-            'reserva': reserva,
-            'cupos_disponibles': cupos_disponibles - 1,
-            'correo_enviado': correo_enviado
-        })
+            return render(request, 'reserva_pendiente.html', {
+                'clase': clase,
+                'reserva': reserva,
+                'cupos_disponibles': cupos_disponibles - 1,
+                'correo_enviado': correo_enviado
+            })
+        except Exception as e:
+            # Capturar cualquier error no previsto
+            logger.error(f"Error inesperado en agendar_clase: {str(e)}", exc_info=True)
+            return render(request, 'agendar.html', {
+                'clase': clase,
+                'cupos_disponibles': clase.cupos - Reserva.objects.filter(clase=clase).count(),
+                'error': f'Hubo un error inesperado. Por favor intenta nuevamente. Error: {str(e)}'
+            })
 
     # Contar cupos disponibles para mostrar en el formulario
-    reservas_existentes = Reserva.objects.filter(clase=clase).count()
-    cupos_disponibles = clase.cupos - reservas_existentes
+    try:
+        reservas_existentes = Reserva.objects.filter(clase=clase).count()
+        cupos_disponibles = clase.cupos - reservas_existentes
+    except Exception as e:
+        logger.error(f"Error al contar cupos: {str(e)}")
+        cupos_disponibles = clase.cupos
     
     return render(request, 'agendar.html', {
         'clase': clase,
