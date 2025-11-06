@@ -4,10 +4,14 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.views import View
 import json
+import logging
 from .models import Lead
 from django.core.mail import send_mail
 from django.conf import settings
 from .models import Clase, Reserva
+
+# Configurar logger
+logger = logging.getLogger(__name__)
 
 # Create your views here.
 
@@ -69,7 +73,15 @@ def agendar_clase(request, clase_id):
     try:
         clase = Clase.objects.get(id=clase_id)
     except Clase.DoesNotExist:
-        return render(request, 'error.html', {'mensaje': 'La clase no existe'})
+        logger.error(f"Intento de agendar clase inexistente con ID: {clase_id}")
+        return render(request, 'agendar.html', {
+            'error': 'La clase seleccionada no existe.'
+        })
+    except Exception as e:
+        logger.error(f"Error al obtener clase {clase_id}: {str(e)}")
+        return render(request, 'agendar.html', {
+            'error': 'Hubo un error al cargar la información de la clase. Por favor intenta nuevamente.'
+        })
 
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
@@ -93,9 +105,17 @@ def agendar_clase(request, clase_id):
             })
 
         # Crear la reserva (por aprobar)
-        reserva = Reserva.objects.create(clase=clase, nombre=nombre, correo=correo)
+        try:
+            reserva = Reserva.objects.create(clase=clase, nombre=nombre, correo=correo)
+        except Exception as e:
+            logger.error(f"Error al crear reserva: {str(e)}")
+            return render(request, 'agendar.html', {
+                'clase': clase,
+                'error': 'Hubo un error al crear la reserva. Por favor intenta nuevamente.'
+            })
         
         # Enviar correo confirmando que la reserva está pendiente
+        correo_enviado = False
         try:
             send_mail(
                 subject=f'Reserva pendiente - {clase.nombre}',
@@ -118,16 +138,20 @@ Saludos,
 Equipo Leblon Gym''',
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[correo],
-                fail_silently=False,
+                fail_silently=True,  # Cambiar a True para que no falle si hay error de correo
             )
+            correo_enviado = True
+            logger.info(f"Correo enviado exitosamente a {correo} para reserva {reserva.id}")
         except Exception as e:
-            # Si falla el envío de correo, continuar con el flujo
-            pass
+            # Si falla el envío de correo, registrar el error pero continuar
+            logger.error(f"Error al enviar correo a {correo}: {str(e)}")
+            correo_enviado = False
 
         return render(request, 'reserva_pendiente.html', {
             'clase': clase,
             'reserva': reserva,
-            'cupos_disponibles': cupos_disponibles - 1
+            'cupos_disponibles': cupos_disponibles - 1,
+            'correo_enviado': correo_enviado
         })
 
     # Contar cupos disponibles para mostrar en el formulario

@@ -122,10 +122,17 @@
                             </div>
 
                             <!-- Mensaje informativo -->
+                            {% if correo_enviado %}
                             <div class="alert alert-info mb-4">
                                 <i class="fas fa-envelope-open-text me-2"></i>
                                 <strong>¡Revisa tu correo!</strong> Te hemos enviado un email de confirmación a <strong>{{ reserva.correo }}</strong> con todos los detalles de tu reserva.
                             </div>
+                            {% else %}
+                            <div class="alert alert-warning mb-4">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                <strong>Nota:</strong> No pudimos enviar el correo de confirmación a <strong>{{ reserva.correo }}</strong>, pero tu reserva ha sido registrada correctamente. Puedes contactarnos directamente si necesitas más información.
+                            </div>
+                            {% endif %}
 
                             <div class="alert alert-success">
                                 <i class="fas fa-check-circle me-2"></i>

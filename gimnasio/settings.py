@@ -134,10 +134,22 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # email configuracion
+# Para desarrollo, puedes usar el backend de consola para ver los correos en la terminal
+# Cambia EMAIL_BACKEND a 'console' para desarrollo o 'smtp' para producción
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # Descomenta para desarrollo
+
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'benjaminjavier46@gmail.com'
 EMAIL_HOST_PASSWORD = 'Benjamin200623.'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# IMPORTANTE: Para usar Gmail, necesitas:
+# 1. Habilitar "Permitir el acceso de aplicaciones menos seguras" O
+# 2. Usar una "Contraseña de aplicación" de Gmail:
+#    - Ve a tu cuenta de Google → Seguridad
+#    - Habilita la verificación en 2 pasos
+#    - Genera una "Contraseña de aplicación"
+#    - Usa esa contraseña en EMAIL_HOST_PASSWORD

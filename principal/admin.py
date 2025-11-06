@@ -21,6 +21,17 @@ class ClaseAdmin(admin.ModelAdmin):
     list_filter = ('fecha',)
     search_fields = ('nombre',)
     date_hierarchy = 'fecha'
+    list_editable = ('cupos',)  # Permite editar cupos directamente desde la lista
+    
+    fieldsets = (
+        ('Información de la Clase', {
+            'fields': ('nombre',)
+        }),
+        ('Fecha y Cupos', {
+            'fields': ('fecha', 'cupos'),
+            'description': 'Selecciona una fecha y hora futura para que la clase aparezca en la lista disponible.'
+        }),
+    )
     
     def cupos_disponibles(self, obj):
         reservas = Reserva.objects.filter(clase=obj).count()
