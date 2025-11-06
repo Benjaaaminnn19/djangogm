@@ -15,6 +15,27 @@ def home(request):
     """Vista para mostrar la página principal del gimnasio"""
     return render(request, 'prueba.html')
 
+def listar_clases(request):
+    """Vista para listar todas las clases disponibles"""
+    from django.utils import timezone
+    # Obtener clases futuras o del día actual
+    clases = Clase.objects.filter(fecha__gte=timezone.now()).order_by('fecha')
+    
+    # Calcular cupos disponibles para cada clase
+    clases_con_cupos = []
+    for clase in clases:
+        reservas_existentes = Reserva.objects.filter(clase=clase).count()
+        cupos_disponibles = clase.cupos - reservas_existentes
+        clases_con_cupos.append({
+            'clase': clase,
+            'cupos_disponibles': cupos_disponibles,
+            'tiene_cupos': cupos_disponibles > 0
+        })
+    
+    return render(request, 'listar_clases.html', {
+        'clases_con_cupos': clases_con_cupos
+    })
+
 @method_decorator(csrf_exempt, name='dispatch')
 class RegistrarLeadView(View):
     def post(self, request):
