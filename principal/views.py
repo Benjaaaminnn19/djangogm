@@ -117,6 +117,9 @@ def agendar_clase(request, clase_id):
         # Enviar correo confirmando que la reserva está pendiente
         correo_enviado = False
         try:
+            # Usar el email configurado o uno por defecto
+            from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@gimnasioleblon.com')
+            
             send_mail(
                 subject=f'Reserva pendiente - {clase.nombre}',
                 message=f'''Hola {nombre},
@@ -136,9 +139,9 @@ Recibirás un correo de confirmación una vez que tu reserva sea aprobada por nu
 
 Saludos,
 Equipo Leblon Gym''',
-                from_email=settings.DEFAULT_FROM_EMAIL,
+                from_email=from_email,
                 recipient_list=[correo],
-                fail_silently=True,  # Cambiar a True para que no falle si hay error de correo
+                fail_silently=True,  # No falla si hay error de correo
             )
             correo_enviado = True
             logger.info(f"Correo enviado exitosamente a {correo} para reserva {reserva.id}")

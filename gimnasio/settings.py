@@ -134,22 +134,26 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # email configuracion
-# Para desarrollo, puedes usar el backend de consola para ver los correos en la terminal
-# Cambia EMAIL_BACKEND a 'console' para desarrollo o 'smtp' para producción
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # Descomenta para desarrollo
+# Para desarrollo: los correos aparecerán en la consola en lugar de enviarse
+# Para producción: cambia a 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # Modo desarrollo - correos en consola
 
+# Email por defecto (necesario para los correos)
+# DEFAULT_FROM_EMAIL = 'benjaminjavier46@gmail.com'
+
+# Configuración SMTP para Gmail (descomenta cuando configures Gmail correctamente)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'benjaminjavier46@gmail.com'
-EMAIL_HOST_PASSWORD = 'Benjamin200623.'
+EMAIL_HOST_PASSWORD = 'mgvq uhwb ttwk lhxm'  # IMPORTANTE: Usa contraseña de aplicación, no tu contraseña normal
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-# IMPORTANTE: Para usar Gmail, necesitas:
-# 1. Habilitar "Permitir el acceso de aplicaciones menos seguras" O
-# 2. Usar una "Contraseña de aplicación" de Gmail:
-#    - Ve a tu cuenta de Google → Seguridad
-#    - Habilita la verificación en 2 pasos
-#    - Genera una "Contraseña de aplicación"
-#    - Usa esa contraseña en EMAIL_HOST_PASSWORD
+# IMPORTANTE: Para usar Gmail en producción:
+# 1. Ve a https://myaccount.google.com/security
+# 2. Activa la verificación en 2 pasos
+# 3. Ve a "Contraseñas de aplicaciones" y genera una nueva
+# 4. Usa esa contraseña (no tu contraseña normal) en EMAIL_HOST_PASSWORD
+# 5. Cambia EMAIL_BACKEND a 'django.core.mail.backends.smtp.EmailBackend'
+# 6. Descomenta las líneas de arriba y comenta la línea EMAIL_BACKEND de consola

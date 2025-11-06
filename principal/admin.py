@@ -55,9 +55,11 @@ class ReservaAdmin(admin.ModelAdmin):
             old_obj = Reserva.objects.get(pk=obj.pk)
             # Solo enviar correo si se aprueba y antes no estaba aprobado
             if obj.aprobado and not old_obj.aprobado:
-                send_mail(
-                    subject=f'¡Tu reserva fue aprobada! - {obj.clase.nombre}',
-                    message=f'''Hola {obj.nombre},
+                try:
+                    from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@gimnasioleblon.com')
+                    send_mail(
+                        subject=f'¡Tu reserva fue aprobada! - {obj.clase.nombre}',
+                        message=f'''Hola {obj.nombre},
 
 ¡Excelente noticia! Tu reserva para la clase "{obj.clase.nombre}" programada para el {obj.clase.fecha.strftime('%d/%m/%Y a las %H:%M')} ha sido aprobada.
 
@@ -69,9 +71,12 @@ Detalles de tu reserva confirmada:
 
 Saludos,
 Equipo Leblon Gym''',
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[obj.correo],
-                    fail_silently=False,
-                )
+                        from_email=from_email,
+                        recipient_list=[obj.correo],
+                        fail_silently=True,  # No falla si hay error de correo
+                    )
+                except Exception as e:
+                    # Si falla el correo, solo registrar el error pero continuar
+                    pass
         # Guardar el modelo (tanto para cambios como para nuevos)
         super().save_model(request, obj, form, change)
