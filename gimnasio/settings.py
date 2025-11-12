@@ -179,13 +179,6 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'benjaminjavier46@gmail.com'
-EMAIL_HOST_PASSWORD = 'mgvq uhwb ttwk lhxm'  # IMPORTANTE: Usa contraseña de aplicación, no tu contraseña normal
+EMAIL_HOST_PASSWORD = 'mgvq uhwb ttwk lhxm'  # IMPORTANTE: Usar contraseña de aplicación, no tu contraseña normal
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-# IMPORTANTE: Para usar Gmail en producción:
-# 1. Ve a https://myaccount.google.com/security
-# 2. Activa la verificación en 2 pasos
-# 3. Ve a "Contraseñas de aplicaciones" y genera una nueva
-# 4. Usa esa contraseña (no tu contraseña normal) en EMAIL_HOST_PASSWORD
-# 5. Cambia EMAIL_BACKEND a 'django.core.mail.backends.smtp.EmailBackend'
-# 6. Descomenta las líneas de arriba y comenta la línea EMAIL_BACKEND de consola
