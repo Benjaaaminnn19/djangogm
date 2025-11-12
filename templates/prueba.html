@@ -9,29 +9,14 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="{% static 'js/main.js' %}"></script>
     
 </head>
 <body style="margin: 0; padding: 0;">
 
   
-    <!-- Header -->
-       <header class="spartan-hero-section" style="
-           background: url('{% static 'img/img3.png' %}');
-           background-size: cover;
-           background-position: center;
-           background-repeat: no-repeat;
-           height: 70vh;
-           max-height: 70vh;
-           display: flex;
-           align-items: center;
-           position: relative;
-           overflow: hidden;
-           margin: 0;
-           padding: 0;
-           width: 100%;
-           left: 0;
-           right: 0;
-       ">
+      <!-- Header -->
+        <header class="spartan-hero-section">
        <!-- Logo -->
        <img src="{% static 'img/logo.jpg' %}" alt="Logo Gimnasio Leblon" class="logo-absolute">
        
@@ -341,9 +326,9 @@
             </ul>
           </div>
           <div class="card-footer text-center">
-            <a href="#contacto" class="btn btn-primary">
+            <button type="button" class="btn btn-plan-azul" data-bs-toggle="modal" data-bs-target="#modalComprarPlan" onclick="abrirModalPlan('Plan Azul', 29000, 14000)">
               <i class="fas fa-check me-2"></i>Elegir Plan
-            </a>
+            </button>
           </div>
         </div>
       </div>
@@ -369,9 +354,9 @@
             </ul>
           </div>
           <div class="card-footer text-center">
-            <a href="#contacto" class="btn btn-warning">
+            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalComprarPlan" onclick="abrirModalPlan('Plan Amarillo', 32000, 14000)">
               <i class="fas fa-check me-2"></i>Elegir Plan
-            </a>
+            </button>
           </div>
         </div>
       </div>
@@ -398,9 +383,9 @@
             </ul>
           </div>
           <div class="card-footer text-center">
-            <a href="#contacto" class="btn btn-success">
+            <button type="button" class="btn btn-plan-verde" data-bs-toggle="modal" data-bs-target="#modalComprarPlan" onclick="abrirModalPlan('Plan Verde', 38000, 14000)">
               <i class="fas fa-check me-2"></i>Elegir Plan
-            </a>
+            </button>
           </div>
         </div>
       </div>
@@ -485,48 +470,6 @@
    
 
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4 mb-4">
-                    <img src="{% static 'img/logo.jpg' %}" alt="Logo" width="120" class="mb-3">
-                    <p>Transformando vidas a través del fitness desde 2019.</p>
-                    <div class="social-icons">
-                        <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-white me-3"><i class="fab fa-tiktok"></i></a>
-                        <a href="#" class="text-white"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-4 mb-4">
-                    <h5 class="mb-3">HORARIO</h5>
-                    <ul class="list-unstyled footer-links">
-                        <li class="mb-2"><strong>Lunes-Viernes:</strong> 9:00 - 23:00 hrs</li>
-                        <li class="mb-2"><strong>Sábados:</strong> 9:00 - 22:00 hrs</li>
-                        <li><strong>Domingos:</strong> 9:00 - 13:00 hrs</li>
-                    </ul>
-                </div>
-                <div class="col-lg-4 mb-4">
-                    <h5 class="mb-3">CONTACTO</h5>
-                    <ul class="list-unstyled footer-links">
-                        <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i> Av. Granaderos 3037, 1393024 Calama, Antofagasta </li>
-                        <li class="mb-2"><i class="fas fa-phone-alt me-2"></i> +56 9 4953 1978</li>
-                        <li><i class="fas fa-envelope me-2"></i> contacto@gimnasioleblon.cl</li>
-                    </ul>
-                </div>
-            </div>
-            <hr class="my-4 bg-light">
-            <div class="row">
-                <div class="col-md-6 text-center text-md-start">
-                    <p class="small mb-0">&copy; 2023 Gimnasio Leblon. Todos los derechos reservados.</p>
-                </div>
-                <div class="col-md-6 text-center text-md-end">
-                    <p class="small mb-0">Desarrollado por Benjamin Rojas</p>
-                </div>
-            </div>
-        </div>
-    </footer>
     <!-- Sección Contacto Mejorada -->
 <section id="contacto" class="py-5 bg-light">
   <div class="container">
@@ -732,19 +675,16 @@
       </div>
     </div>
 
-    <!-- CTA Final -->
+    <!-- Instagram CTA -->
     <div class="text-center mt-5">
       <div class="alert alert-primary border-0 shadow-sm" role="alert">
         <h5 class="alert-heading mb-2">
-          <i class="fas fa-star me-2"></i>¡No esperes más!
+          <i class="fab fa-instagram me-2"></i>¡Síguenos en Instagram!
         </h5>
-        <p class="mb-3">Únete a nuestra comunidad fitness y comienza tu transformación hoy mismo.</p>
-        <div class="d-flex justify-content-center gap-3 flex-wrap">
-          <a href="#planes" class="btn btn-primary btn-lg">
-            <i class="fas fa-dumbbell me-2"></i>Ver Planes
-          </a>
-          <a href="https://wa.me/56949531978" target="_blank" class="btn btn-success btn-lg">
-            <i class="fab fa-whatsapp me-2"></i>WhatsApp Directo
+        <p class="mb-3">Únete a nuestra comunidad fitness y mantente al día con nuestros consejos, rutinas y promociones.</p>
+        <div class="d-flex justify-content-center">
+          <a href="https://www.instagram.com/lebloncalama/" target="_blank" class="btn btn-lg" style="background: linear-gradient(45deg, #E4405F, #C13584); border: none; color: white; border-radius: 50px; padding: 12px 30px; font-weight: 600;">
+            <i class="fab fa-instagram me-2"></i>@lebloncalama
           </a>
         </div>
       </div>
@@ -755,807 +695,7 @@
     <!-- WhatsApp -->
     <a href="https://wa.me/56949531978" class="whatsapp-float" target="_blank">
         <i class="fab fa-whatsapp"></i>
-    </a>
-    <script>
-  document.querySelectorAll('a.nav-link[href^="#"]').forEach(link => {
-    link.addEventListener('click', e => {
-      e.preventDefault();
-      const destino = document.querySelector(link.getAttribute('href'));
-      if (destino) destino.scrollIntoView({ behavior: 'smooth' });
-    });
-  });
-</script>
-
-<!-- En tu archivo principal (index.html), justo antes de cerrar </body> -->
-<script>
-  document.querySelectorAll('a[href="tienda.html"]').forEach(link => {
-    link.addEventListener('click', function(e) {
-      e.preventDefault();
-      document.body.classList.add('fade-out');
-      setTimeout(() => {
-        window.location.href = this.href;
-      }, 500); // tiempo igual al de la animación
-    });
-  });
-</script>
-
-<style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-
-  html, body {
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 100%;
-    overflow-x: hidden;
-  }
-
-  body {
-    background: #e8e9ea !important;
-  }
-
-  /* Eliminar márgenes y padding del header */
-  .spartan-hero-section {
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    height: 70vh !important;
-    max-height: 70vh !important;
-    min-height: 70vh !important;
-    overflow: hidden !important;
-    position: relative !important;
-    left: 0 !important;
-    right: 0 !important;
-  }
-
-  /* Asegurar que el contenedor dentro del header no agregue padding */
-  .spartan-hero-section .container {
-    padding-left: 15px;
-    padding-right: 15px;
-  }
-
-  .bg-light {
-    background-color: #e8e9ea !important;
-  }
-
-  section {
-    background-color: #e8e9ea !important;
-  }
-
-  .py-5 {
-    background-color: #e8e9ea !important;
-  }
-
-  /* Arreglar el contraste del texto en secciones con fondo claro */
-  #inicio h2,
-  #inicio p,
-  #inicio .lead,
-  #inicio span,
-  #promociones h2,
-  #promociones p,
-  #promociones .lead,
-  section.bg-light h2,
-  section.bg-light p,
-  section.bg-light .lead,
-  section.bg-light span,
-  section.bg-light h5,
-  section:not(.spartan-hero-section) h2,
-  section:not(.spartan-hero-section) p,
-  section:not(.spartan-hero-section) .lead {
-    color: #212529 !important;
-  }
-
-  /* Asegurar que el texto en secciones sin fondo oscuro sea oscuro */
-  section.py-5:not(.spartan-hero-section) h2,
-  section.py-5:not(.spartan-hero-section) p,
-  section.py-5:not(.spartan-hero-section) .lead {
-    color: #212529 !important;
-  }
-
-  /* Asegurar que el footer tenga texto blanco visible */
-  footer {
-    background-color: #f57c00 !important;
-    color: white !important;
-  }
-
-  footer * {
-    color: white !important;
-  }
-
-  footer h5,
-  footer p,
-  footer li,
-  footer .footer-links,
-  footer .footer-links li,
-  footer .small,
-  footer i,
-  footer strong {
-    color: white !important;
-  }
-
-  footer .social-icons a {
-    color: white !important;
-  }
-
-  footer .social-icons a:hover {
-    color: rgba(255,255,255,0.8) !important;
-  }
-
-  /* Logo más pequeño */
-  .logo-absolute {
-    position: absolute !important;
-    width: 50px !important;
-    height: 50px !important;
-    max-width: 50px !important;
-    max-height: 50px !important;
-    top: 8px !important;
-    left: 8px !important;
-    right: auto !important;
-    object-fit: contain !important;
-    z-index: 1000 !important;
-    border-radius: 50% !important;
-  }
-
-  /* Forzar color oscuro en textos de secciones con fondo claro */
-  #inicio h2, #inicio h3, #inicio h4, #inicio h5, #inicio h6,
-  #inicio p, #inicio .lead, #inicio span:not(.text-success):not(.text-danger):not(.text-warning):not(.text-info),
-  #promociones h2, #promociones h3, #promociones h4, #promociones h5, #promociones h6,
-  #promociones p, #promociones .lead,
-  section.bg-light h2, section.bg-light h3, section.bg-light h4, section.bg-light h5, section.bg-light h6,
-  section.bg-light p, section.bg-light .lead,
-  section.py-5:not(.spartan-hero-section) h2,
-  section.py-5:not(.spartan-hero-section) h3,
-  section.py-5:not(.spartan-hero-section) h4,
-  section.py-5:not(.spartan-hero-section) h5,
-  section.py-5:not(.spartan-hero-section) h6,
-  section.py-5:not(.spartan-hero-section) p,
-  section.py-5:not(.spartan-hero-section) .lead {
-    color: #212529 !important;
-  }
-
-  .producto-promo {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .producto-promo:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
-  }
-
-  /* Estilos adicionales del header (ya consolidados arriba) */
-
-  .spartan-hero-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: inherit;
-    background-size: cover !important;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
-    z-index: 0;
-  }
-
-  .spartan-hero-section::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 1;
-  }
-
-  .fade-out {
-    opacity: 0;
-    transition: opacity 0.5s ease-in;
-  }
-
-  /* Estilos para el header con imagen de guerrero */
-  .spartan-hero-section {
-    background-repeat: no-repeat;
-    background-size: cover;
-    position: relative;
-    overflow: hidden;
-    isolation: isolate;
-    height: 70vh;
-    max-height: 70vh;
-  }
-
-
-  .spartan-hero-section .container {
-    position: relative;
-    z-index: 2;
-  }
-
-  .spartan-hero-section h1 {
-    animation: fadeInUp 1s ease-out;
-  }
-
-  .spartan-hero-section p {
-    animation: fadeInUp 1s ease-out 0.3s both;
-  }
-
-  .spartan-hero-section .d-flex {
-    animation: fadeInUp 1s ease-out 0.6s both;
-  }
-
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  /* Animaciones adicionales */
-  @keyframes slideInLeft {
-    from {
-      opacity: 0;
-      transform: translateX(-50px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  @keyframes slideInRight {
-    from {
-      opacity: 0;
-      transform: translateX(50px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  @keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {
-      transform: translateY(0);
-    }
-    40% {
-      transform: translateY(-10px);
-    }
-    60% {
-      transform: translateY(-5px);
-    }
-  }
-
-  @keyframes pulse {
-    0% {
-      transform: scale(1);
-    }
-    50% {
-      transform: scale(1.05);
-    }
-    100% {
-      transform: scale(1);
-    }
-  }
-
-  @keyframes rotate {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
-  @keyframes float {
-    0%, 100% {
-      transform: translateY(0px);
-    }
-    50% {
-      transform: translateY(-10px);
-    }
-  }
-
-  @keyframes glow {
-    0%, 100% {
-      box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
-    }
-    50% {
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.6), 0 0 30px rgba(255, 255, 255, 0.4);
-    }
-  }
-
-  /* Clases de animación */
-  .animate-slide-in-left {
-    animation: slideInLeft 1s ease-out both;
-  }
-
-  .animate-slide-in-right {
-    animation: slideInRight 1s ease-out both;
-  }
-
-  .animate-fade-in-up {
-    animation: fadeInUp 1s ease-out both;
-  }
-
-  .animate-pulse {
-    animation: pulse 2s infinite;
-  }
-
-  .animate-bounce {
-    animation: bounce 2s infinite;
-  }
-
-  .animate-float {
-    animation: float 3s ease-in-out infinite;
-  }
-
-  .animate-rotate {
-    animation: rotate 4s linear infinite;
-  }
-
-  .animate-glow {
-    animation: glow 2s ease-in-out infinite;
-  }
-
-  .animate-hover-lift {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .animate-hover-lift:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.2) !important;
-  }
-
-  /* Animaciones de scroll */
-  .animate-on-scroll {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.6s ease;
-  }
-
-  .animate-on-scroll.animated {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* Efectos especiales */
-  .animate-text-glow {
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
-    animation: glow 2s ease-in-out infinite;
-  }
-
-  .animate-border-glow {
-    border: 2px solid transparent;
-    background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
-    background-size: 400% 400%;
-    animation: gradientShift 3s ease infinite;
-  }
-
-  @keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-
-  /* Efectos de hover mejorados para botones */
-  .spartan-hero-section .btn {
-    position: relative;
-    overflow: hidden;
-  }
-
-  .spartan-hero-section .btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left 0.5s;
-  }
-
-  .spartan-hero-section .btn:hover::before {
-    left: 100%;
-  }
-
-  /* Responsive para móviles */
-  @media (max-width: 768px) {
-    .spartan-hero-section {
-      background-attachment: scroll;
-      min-height: 80vh;
-    }
-    
-    .spartan-hero-section h1 {
-      font-size: 2.5rem !important;
-      letter-spacing: 2px !important;
-    }
-    
-    .spartan-hero-section p {
-      font-size: 1.2rem !important;
-    }
-    
-    .spartan-hero-section .d-flex {
-      flex-direction: column;
-      gap: 1rem !important;
-    }
-    
-    .spartan-hero-section .btn {
-      width: 100%;
-      max-width: 300px;
-      margin: 0 auto;
-    }
-  }
-
-  .modern-navbar {
-    background: linear-gradient(135deg, rgba(255, 152, 0, 0.9), rgba(255, 193, 7, 0.9));
-    backdrop-filter: blur(10px);
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .modern-navbar .navbar-brand {
-    color: white !important;
-    font-size: 1.5rem;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-  }
-
-  .modern-navbar .nav-link {
-    color: rgba(255, 255, 255, 0.95) !important;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-  }
-
-  .modern-navbar .nav-link:hover {
-    color: white !important;
-    transform: translateY(-1px);
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-  }
-
-  .modern-navbar .nav-link.active {
-    background: rgba(255, 255, 255, 0.2) !important;
-    border-radius: 5px;
-    color: white !important;
-  }
-
-  /* Iconos navbar (usuario y carrito) */
-  .navbar-icons .icon-btn {
-    color: rgba(255,255,255,0.95);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 34px;
-    height: 34px;
-    border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.25);
-    transition: all 0.2s ease;
-  }
-
-  .navbar-icons .icon-btn:hover {
-    color: #fff;
-    background: rgba(255,255,255,0.12);
-    transform: translateY(-1px);
-  }
-
-  .navbar-icons .icon-btn i {
-    font-size: 18px;
-  }
-
-  .navbar-icons .cart-badge {
-    position: absolute;
-    top: -6px;
-    right: -8px;
-    background: #d32f2f;
-    color: #fff;
-    font-weight: 700;
-    font-size: 11px;
-    line-height: 1;
-    padding: 4px 6px;
-    border-radius: 999px;
-    border: 2px solid rgba(0,0,0,0.15);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-  }
-
-  /* Estilos para las secciones con transición gradual */
-  .section {
-    padding: 80px 0;
-    transition: all 0.6s ease;
-    position: relative;
-  }
-
-  .section:nth-child(even) {
-    background: linear-gradient(135deg, rgba(47, 79, 79, 0.05) 0%, rgba(70, 130, 180, 0.03) 100%);
-    backdrop-filter: blur(5px);
-  }
-
-  .section:nth-child(odd) {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(248, 249, 250, 1) 100%);
-    backdrop-filter: blur(5px);
-  }
-
-  /* Transición gradual desde el header */
-  .section:first-of-type {
-    background: linear-gradient(135deg, 
-      rgba(255, 152, 0, 0.08) 0%, 
-      rgba(255, 193, 7, 0.04) 30%, 
-      rgba(255, 255, 255, 1) 70%,
-      rgba(255, 255, 255, 1) 100%);
-    padding-top: 80px;
-  }
-
-  /* Estilos para botones armoniosos */
-  .btn-primary {
-    background: linear-gradient(135deg, #8B4513, #A0522D);
-    border: 2px solid #D2691E;
-    border-radius: 50px;
-    padding: 12px 30px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(139, 69, 19, 0.4);
-    color: white;
-  }
-
-  .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(139, 69, 19, 0.6);
-    background: linear-gradient(135deg, #A0522D, #8B4513);
-    border-color: #CD853F;
-    color: white;
-  }
-
-  .btn-outline-primary {
-    border: 2px solid #8B4513;
-    color: #8B4513;
-    border-radius: 50px;
-    padding: 10px 28px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-  }
-
-  .btn-outline-primary:hover {
-    background: linear-gradient(135deg, #8B4513, #A0522D);
-    color: white;
-    border-color: #D2691E;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(139, 69, 19, 0.4);
-  }
-
-  /* Estilos para los planes modernos */
-  .plan-card {
-    border: none;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-    position: relative;
-  }
-
-  .plan-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.15);
-  }
-
-  .plan-card .card-header {
-    padding: 25px 20px;
-    border: none;
-    position: relative;
-  }
-
-  .plan-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 15px;
-  }
-
-  .plan-price {
-    margin-bottom: 10px;
-  }
-
-  .plan-price .currency {
-    font-size: 1.2rem;
-    font-weight: 600;
-    vertical-align: top;
-  }
-
-  .plan-price .amount {
-    font-size: 2.5rem;
-    font-weight: 800;
-    line-height: 1;
-  }
-
-  .plan-price .period {
-    font-size: 1rem;
-    font-weight: 500;
-    opacity: 0.8;
-  }
-
-  .plan-matricula {
-    font-size: 0.9rem;
-    opacity: 0.8;
-    font-weight: 500;
-  }
-
-  .plan-features {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .plan-features li {
-    padding: 10px 0;
-    border-bottom: 1px solid rgba(0,0,0,0.1);
-    display: flex;
-    align-items: center;
-    font-weight: 500;
-  }
-
-  .plan-features li:last-child {
-    border-bottom: none;
-  }
-
-  .plan-features i {
-    margin-right: 10px;
-    font-size: 1rem;
-    width: 16px;
-    text-align: center;
-  }
-
-  .plan-card .card-footer {
-    border: none;
-    background: transparent;
-    padding: 20px;
-  }
-
-  /* Colores de planes */
-  .plan-azul .card-header {
-    background: linear-gradient(135deg, #ff9800 0%, #ffc107 100%);
-    color: white;
-  }
-
-  .plan-amarillo .card-header {
-    background: linear-gradient(135deg, #ffc107 0%, #ffeb3b 100%);
-    color: white;
-  }
-
-  .plan-verde .card-header {
-    background: linear-gradient(135deg, #ff9800 0%, #ff5722 100%);
-    color: white;
-  }
-
-  /* Estilos específicos para la sección de contacto */
-  .contact-form-container .card {
-    border-radius: 15px;
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .contact-form-container .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.1) !important;
-  }
-
-  .contact-info-container .card {
-    border-radius: 12px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .contact-info-container .card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1) !important;
-  }
-
-  .contact-icon {
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(135deg, #8B4513, #A0522D);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.2rem;
-    flex-shrink: 0;
-  }
-
-  .form-control-lg, .form-select-lg {
-    border-radius: 10px;
-    border: 2px solid #e9ecef;
-    transition: all 0.3s ease;
-  }
-
-  .form-control-lg:focus, .form-select-lg:focus {
-    border-color: #8B4513;
-    box-shadow: 0 0 0 0.2rem rgba(139, 69, 19, 0.25);
-  }
-
-  .btn-lg {
-    border-radius: 10px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-  }
-
-  .alert {
-    border-radius: 15px;
-    background: linear-gradient(135deg, rgba(139, 69, 19, 0.1), rgba(160, 82, 45, 0.1));
-    border: none;
-  }
-
-  /* Animaciones para la sección de contacto */
-  .contact-form-container,
-  .contact-info-container {
-    opacity: 0;
-    transform: translateY(30px);
-    animation: fadeInUp 0.8s ease forwards;
-  }
-
-  .contact-info-container {
-    animation-delay: 0.3s;
-  }
-
-  .contact-info-container .card:nth-child(1) {
-    animation: slideInRight 0.6s ease forwards;
-    animation-delay: 0.1s;
-    opacity: 0;
-    transform: translateX(30px);
-  }
-
-  .contact-info-container .card:nth-child(2) {
-    animation: slideInRight 0.6s ease forwards;
-    animation-delay: 0.2s;
-    opacity: 0;
-    transform: translateX(30px);
-  }
-
-  .contact-info-container .card:nth-child(3) {
-    animation: slideInRight 0.6s ease forwards;
-    animation-delay: 0.3s;
-    opacity: 0;
-    transform: translateX(30px);
-  }
-
-  .contact-info-container .card:nth-child(4) {
-    animation: slideInRight 0.6s ease forwards;
-    animation-delay: 0.4s;
-    opacity: 0;
-    transform: translateX(30px);
-  }
-
-  @keyframes slideInRight {
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  /* Responsive para móviles */
-  @media (max-width: 768px) {
-    .contact-icon {
-      width: 40px;
-      height: 40px;
-      font-size: 1rem;
-    }
-    
-    .form-control-lg, .form-select-lg {
-      font-size: 1rem;
-    }
-    
-    .btn-lg {
-      padding: 0.75rem 1.5rem;
-      font-size: 1rem;
-    }
-  }
-</style>
-
-
-
+    </a>    
     <!-- Modal para Agendar Clases -->
     <div class="modal fade" id="modalAgendarClase" tabindex="-1" aria-labelledby="modalAgendarClaseLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -1649,435 +789,91 @@
             </div>
         </div>
     </div>
-
-    <script>
-        // Función para abrir el modal de agendar clase
-        function abrirModalClase(nombreClase) {
-            document.getElementById('nombreClase').value = nombreClase;
-            
-            // Establecer fecha mínima como hoy
-            const hoy = new Date().toISOString().split('T')[0];
-            document.getElementById('fechaClase').min = hoy;
-            
-            // Limpiar formulario
-            document.getElementById('formAgendarClase').reset();
-            document.getElementById('nombreClase').value = nombreClase;
-            
-            // Mostrar modal
-            const modal = new bootstrap.Modal(document.getElementById('modalAgendarClase'));
-            modal.show();
-        }
-
-        // Función para enviar la solicitud de clase
-        function enviarSolicitudClase() {
-            const form = document.getElementById('formAgendarClase');
-            const formData = new FormData(form);
-            
-            // Validar formulario
-            if (!form.checkValidity()) {
-                form.classList.add('was-validated');
-                return;
-            }
-
-            // Recopilar datos
-            const datosClase = {
-                clase: document.getElementById('nombreClase').value,
-                fecha: document.getElementById('fechaClase').value,
-                hora: document.getElementById('horaClase').value,
-                plan: document.getElementById('planCliente').value,
-                nombre: document.getElementById('nombreCliente').value,
-                telefono: document.getElementById('telefonoCliente').value,
-                email: document.getElementById('emailCliente').value,
-                comentarios: document.getElementById('comentariosClase').value
-            };
-
-            // Simular envío (aquí podrías integrar con tu backend)
-            console.log('Solicitud de clase:', datosClase);
-            
-            // Mostrar mensaje de confirmación
-            alert('¡Solicitud enviada exitosamente!\n\nTe contactaremos pronto para confirmar tu reserva.\n\nGracias por elegir Leblon Fitness.');
-            
-            // Cerrar modal
-            const modal = bootstrap.Modal.getInstance(document.getElementById('modalAgendarClase'));
-            modal.hide();
-            
-            // Limpiar formulario
-            form.reset();
-        }
-
-        // Configurar fecha mínima cuando se abre el modal
-        document.addEventListener('DOMContentLoaded', function() {
-            const fechaInput = document.getElementById('fechaClase');
-            if (fechaInput) {
-                const hoy = new Date().toISOString().split('T')[0];
-                fechaInput.min = hoy;
-            }
-
-            // Animaciones de scroll
-            initScrollAnimations();
-            
-            // Efectos dinámicos adicionales
-            initDynamicEffects();
-        });
-
-        // Función para animaciones de scroll
-        function initScrollAnimations() {
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('animated');
-                    }
-                });
-            }, observerOptions);
-
-            // Observar elementos con animación de scroll
-            document.querySelectorAll('.animate-on-scroll').forEach(el => {
-                observer.observe(el);
-            });
-        }
-
-        // Efectos dinámicos adicionales
-        function initDynamicEffects() {
-            // Efecto parallax en el header
-            window.addEventListener('scroll', () => {
-              const scrolled = window.pageYOffset;
-              const header = document.querySelector('.spartan-hero-section');
-              if (header) {
-                header.style.backgroundPositionY = `${scrolled * 0.4}px`;
-              }
-            });
-
-            // Scroll-based color change effect
-            initScrollColorChange();
-        }
-
-        // Función para el efecto de cambio de color basado en scroll
-        function initScrollColorChange() {
-            // Configuración de colores para la transición - SUAVES Y ELEGANTES
-            const colorConfig = {
-                // Colores iniciales (top) - GRIS CLARO CON TONOS CÁLIDOS
-                start: {
-                    background: '#f8f9fa',
-                    navbar: 'rgba(139, 69, 19, 0.9)',
-                    text: '#6c757d',
-                    primary: '#8B4513',
-                    secondary: '#A0522D',
-                    accent: '#D2691E'
-                },
-                // Colores intermedios (middle) - AZUL SUAVE
-                middle: {
-                    background: '#f0f8ff',
-                    navbar: 'rgba(70, 130, 180, 0.9)',
-                    text: '#4682B4',
-                    primary: '#4682B4',
-                    secondary: '#5F9EA0',
-                    accent: '#87CEEB'
-                },
-                // Colores finales (bottom) - VERDE SUAVE
-                end: {
-                    background: '#f0fff0',
-                    navbar: 'rgba(34, 139, 34, 0.9)',
-                    text: '#228B22',
-                    primary: '#228B22',
-                    secondary: '#32CD32',
-                    accent: '#90EE90'
-                }
-            };
-
-            // Función para interpolar entre colores
-            function interpolateColor(color1, color2, factor) {
-                // Convertir colores hex a RGB
-                function hexToRgb(hex) {
-                    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-                    return result ? {
-                        r: parseInt(result[1], 16),
-                        g: parseInt(result[2], 16),
-                        b: parseInt(result[3], 16)
-                    } : null;
-                }
-
-                // Convertir RGB a hex
-                function rgbToHex(r, g, b) {
-                    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-                }
-
-                const rgb1 = hexToRgb(color1);
-                const rgb2 = hexToRgb(color2);
-
-                if (!rgb1 || !rgb2) return color1;
-
-                const r = Math.round(rgb1.r + (rgb2.r - rgb1.r) * factor);
-                const g = Math.round(rgb1.g + (rgb2.g - rgb1.g) * factor);
-                const b = Math.round(rgb1.b + (rgb2.b - rgb1.b) * factor);
-
-                return rgbToHex(r, g, b);
-            }
-
-            // Función para interpolar colores rgba
-            function interpolateRgbaColor(color1, color2, factor) {
-                // Extraer valores rgba de las cadenas
-                function parseRgba(rgbaString) {
-                    const match = rgbaString.match(/rgba?\((\d+),\s*(\d+),\s*(\d+),\s*([\d.]+)\)/);
-                    if (match) {
-                        return {
-                            r: parseInt(match[1]),
-                            g: parseInt(match[2]),
-                            b: parseInt(match[3]),
-                            a: parseFloat(match[4])
-                        };
-                    }
-                    return null;
-                }
-
-                const rgba1 = parseRgba(color1);
-                const rgba2 = parseRgba(color2);
-
-                if (!rgba1 || !rgba2) return color1;
-
-                const r = Math.round(rgba1.r + (rgba2.r - rgba1.r) * factor);
-                const g = Math.round(rgba1.g + (rgba2.g - rgba1.g) * factor);
-                const b = Math.round(rgba1.b + (rgba2.b - rgba1.b) * factor);
-                const a = rgba1.a + (rgba2.a - rgba1.a) * factor;
-
-                return `rgba(${r}, ${g}, ${b}, ${a})`;
-            }
-
-            // Throttle function para optimizar rendimiento
-            function throttle(func, limit) {
-                let inThrottle;
-                return function() {
-                    const args = arguments;
-                    const context = this;
-                    if (!inThrottle) {
-                        func.apply(context, args);
-                        inThrottle = true;
-                        setTimeout(() => inThrottle = false, limit);
-                    }
-                }
-            }
-
-            // Función principal del efecto de scroll - MÁS SENSIBLE
-            const handleScrollColorChange = throttle(() => {
-                const scrollTop = window.pageYOffset;
-                const documentHeight = document.documentElement.scrollHeight - window.innerHeight;
-                // Hacer el efecto más sensible - empezar más temprano
-                const scrollProgress = Math.min(scrollTop / (documentHeight * 0.8), 1);
-
-                // Determinar qué fase de color estamos en con transiciones más bruscas
-                let currentColors;
-                if (scrollProgress < 0.4) {
-                    // Primera fase: transición de start a middle (más rápida)
-                    const factor = Math.pow(scrollProgress / 0.4, 0.7); // Curva más pronunciada
-                    currentColors = {
-                        background: interpolateColor(colorConfig.start.background, colorConfig.middle.background, factor),
-                        navbar: interpolateRgbaColor(colorConfig.start.navbar, colorConfig.middle.navbar, factor),
-                        text: interpolateColor(colorConfig.start.text, colorConfig.middle.text, factor),
-                        primary: interpolateColor(colorConfig.start.primary, colorConfig.middle.primary, factor),
-                        secondary: interpolateColor(colorConfig.start.secondary, colorConfig.middle.secondary, factor),
-                        accent: interpolateColor(colorConfig.start.accent, colorConfig.middle.accent, factor)
-                    };
-                } else {
-                    // Segunda fase: transición de middle a end (más rápida)
-                    const factor = Math.pow((scrollProgress - 0.4) / 0.6, 0.7); // Curva más pronunciada
-                    currentColors = {
-                        background: interpolateColor(colorConfig.middle.background, colorConfig.end.background, factor),
-                        navbar: interpolateRgbaColor(colorConfig.middle.navbar, colorConfig.end.navbar, factor),
-                        text: interpolateColor(colorConfig.middle.text, colorConfig.end.text, factor),
-                        primary: interpolateColor(colorConfig.middle.primary, colorConfig.end.primary, factor),
-                        secondary: interpolateColor(colorConfig.middle.secondary, colorConfig.end.secondary, factor),
-                        accent: interpolateColor(colorConfig.middle.accent, colorConfig.end.accent, factor)
-                    };
-                }
-
-                // Aplicar cambios de color
-                applyColorChanges(currentColors);
-            }, 8); // Aumentar a ~120fps para más fluidez
-
-            // Función para aplicar los cambios de color - MÁS EXTENSIVA
-            function applyColorChanges(colors) {
-                // Cambiar color de fondo del body con transición suave
-                document.body.style.backgroundColor = colors.background;
-                document.body.style.transition = 'background-color 0.3s ease';
-
-                // Cambiar color de fondo de secciones bg-light
-                document.querySelectorAll('.bg-light').forEach(section => {
-                    section.style.backgroundColor = colors.background + ' !important';
-                    section.style.transition = 'background-color 0.3s ease';
-                });
-
-                // Cambiar color de fondo de secciones py-5
-                document.querySelectorAll('section.py-5').forEach(section => {
-                    section.style.backgroundColor = colors.background + ' !important';
-                    section.style.transition = 'background-color 0.3s ease';
-                });
-
-                // Cambiar color del navbar con efecto suave
-                const navbar = document.querySelector('.modern-navbar');
-                if (navbar) {
-                    navbar.style.background = colors.navbar;
-                    navbar.style.transition = 'background 0.5s ease';
-                    navbar.style.boxShadow = `0 2px 10px ${colors.primary}20`;
-                }
-
-                // Cambiar colores de texto en títulos principales
-                document.querySelectorAll('h1, h2, h3, .section-title').forEach(title => {
-                    title.style.color = colors.text;
-                    title.style.transition = 'color 0.5s ease';
-                    title.style.textShadow = `1px 1px 2px ${colors.primary}15`;
-                });
-
-                // Cambiar colores de botones primarios con gradientes suaves
-                document.querySelectorAll('.btn-primary').forEach(btn => {
-                    btn.style.background = colors.primary;
-                    btn.style.borderColor = colors.secondary;
-                    btn.style.boxShadow = `0 2px 8px ${colors.primary}30`;
-                    btn.style.transition = 'all 0.5s ease';
-                });
-
-                // Cambiar colores de botones outline
-                document.querySelectorAll('.btn-outline-primary').forEach(btn => {
-                    btn.style.borderColor = colors.primary;
-                    btn.style.color = colors.primary;
-                    btn.style.boxShadow = `0 1px 4px ${colors.primary}20`;
-                    btn.style.transition = 'all 0.5s ease';
-                });
-
-                // Cambiar colores de iconos principales con efectos suaves
-                document.querySelectorAll('.feature-icon, .fas.fa-dumbbell').forEach(icon => {
-                    icon.style.color = colors.primary;
-                    icon.style.textShadow = `0 0 5px ${colors.accent}20`;
-                    icon.style.transition = 'all 0.5s ease';
-                });
-
-                // Efecto especial en cards de productos suave
-                document.querySelectorAll('.producto-promo').forEach(card => {
-                    card.style.borderLeft = `3px solid ${colors.primary}`;
-                    card.style.boxShadow = `0 4px 15px ${colors.primary}15`;
-                    card.style.transition = 'all 0.5s ease';
-                });
-
-                // Cambiar colores de enlaces de navegación
-                document.querySelectorAll('.nav-link').forEach(link => {
-                    if (!link.classList.contains('active')) {
-                        link.style.color = colors.text + ' !important';
-                        link.style.transition = 'color 0.3s ease';
-                    }
-                });
-
-                // EFECTOS SUAVES Y ELEGANTES:
-                
-                // Cambiar color de las cards de planes
-                document.querySelectorAll('.plan-card').forEach(card => {
-                    card.style.boxShadow = `0 5px 15px ${colors.primary}20`;
-                    card.style.transition = 'box-shadow 0.5s ease';
-                });
-
-                // Cambiar color de los headers de planes
-                document.querySelectorAll('.plan-card .card-header').forEach(header => {
-                    header.style.background = colors.primary;
-                    header.style.transition = 'background 0.5s ease';
-                });
-
-                // Cambiar color del botón de WhatsApp
-                const whatsappBtn = document.querySelector('.whatsapp-float');
-                if (whatsappBtn) {
-                    whatsappBtn.style.background = colors.primary;
-                    whatsappBtn.style.boxShadow = `0 2px 10px ${colors.primary}30`;
-                    whatsappBtn.style.transition = 'all 0.5s ease';
-                }
-
-                // Efecto suave en las tablas
-                document.querySelectorAll('table thead').forEach(thead => {
-                    thead.style.background = colors.primary;
-                    thead.style.transition = 'background 0.5s ease';
-                });
-
-                // Cambiar color de los modales
-                document.querySelectorAll('.modal-header').forEach(header => {
-                    header.style.background = colors.primary;
-                    header.style.transition = 'background 0.5s ease';
-                });
-
-                // NUEVOS EFECTOS PARA LA SECCIÓN DE CONTACTO:
-                
-                // Cambiar color de los iconos de contacto
-                document.querySelectorAll('.contact-icon').forEach(icon => {
-                    icon.style.background = `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`;
-                    icon.style.transition = 'background 0.5s ease';
-                });
-
-                // Cambiar color del header del formulario de contacto
-                document.querySelectorAll('#contacto .card-header').forEach(header => {
-                    header.style.background = `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`;
-                    header.style.transition = 'background 0.5s ease';
-                });
-
-                // Cambiar color de los botones en la sección de contacto
-                document.querySelectorAll('#contacto .btn').forEach(btn => {
-                    if (btn.classList.contains('btn-primary')) {
-                        btn.style.background = colors.primary;
-                        btn.style.borderColor = colors.secondary;
-                        btn.style.transition = 'all 0.5s ease';
-                    }
-                    if (btn.classList.contains('btn-success')) {
-                        btn.style.background = colors.accent;
-                        btn.style.borderColor = colors.accent;
-                        btn.style.transition = 'all 0.5s ease';
-                    }
-                });
-
-                // Cambiar color del alert final
-                const contactAlert = document.querySelector('#contacto .alert');
-                if (contactAlert) {
-                    contactAlert.style.background = `linear-gradient(135deg, ${colors.primary}20, ${colors.secondary}20)`;
-                    contactAlert.style.transition = 'background 0.5s ease';
-                }
-            }
-
-            // Agregar event listener para scroll
-            window.addEventListener('scroll', handleScrollColorChange);
-
-            // Aplicar colores iniciales
-            handleScrollColorChange();
-        }
-
-            // Efecto de rotación en iconos al hacer hover
-            document.querySelectorAll('.fas').forEach(icon => {
-                icon.addEventListener('mouseenter', () => {
-                    icon.style.animation = 'rotate 0.5s ease-in-out';
-                });
-                icon.addEventListener('animationend', () => {
-                    icon.style.animation = '';
-                });
-            });
-
-            // Efecto de pulso en botones
-            document.querySelectorAll('.btn').forEach(btn => {
-                btn.addEventListener('mouseenter', () => {
-                    btn.style.animation = 'pulse 0.5s ease-in-out';
-                });
-                btn.addEventListener('mouseleave', () => {
-                    btn.style.animation = '';
-                });
-            });
-
-            // Efecto de glow en títulos
-            document.querySelectorAll('h1, h2, h3').forEach(title => {
-                title.addEventListener('mouseenter', () => {
-                    title.classList.add('animate-text-glow');
-                });
-                title.addEventListener('mouseleave', () => {
-                    title.classList.remove('animate-text-glow');
-                });
-            });
-        }
-    </script>
-
+    
+    <!-- Modal para Comprar Plan -->
+    <div class="modal fade" id="modalComprarPlan" tabindex="-1" aria-labelledby="modalComprarPlanLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(135deg, #616161, #757575); color: white;">
+                    <h5 class="modal-title" id="modalComprarPlanLabel">
+                        <i class="fas fa-credit-card me-2"></i>Comprar Plan - Compra Inmediata
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formComprarPlan" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        <input type="hidden" id="planSeleccionado" name="plan">
+                        
+                        <!-- Resumen del Plan -->
+                        <div class="alert alert-info mb-4">
+                            <h5 class="alert-heading mb-2" id="planNombreModal">Plan Seleccionado</h5>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p class="mb-1"><strong>Mensualidad:</strong> <span id="planMensualidad">$0</span></p>
+                                    <p class="mb-0"><strong>Matrícula:</strong> <span id="planMatricula">$0</span></p>
+                                </div>
+                                <div class="text-end">
+                                    <p class="mb-0"><strong>Total:</strong> <span id="planTotal" class="h4 text-primary">$0</span></p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Formulario -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="nombrePlan" class="form-label fw-semibold">
+                                    <i class="fas fa-user me-1"></i>Nombre Completo <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" class="form-control" id="nombrePlan" name="nombre" required>
+                                <div class="invalid-feedback">
+                                    Por favor ingresa tu nombre completo.
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="telefonoPlan" class="form-label fw-semibold">
+                                    <i class="fas fa-phone me-1"></i>Teléfono <span class="text-danger">*</span>
+                                </label>
+                                <input type="tel" class="form-control" id="telefonoPlan" name="telefono" placeholder="+56 9 1234 5678" required>
+                                <div class="invalid-feedback">
+                                    Por favor ingresa tu teléfono.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="emailPlan" class="form-label fw-semibold">
+                                <i class="fas fa-envelope me-1"></i>Correo Electrónico <span class="text-danger">*</span>
+                            </label>
+                            <input type="email" class="form-control" id="emailPlan" name="email" placeholder="tu@email.com" required>
+                            <div class="invalid-feedback">
+                                Por favor ingresa un email válido.
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="mensajePlan" class="form-label fw-semibold">
+                                <i class="fas fa-comment me-1"></i>Mensaje o Comentarios (Opcional)
+                            </label>
+                            <textarea class="form-control" id="mensajePlan" name="mensaje" rows="3" placeholder="Cuéntanos sobre tus objetivos o cualquier información adicional..."></textarea>
+                        </div>
+                        
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <strong>¡Compra Inmediata!</strong> Al completar este formulario, tu plan quedará activado automáticamente. Recibirás un correo de confirmación con los detalles de tu membresía.
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success" onclick="enviarSolicitudPlan()">
+                        <i class="fas fa-check-circle me-2"></i>Confirmar Compra
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- Popup de Registro de Leads -->
     <div class="modal fade" id="popupRegistro" tabindex="-1" aria-labelledby="popupRegistroLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -2164,219 +960,7 @@
     <!-- Notificaciones personalizadas -->
     <div id="notificationContainer" style="position: fixed; top: 20px; right: 20px; z-index: 10000;"></div>
 
-    <script>
-        // Función para mostrar notificaciones personalizadas
-        function mostrarNotificacion(mensaje, tipo = 'success') {
-            const container = document.getElementById('notificationContainer');
-            const notification = document.createElement('div');
-            
-            const bgColor = tipo === 'success' ? '#28a745' : '#dc3545';
-            const icon = tipo === 'success' ? '✓' : '✗';
-            
-            notification.style.cssText = `
-                background: ${bgColor};
-                color: white;
-                padding: 15px 20px;
-                border-radius: 8px;
-                margin-bottom: 10px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                transform: translateX(100%);
-                transition: transform 0.3s ease;
-                max-width: 350px;
-                font-weight: 500;
-            `;
-            
-            notification.innerHTML = `
-                <div style="display: flex; align-items: center;">
-                    <span style="margin-right: 10px; font-size: 1.2rem;">${icon}</span>
-                    <span>${mensaje}</span>
-                </div>
-            `;
-            
-            container.appendChild(notification);
-            
-            // Animar entrada
-            setTimeout(() => {
-                notification.style.transform = 'translateX(0)';
-            }, 100);
-            
-            // Remover después de 5 segundos
-            setTimeout(() => {
-                notification.style.transform = 'translateX(100%)';
-                setTimeout(() => {
-                    if (notification.parentNode) {
-                        notification.parentNode.removeChild(notification);
-                    }
-                }, 300);
-            }, 5000);
-        }
-
-        // Función para enviar registro de lead
-        async function enviarRegistroLead(event) {
-            event.preventDefault();
-            
-            const nombre = document.getElementById('nombreLead').value.trim();
-            const email = document.getElementById('emailLead').value.trim();
-            
-            if (!nombre || !email) {
-                mostrarNotificacion('Por favor completa todos los campos', 'error');
-                return;
-            }
-            
-            if (!email.includes('@')) {
-                mostrarNotificacion('Por favor ingresa un email válido', 'error');
-                return;
-            }
-            
-            try {
-                const response = await fetch('/registrar-lead/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || ''
-                    },
-                    body: JSON.stringify({
-                        nombre: nombre,
-                        email: email
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    mostrarNotificacion(data.message, 'success');
-                    // Cerrar popup después de 2 segundos
-                    setTimeout(() => {
-                        const modal = bootstrap.Modal.getInstance(document.getElementById('popupRegistro'));
-                        if (modal) {
-                            modal.hide();
-                        }
-                    }, 2000);
-                } else {
-                    mostrarNotificacion(data.message, 'error');
-                }
-                
-            } catch (error) {
-                console.error('Error:', error);
-                mostrarNotificacion('Error al enviar el registro. Intenta nuevamente.', 'error');
-            }
-        }
-
-        // Mostrar popup después de 3 segundos de cargar la página
-        document.addEventListener('DOMContentLoaded', function() {
-            // Verificar si ya se mostró el popup en esta sesión
-            const popupMostrado = sessionStorage.getItem('popupRegistroMostrado');
-            
-            if (!popupMostrado) {
-                setTimeout(() => {
-                    const popup = new bootstrap.Modal(document.getElementById('popupRegistro'));
-                    popup.show();
-                    sessionStorage.setItem('popupRegistroMostrado', 'true');
-                }, 3000);
-            }
-            
-            // Configurar formulario
-            document.getElementById('formRegistroLead').addEventListener('submit', enviarRegistroLead);
-            
-            // Configurar formulario de contacto
-            configurarFormularioContacto();
-        });
-        
-        // Funcionalidad del Formulario de Contacto
-        function configurarFormularioContacto() {
-            const contactForm = document.getElementById('contactForm');
-            
-            if (contactForm) {
-                contactForm.addEventListener('submit', function(event) {
-                    event.preventDefault();
-                    
-                    // Validar formulario
-                    if (!contactForm.checkValidity()) {
-                        event.stopPropagation();
-                        contactForm.classList.add('was-validated');
-                        return;
-                    }
-                    
-                    // Mostrar spinner
-                    const submitBtn = contactForm.querySelector('button[type="submit"]');
-                    const originalText = submitBtn.innerHTML;
-                    
-                    submitBtn.disabled = true;
-                    submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Enviando... <span class="spinner-border spinner-border-sm ms-2" role="status"></span>';
-                    
-                    // Simular envío (aquí podrías integrar con tu backend)
-                    setTimeout(() => {
-                        // Mostrar mensaje de éxito
-                        mostrarNotificacion('¡Mensaje enviado exitosamente! Te contactaremos pronto.', 'success');
-                        
-                        // Restaurar botón
-                        submitBtn.disabled = false;
-                        submitBtn.innerHTML = originalText;
-                        
-                        // Limpiar formulario
-                        contactForm.reset();
-                        contactForm.classList.remove('was-validated');
-                        
-                        // Preparar mensaje para WhatsApp
-                        const nombre = document.getElementById('nombre').value;
-                        const telefono = document.getElementById('telefono').value;
-                        const email = document.getElementById('email').value;
-                        const asunto = document.getElementById('asunto').value;
-                        const mensaje = document.getElementById('mensaje').value;
-                        
-                        const mensajeWhatsApp = `Hola! Me contacto desde la web del gimnasio:
-
-*Nombre:* ${nombre}
-*Teléfono:* ${telefono}
-*Email:* ${email}
-*Asunto:* ${asunto}
-
-*Mensaje:* ${mensaje}
-
-¡Espero su respuesta pronto!`;
-                        
-                        // Mostrar opción de WhatsApp
-                        if (confirm('¿Te gustaría también enviar el mensaje por WhatsApp para una respuesta más rápida?')) {
-                            window.open(`https://wa.me/56949531978?text=${encodeURIComponent(mensajeWhatsApp)}`, '_blank');
-                        }
-                        
-                    }, 2000);
-                });
-            }
-            
-            // Animaciones de scroll para la sección de contacto
-            const contactSection = document.getElementById('contacto');
-            if (contactSection) {
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            // Activar animaciones
-                            const containers = entry.target.querySelectorAll('.contact-form-container, .contact-info-container');
-                            containers.forEach((container, index) => {
-                                setTimeout(() => {
-                                    container.style.animationPlayState = 'running';
-                                }, index * 200);
-                            });
-                        }
-                    });
-                }, { threshold: 0.1 });
-                
-                observer.observe(contactSection);
-            }
-            
-            // Efectos hover mejorados para las cards de contacto
-            const contactCards = document.querySelectorAll('#contacto .card');
-            contactCards.forEach(card => {
-                card.addEventListener('mouseenter', function() {
-                    this.style.transform = 'translateY(-5px) scale(1.02)';
-                });
-                
-                card.addEventListener('mouseleave', function() {
-                    this.style.transform = 'translateY(0) scale(1)';
-                });
-            });
-        }
-    </script>
+    
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
 </body>

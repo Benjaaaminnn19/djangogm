@@ -37,3 +37,34 @@ class Reserva(models.Model):
 
     def __str__(self):
         return f"{self.nombre} - {self.clase.nombre}"
+
+class SolicitudPlan(models.Model):
+    PLAN_CHOICES = [
+        ('Plan Azul', 'Plan Azul'),
+        ('Plan Amarillo', 'Plan Amarillo'),
+        ('Plan Verde', 'Plan Verde'),
+    ]
+    
+    ESTADO_CHOICES = [
+        ('pendiente', 'Pendiente de Pago'),
+        ('pagado', 'Pagado'),
+        ('activado', 'Activado'),
+        ('cancelado', 'Cancelado'),
+    ]
+    
+    plan = models.CharField(max_length=20, choices=PLAN_CHOICES, verbose_name="Plan")
+    nombre = models.CharField(max_length=100, verbose_name="Nombre Completo")
+    telefono = models.CharField(max_length=20, verbose_name="Teléfono")
+    email = models.EmailField(verbose_name="Correo Electrónico")
+    mensaje = models.TextField(blank=True, null=True, verbose_name="Mensaje o Comentarios")
+    fecha_compra = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de Compra")
+    estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='pagado', verbose_name="Estado")
+    activado = models.BooleanField(default=True, verbose_name="Activado")
+    
+    class Meta:
+        verbose_name = "Compra de Plan"
+        verbose_name_plural = "Compras de Planes"
+        ordering = ['-fecha_compra']
+    
+    def __str__(self):
+        return f"{self.nombre} - {self.plan} - {self.fecha_compra.strftime('%d/%m/%Y')}"
