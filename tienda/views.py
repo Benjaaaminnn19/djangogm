@@ -7,9 +7,19 @@ def tienda(request):
     return render(request, 'tienda.html', {'productos': productos})
 
 def detalle_producto(request, producto_id):
-    """Vista para mostrar el detalle de un producto"""
     producto = get_object_or_404(Producto, id=producto_id)
-    return render(request, 'detalle_producto.html', {'producto': producto})
+
+    # Productos relacionados: misma categoría, excluyendo el actual
+    productos_relacionados = Producto.objects.filter(
+        categoria=producto.categoria,
+        activo=True
+    ).exclude(id=producto_id)[:3]  # máximo 3
+
+    return render(request, 'detalle_producto.html', {
+        'producto': producto,
+        'productos_relacionados': productos_relacionados
+    })
+
 
 def tienda_test(request):
     """Vista de prueba para la tienda"""
