@@ -1,0 +1,4 @@
+{
+    "vscode-ollama.baseUrl": "http://localhost:11434",
+    "vscode-ollama.model": "deepseek-r1:7b"
+}
