@@ -27,6 +27,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['proud-integrity-production.up.railway.app', 'gimnasiolebloncalama.cl']
 CSRF_TRUSTED_ORIGINS = [
     "https://proud-integrity-production.up.railway.app",
+    "https://www.gimnasiolebloncalama.cl"
 ]
 
 
