@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Producto
-
+from django.contrib.humanize.templatetags.humanize import intcomma
 # Register your models here.
 
 @admin.register(Producto)
@@ -11,5 +11,5 @@ class ProductoAdmin(admin.ModelAdmin):
     list_editable = ['precio', 'stock', 'activo']
 
     def precio_clp(self, obj):
-        return f"${obj.precio:,}".replace(",", ".")
+        return f"${intcomma(obj.precio)}"
     precio_clp.short_description = "Precio (CLP)"

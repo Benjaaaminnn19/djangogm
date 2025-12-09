@@ -1,4 +1,6 @@
 {% load static %}
+{% load humanize %}
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -105,7 +107,7 @@
                 <div class="col-lg-9 col-md-8">
                     <div class="row" id="productos-container">
                 {% for producto in productos %}
-                <div class="col-lg-3 col-md-6 mb-4 producto-item" data-categoria="{{ producto.categoria|lower }}" data-precio="{{ producto.precio }}" data-nombre="{{ producto.nombre|lower }}">
+                <div class="col-lg-3 col-md-6 mb-4 producto-item" data-categoria="{{ producto.categoria|lower }}" data-precio="{{ producto.precio|intcomma }}" data-nombre="{{ producto.nombre|lower }}">
                     <div class="producto-card animate-fade-in">
                         <a href="{% url 'detalle_producto' producto.id %}" style="text-decoration: none; color: inherit;">
                             <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="producto-imagen" loading="lazy">
@@ -113,7 +115,7 @@
                                 <h4 class="producto-nombre">{{ producto.nombre }}</h4>
                                 <div class="producto-marca">{{ producto.categoria|title }}</div>
                                 <p class="producto-descripcion">{{ producto.descripcion|truncatewords:15 }}</p>
-                                <div class="producto-precio">${{ producto.precio }}</div>
+                                <div class="producto-precio">${{ producto.precio|intcomma }}</div>
                                 <button class="btn btn-comprar" onclick="event.preventDefault(); agregarAlCarrito('{{ producto.nombre }}')">
                                     <i class="fas fa-shopping-cart me-1"></i>AGREGAR
                       </button>
