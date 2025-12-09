@@ -9,3 +9,8 @@ class ProductoAdmin(admin.ModelAdmin):
     list_filter = ['categoria', 'activo']
     search_fields = ['nombre', 'descripcion']
     list_editable = ['precio', 'stock', 'activo']
+
+    def precio_clp(self, obj):
+        return f"${obj.precio:,.0f} CLP"
+
+    precio_clp.short_description = 'Precio'
