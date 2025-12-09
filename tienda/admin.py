@@ -11,6 +11,5 @@ class ProductoAdmin(admin.ModelAdmin):
     list_editable = ['precio', 'stock', 'activo']
 
     def precio_clp(self, obj):
-        return f"${obj.precio:,.0f} CLP"
-
-    precio_clp.short_description = 'Precio'
+        return f"${obj.precio:,}".replace(",", ".")
+    precio_clp.short_description = "Precio (CLP)"
