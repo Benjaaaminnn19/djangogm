@@ -271,31 +271,31 @@
                                 
                             </tr>
                             <tr>
-                                <td>-<strong>18:00</strong></td>
-                                <td>-</td>
+                                <td><strong>18:00</strong></td>
+                                <td></td>
                                 <td>Body Pump</td>
-                                <td>-</td>
+                                <td></td>
                                 <td>Body Pump</td>
-                                <td>-</td>
+                                <td></td>
                           
                             </tr>
                             <tr>
-                                <td>-<strong>19:00</strong></td>
+                                <td><strong>19:00</strong></td>
                                 <td>Spinning</td>
-                                <td>-</td>
+                                <td></td>
                                 <td>Spinning</td>
-                                <td>-</td>
+                                <td></td>
                                 <td>Spinning</td>
-                                <td>-</td>
+                               
                             </tr>
                             <tr>
                               <td><strong>20:00</strong></td>
                               <td>Funcional</td>
-                              <td>-</td>
+                              <td></td>
                               <td>Funcional</td>
-                              <td>-</td>
+                              <td></td>
                               <td>Funcional</td>
-                              <td>-</td>
+                              
                           </tr>
                         </tbody>
                     </table>
@@ -332,7 +332,7 @@
             </ul>
           </div>
           <div class="card-footer text-center">
-            <button type="button" class="btn btn-plan-azul" data-bs-toggle="modal" data-bs-target="#modalComprarPlan" onclick="abrirModalPlan('Plan Azul', 29000, 14000)">
+            <button type="button" class="btn btn-plan-azul" data-bs-toggle="modal" data-bs-target="#modalComprarPlan" onclick="abrirModalPlan('Plan Azul', 0, 0)">
               <i class="fas fa-check me-2"></i>Elegir Plan
             </button>
           </div>
@@ -358,7 +358,7 @@
             </ul>
           </div>
           <div class="card-footer text-center">
-            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalComprarPlan" onclick="abrirModalPlan('Plan Amarillo', 32000, 14000)">
+            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalComprarPlan" onclick="abrirModalPlan('Plan Amarillo', 0, 0)">
               <i class="fas fa-check me-2"></i>Elegir Plan
             </button>
           </div>
@@ -384,7 +384,7 @@
             </ul>
           </div>
           <div class="card-footer text-center">
-            <button type="button" class="btn btn-plan-verde" data-bs-toggle="modal" data-bs-target="#modalComprarPlan" onclick="abrirModalPlan('Plan Verde', 38000, 14000)">
+            <button type="button" class="btn btn-plan-verde" data-bs-toggle="modal" data-bs-target="#modalComprarPlan" onclick="abrirModalPlan('Plan Verde', 0, 0)">
               <i class="fas fa-check me-2"></i>Elegir Plan
             </button>
           </div>
@@ -820,61 +820,7 @@
                             </div>
                         </div>
                         
-                        <!-- Formulario -->
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="nombrePlan" class="form-label fw-semibold">
-                                    <i class="fas fa-user me-1"></i>Nombre Completo <span class="text-danger">*</span>
-                                </label>
-                                <input type="text" class="form-control" id="nombrePlan" name="nombre" required>
-                                <div class="invalid-feedback">
-                                    Por favor ingresa tu nombre completo.
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="telefonoPlan" class="form-label fw-semibold">
-                                    <i class="fas fa-phone me-1"></i>Teléfono <span class="text-danger">*</span>
-                                </label>
-                                <input type="tel" class="form-control" id="telefonoPlan" name="telefono" placeholder="+56 9 1234 5678" required>
-                                <div class="invalid-feedback">
-                                    Por favor ingresa tu teléfono.
-                                </div>
-                            </div>
-                        </div>
                         
-                        <div class="mb-3">
-                            <label for="emailPlan" class="form-label fw-semibold">
-                                <i class="fas fa-envelope me-1"></i>Correo Electrónico <span class="text-danger">*</span>
-                            </label>
-                            <input type="email" class="form-control" id="emailPlan" name="email" placeholder="tu@email.com" required>
-                            <div class="invalid-feedback">
-                                Por favor ingresa un email válido.
-                            </div>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <label for="mensajePlan" class="form-label fw-semibold">
-                                <i class="fas fa-comment me-1"></i>Mensaje o Comentarios (Opcional)
-                            </label>
-                            <textarea class="form-control" id="mensajePlan" name="mensaje" rows="3" placeholder="Cuéntanos sobre tus objetivos o cualquier información adicional..."></textarea>
-                        </div>
-                        
-                        <div class="alert alert-success">
-                            <i class="fas fa-check-circle me-2"></i>
-                            <strong>¡Compra Inmediata!</strong> Al completar este formulario, tu plan quedará activado automáticamente. Recibirás un correo de confirmación con los detalles de tu membresía.
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-success" onclick="enviarSolicitudPlan()">
-                        <i class="fas fa-check-circle me-2"></i>Confirmar Compra
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
     <!-- Popup de Registro de Leads -->
     <div class="modal fade" id="popupRegistro" tabindex="-1" aria-labelledby="popupRegistroLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered modal-lg">
