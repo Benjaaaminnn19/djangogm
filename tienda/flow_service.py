@@ -14,10 +14,13 @@ class FlowService:
     
     def generate_signature(self, params):
         """Genera la firma para autenticar la petición"""
-        # Ordenar parámetros alfabéticamente
-        sorted_params = sorted(params.items())
-        # Crear string con formato key=value&key=value
-        params_string = urlencode(sorted_params)
+        # No se debe incluir el propio parámetro de firma "s"
+        params_without_s = {k: v for k, v in params.items() if k != 's'}
+        # Ordenar parámetros alfabéticamente por nombre
+        sorted_items = sorted(params_without_s.items())
+        # Crear string con formato key=value&key=value sin urlencode extra,
+        # siguiendo la especificación de Flow
+        params_string = '&'.join(f"{k}={v}" for k, v in sorted_items)
         # Crear firma HMAC-SHA256 (Flow espera el hash en HEX mayúsculas)
         signature = hmac.new(
             self.secret_key.encode(),
