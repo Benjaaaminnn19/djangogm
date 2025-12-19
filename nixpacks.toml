@@ -1,5 +1,6 @@
 [phases.setup]
-nixPkgs = ['python310']
+nixPkgs = ['python310', 'postgresql']
+aptPkgs = ['default-libmysqlclient-dev']
 
 [phases.install]
 cmds = ['pip install -r requirements.txt']
@@ -8,4 +9,7 @@ cmds = ['pip install -r requirements.txt']
 cmds = ['python manage.py collectstatic --noinput']
 
 [start]
-cmd = 'gunicorn gimnasio.wsgi:application --bind 0.0.0.0:$PORT'
+cmd = 'gunicorn gym_leblon.wsgi:application --bind 0.0.0.0:$PORT'
+
+[variables]
+NIXPACKS_NO_MUSL = '1'
