@@ -115,7 +115,7 @@
                                 <h4 class="producto-nombre">{{ producto.nombre }}</h4>
                                 <div class="producto-marca">{{ producto.categoria|title }}</div>
                                 <p class="producto-descripcion">{{ producto.descripcion|truncatewords:15 }}</p>
-                                <div class="producto-precio">${{ producto.precio|intcomma }}</div>
+                                <div class="producto-precio">{{ producto.precio|clp }}</div>
                                 <button class="btn btn-comprar" onclick="event.preventDefault(); agregarAlCarrito('{{ producto.nombre }}')">
                                     <i class="fas fa-shopping-cart me-1"></i>AGREGAR
                       </button>
