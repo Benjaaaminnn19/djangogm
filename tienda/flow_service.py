@@ -25,28 +25,33 @@ class FlowService:
     
     def _generate_signature(self, params):
         """
-        GENERA FIRMA EXACTA según Flow
+        Genera la firma según la especificación de Flow:
+          1) Eliminar el parámetro 's' si existe
+          2) Ordenar alfabéticamente por nombre
+          3) Construir el *mismo* query string que se enviará (urlencode)
+          4) Firmar ese query string con HMAC-SHA256 usando la secret key
         """
         # 1. Remover 's' si existe
         params_to_sign = {k: v for k, v in params.items() if k != 's'}
-        
-        # 2. Ordenar alfabéticamente (Flow es CASE SENSITIVE)
+
+        # 2. Ordenar alfabéticamente
         sorted_params = sorted(params_to_sign.items())
-        
-        # 3. Crear string EXACTO
-        string_to_sign = '&'.join([f"{k}={v}" for k, v in sorted_params])
-        
+
+        # 3. Crear query string EXACTO (mismo formato que se envía a Flow)
+        #    Importante: usar urlencode para que espacios, tildes, etc. coincidan.
+        string_to_sign = urllib.parse.urlencode(sorted_params)
+
         print(f"\n[FIRMA] String para firmar: '{string_to_sign}'")
         print(f"[FIRMA] Longitud string: {len(string_to_sign)}")
         print(f"[FIRMA] Secret Key (completa): {self.secret_key}")
-        
-        # 4. Calcular HMAC (¡ATENCIÓN! Flow requiere UTF-8)
+
+        # 4. Calcular HMAC-SHA256 en UTF-8 y devolver en HEX mayúsculas
         signature = hmac.new(
             self.secret_key.encode('utf-8'),
             string_to_sign.encode('utf-8'),
             hashlib.sha256
         ).hexdigest().upper()
-        
+
         print(f"[FIRMA] Firma generada: {signature}")
         return signature
     
