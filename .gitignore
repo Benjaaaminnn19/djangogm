@@ -1,0 +1,20 @@
+# Configuración sensible (LO MÁS IMPORTANTE)
+.env
+
+# Archivos temporales de Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Entornos virtuales (si creaste uno para instalar requests)
+venv/
+env/
+.venv/
+
+# Archivos de configuración de tu editor
+.vscode/
+.idea/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db

@@ -172,7 +172,7 @@
                         <img src="{{ producto_rel.imagen.url }}" alt="{{ producto_rel.nombre }}" class="related-product-image">
                         <div class="related-product-info">
                             <h5>{{ producto_rel.nombre }}</h5>
-                            <div class="product-price">{{ producto.precio_formateado }}</div>
+                            <div class="product-price">{{ producto.precio_formateado }}</div>   
                             <a href="{% url 'detalle_producto' producto_rel.id %}" class="btn btn-outline-primary btn-sm">
                                 Ver Detalle
                             </a>

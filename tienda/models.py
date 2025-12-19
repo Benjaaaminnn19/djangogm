@@ -26,3 +26,29 @@ class Producto(models.Model):
     
     def __str__(self):
         return self.nombre
+
+class Orden(models.Model):
+    ESTADO_CHOICES = [
+        ('pendiente', 'Pendiente'),
+        ('pagado', 'Pagado'),
+        ('cancelado', 'Cancelado'),
+        ('fallido', 'Fallido'),
+    ]
+    
+    orden_id = models.CharField(max_length=100, unique=True)
+    email = models.EmailField()
+    total = models.IntegerField()
+    estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='pendiente')
+    flow_token = models.CharField(max_length=255, blank=True, null=True)
+    flow_order = models.CharField(max_length=255, blank=True, null=True)
+    productos = models.JSONField(default=list)  # Lista de productos comprados
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_actualizacion = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name = "Orden"
+        verbose_name_plural = "Órdenes"
+        ordering = ['-fecha_creacion']
+    
+    def __str__(self):
+        return f"Orden {self.orden_id} - {self.estado}"

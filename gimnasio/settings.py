@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
-
+from decouple import config
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -22,6 +22,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-j)$i8#vx-^gdg#apoumb9gkb*u6b)=viy(rcm&1=jb@(f+e$l8'
+FLOW_API_KEY = config('FLOWKEY')   
+FLOW_SECRET_KEY = config('FLOWSECRET')
+FLOW_API_URL = config('FLOW_API_URL', default='https://sandbox.flow.cl/api')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
