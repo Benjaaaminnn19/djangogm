@@ -13,9 +13,17 @@
     <link rel="stylesheet" href="{% static 'css/styleTienda.css' %}">
     <script src="{% static 'js/Tienda.js' %}"></script>
     <script>
+        // Forzamos que el botón "Proceder al Pago" lleve al checkout de Django,
+        // incluso si el JS estático del servidor está desactualizado.
         function procederPago() {
-            cerrarCarritoModal();
-            mostrarCheckout();
+            try {
+                if (typeof cerrarCarritoModal === 'function') {
+                    cerrarCarritoModal();
+                }
+            } catch (e) {
+                console.error(e);
+            }
+            window.location.href = "{% url 'iniciar_pago' %}";
         }
     </script>
     
