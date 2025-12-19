@@ -143,7 +143,7 @@
             cards.forEach((card, index) => {
                 card.style.animationDelay = `${index * 0.1}s`;
             });
-  });
+  }); 
 
         // Función para ver el carrito
         function verCarrito() {
@@ -259,7 +259,7 @@
         }
 
         function procederPago() {
-            alert('¡Redirigiendo al proceso de pago! (Funcionalidad en desarrollo)');
+            alert('¡Redirigiendo al proceso de pago!');
         }
 
 
