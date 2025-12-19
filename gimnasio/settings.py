@@ -22,9 +22,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-j)$i8#vx-^gdg#apoumb9gkb*u6b)=viy(rcm&1=jb@(f+e$l8'
-FLOW_API_KEY = config('FLOWKEY')   
-FLOW_SECRET_KEY = config('FLOWSECRET')
+FLOW_API_KEY = config('FLOW_API_KEY')   
+FLOW_SECRET_KEY = config('FLOW_SECRET_KEY')
 FLOW_API_URL = config('FLOW_API_URL', default='https://sandbox.flow.cl/api')
+
+
+if not FLOW_API_KEY or not FLOW_SECRET_KEY:
+    import warnings
+    warnings.warn(
+        "Flow API credentials not configured. Payment functionality will not work.",
+        RuntimeWarning
+    )
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
