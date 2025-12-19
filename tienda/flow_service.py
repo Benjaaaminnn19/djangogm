@@ -12,7 +12,7 @@ class FlowService:
         # Obtener credenciales desde settings
         self.api_key = getattr(settings, 'FLOW_API_KEY', '').strip()
         self.secret_key = getattr(settings, 'FLOW_SECRET_KEY', '').strip()
-        self.base_url = getattr(settings, 'FLOW_API_URL', 'https://www.flow.cl/api').strip()
+        self.base_url = getattr(settings, 'FLOW_API_URL', 'https://sandbox.flow.cl/api').strip()
         
         # Validar credenciales
         if not self.api_key or not self.secret_key:
