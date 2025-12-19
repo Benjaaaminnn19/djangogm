@@ -1,4 +1,4 @@
-# flow_service_final.py
+# flow_service.py - Versión REAL para tu gimnasio
 import hmac
 import hashlib
 import requests
@@ -7,163 +7,100 @@ import urllib.parse
 from django.conf import settings
 
 class FlowService:
-    """Servicio Flow - VERSIÓN VALIDADA"""
+    """Servicio Flow para Gimnasio - Sin complicaciones"""
     
-    def __init__(self, sandbox=False):
-        """
-        sandbox: True para pruebas, False para producción
-        """
-        self.sandbox = sandbox
+    def __init__(self):
+        # Obtener URL base desde settings (definida en .env o Railway)
+        self.base_url = getattr(settings, 'FLOW_BASE_URL', 'https://www.flow.cl/api')
         
-        # Obtener y limpiar credenciales
-        self.api_key = getattr(settings, 'FLOW_API_KEY', '').strip()
-        self.secret_key = getattr(settings, 'FLOW_SECRET_KEY', '').strip()
+        # Tus claves (las mismas siempre)
+        self.api_key = settings.FLOW_API_KEY.strip()
+        self.secret_key = settings.FLOW_SECRET_KEY.strip()
         
-        if not self.api_key or not self.secret_key:
-            raise ValueError("Credenciales de Flow no configuradas")
+        # Debug útil
+        print(f"🔧 FlowService: {self.base_url}")
+        print(f"   Usando API Key: {self.api_key[:8]}...")
         
-        # DEBUG
-        print(f"[FLOW] API Key: {self.api_key[:8]}...")
-        print(f"[FLOW] Sandbox: {self.sandbox}")
-    
-    @property
-    def base_url(self):
-        """URL base según ambiente"""
-        return "https://sandbox.flow.cl/api" if self.sandbox else "https://www.flow.cl/api"
-    
-    def _generate_signature(self, params):
-        """
-        Genera firma HMAC-SHA256 para Flow.
+    def _crear_firma(self, params):
+        """Crea la firma CORRECTA para Flow"""
+        # 1. Quitar 's' si existe
+        params_sin_firma = {k: v for k, v in params.items() if k != 's'}
         
-        IMPORTANTE: Los valores deben estar URL-encoded para la firma,
-        pero NO la firma misma.
-        """
-        # 1. Excluir parámetro 's' si existe
-        params_to_sign = {k: v for k, v in params.items() if k != 's'}
+        # 2. Ordenar A-Z
+        params_ordenados = sorted(params_sin_firma.items())
         
-        # 2. Ordenar alfabéticamente
-        sorted_params = sorted(params_to_sign.items())
+        # 3. Crear string clave=valor_codificado
+        partes = []
+        for clave, valor in params_ordenados:
+            # ¡ESTO ES LO MÁS IMPORTANTE!
+            valor_codificado = urllib.parse.quote(str(valor), safe='')
+            partes.append(f"{clave}={valor_codificado}")
         
-        # 3. Crear string con valores URL-encoded
-        # Flow espera: key=urlencode(value)
-        string_parts = []
-        for key, value in sorted_params:
-            # URL-encode el valor (excepto para la firma misma)
-            encoded_value = urllib.parse.quote(str(value), safe='')
-            string_parts.append(f"{key}={encoded_value}")
+        string_para_firmar = '&'.join(partes)
         
-        string_to_sign = '&'.join(string_parts)
+        # DEBUG: Esto te mostrará EXACTAMENTE qué se está firmando
+        print("\n📄 STRING para FIRMAR:")
+        print(string_para_firmar)
+        print("=" * 50)
         
-        # 4. Calcular HMAC-SHA256
-        signature = hmac.new(
+        # 4. Calcular HMAC
+        firma = hmac.new(
             self.secret_key.encode('utf-8'),
-            string_to_sign.encode('utf-8'),
+            string_para_firmar.encode('utf-8'),
             hashlib.sha256
         ).hexdigest().upper()
         
-        return signature
+        print(f"✅ FIRMA generada: {firma}")
+        return firma
     
-    def create_payment(self, order_data):
-        """
-        Crea un pago en Flow.
+    def crear_pago(self, orden):
+        """Crea pago en Flow - Simple y directo"""
         
-        Args:
-            order_data: dict con:
-                - commerceOrder (str): ID orden única
-                - subject (str): Descripción
-                - amount (int): Monto en CLP
-                - email (str): Email cliente
-                - urlConfirmation (str): URL webhook
-                - urlReturn (str): URL retorno
-                
-        Returns:
-            dict: Respuesta de Flow
-        """
-        # Validar datos requeridos
-        required = ['commerceOrder', 'subject', 'amount', 'email', 
-                   'urlConfirmation', 'urlReturn']
-        for field in required:
-            if field not in order_data:
-                return {
-                    'error': True,
-                    'message': f'Falta campo requerido: {field}'
-                }
-        
-        # 1. Timestamp actual (segundos UNIX)
+        # 1. Preparar parámetros OBLIGATORIOS
         timestamp = str(int(time.time()))
         
-        # 2. Parámetros base (todos como strings)
         params = {
             'apiKey': self.api_key,
-            'commerceOrder': str(order_data['commerceOrder']),
-            'subject': str(order_data['subject']),
+            'commerceOrder': str(orden['commerceOrder']),
+            'subject': str(orden['subject']),
             'currency': 'CLP',
-            'amount': str(order_data['amount']),
-            'email': str(order_data['email']),
-            'urlConfirmation': str(order_data['urlConfirmation']),
-            'urlReturn': str(order_data['urlReturn']),
-            'timestamp': timestamp
+            'amount': str(orden['amount']),  # ¡Como string!
+            'email': str(orden['email']),
+            'urlConfirmation': str(orden['urlConfirmation']),
+            'urlReturn': str(orden['urlReturn']),
+            'timestamp': timestamp,  # ¡NO OLVIDAR!
         }
         
-        # 3. Campos opcionales
-        optional_fields = ['optional', 'paymentMethod', 'timeout']
-        for field in optional_fields:
-            if field in order_data and order_data[field]:
-                params[field] = str(order_data[field])
+        # 2. Generar firma
+        params['s'] = self._crear_firma(params)
         
-        # 4. Generar firma
-        params['s'] = self._generate_signature(params)
-        
-        # 5. Construir URL para GET
-        # Para la URL final, usar quote_plus para mejor legibilidad
-        url_parts = []
-        for key, value in params.items():
-            if key == 's':
-                # La firma ya está en hex, no necesita encoding extra
-                url_parts.append(f"{key}={value}")
+        # 3. Construir URL FINAL
+        partes_url = []
+        for clave, valor in params.items():
+            if clave == 's':
+                partes_url.append(f"{clave}={valor}")
             else:
-                # Usar quote_plus para convertir espacios a +
-                encoded_value = urllib.parse.quote_plus(str(value))
-                url_parts.append(f"{key}={encoded_value}")
+                # Para la URL, usar quote_plus (espacios → +)
+                valor_codificado = urllib.parse.quote_plus(str(valor))
+                partes_url.append(f"{clave}={valor_codificado}")
         
-        query_string = '&'.join(url_parts)
-        url = f"{self.base_url}/payment/create?{query_string}"
+        url_completa = f"{self.base_url}/payment/create?{'&'.join(partes_url)}"
         
-        # 6. Enviar petición GET
+        print(f"\n🌐 URL enviada a Flow (inicio):")
+        print(url_completa[:150] + "...")
+        
+        # 4. Enviar a Flow (usa GET)
         try:
-            response = requests.get(
-                url,
-                timeout=30,
-                headers={
-                    'Accept': 'application/json',
-                    'User-Agent': 'Django-Flow/1.0'
-                }
-            )
+            respuesta = requests.get(url_completa, timeout=30)
+            print(f"\n📨 Respuesta de Flow: {respuesta.status_code}")
             
-            # 7. Procesar respuesta
-            if response.status_code == 200:
-                try:
-                    return response.json()
-                except ValueError:
-                    return {
-                        'error': True,
-                        'message': 'Respuesta JSON inválida de Flow',
-                        'raw': response.text[:500]
-                    }
+            if respuesta.status_code == 200:
+                print("✅ ¡PAGO CREADO EXITOSAMENTE!")
+                return respuesta.json()
             else:
-                # Intentar obtener error específico de Flow
-                error_info = {'status': response.status_code}
-                try:
-                    flow_error = response.json()
-                    error_info.update(flow_error)
-                except:
-                    error_info['raw'] = response.text[:500]
+                print(f"❌ Error {respuesta.status_code}: {respuesta.text}")
+                return {'error': True, 'detalle': respuesta.text}
                 
-                error_info['error'] = True
-                error_info['message'] = 'Error en API Flow'
-                return error_info
-                
-        except requests.exceptions.Timeout:
-            return {'error': True, 'message': 'Timeout conectando a Flow'}
-        except requests.exceptions.RequestException as e:
-            return {'error': True, 'message': f'Error de conexión: {str(e)}'}
+        except Exception as e:
+            print(f"🔥 Error de conexión: {e}")
+            return {'error': True, 'detalle': str(e)}

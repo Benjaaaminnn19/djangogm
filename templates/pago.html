@@ -1,0 +1,42 @@
+<!-- tienda/pago.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pago - Gimnasio Leblon</title>
+</head>
+<body>
+    <h1>💪 Completar Pago - Gimnasio Leblon</h1>
+    
+    <form id="pagoForm">
+        <input type="email" name="email" placeholder="Tu email" required>
+        <input type="hidden" name="total" value="27900"> <!-- Ej: $27.900 -->
+        <input type="hidden" name="carrito" value='[{"producto": "Membresía Mensual", "precio": 27900}]'>
+        
+        <button type="submit">Pagar con Flow</button>
+    </form>
+    
+    <div id="resultado"></div>
+    
+    <script>
+    document.getElementById('pagoForm').onsubmit = async function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const response = await fetch('/iniciar-pago/', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // Redirigir a Flow para pagar
+            window.location.href = data.url_pago + '?token=' + data.token;
+        } else {
+            document.getElementById('resultado').innerHTML = 
+                `<p style="color:red">Error: ${data.mensaje}</p>`;
+        }
+    };
+    </script>
+</body>
+</html>
