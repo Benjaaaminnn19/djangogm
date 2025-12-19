@@ -39,29 +39,23 @@ class FlowServiceFixed:
         return "https://sandbox.flow.cl/api" if self.sandbox else "https://www.flow.cl/api"
     
     def _generate_signature(self, params):
-        """Genera firma HMAC-SHA256 con URL encoding"""
-        # Excluir 's' si existe
+    # Excluir 's'
         params_to_sign = {k: v for k, v in params.items() if k != 's'}
-        
-        # Ordenar alfabéticamente
+
+    # Ordenar alfabéticamente
         sorted_params = sorted(params_to_sign.items())
-        
-        # Crear string con valores URL-encoded
-        string_parts = []
-        for key, value in sorted_params:
-            encoded_value = urllib.parse.quote(str(value), safe='')
-            string_parts.append(f"{key}={encoded_value}")
-        
-        string_to_sign = '&'.join(string_parts)
-        
-        # Calcular firma
-        signature = hmac.new(
-            self.secret_key.encode('utf-8'),
-            string_to_sign.encode('utf-8'),
-            hashlib.sha256
-        ).hexdigest().upper()
-        
+
+    # Crear string base SIN URL ENCODE
+        base_string = "&".join(f"{k}={v}" for k, v in sorted_params)
+        base_string += f"&secretKey={self.secret_key}"
+
+    # SHA256 plano
+        signature = hashlib.sha256(
+            base_string.encode("utf-8")
+        ).hexdigest()
+
         return signature
+
     
     def create_payment(self, order_data):
         """Crea pago en Flow - VERSIÓN CORREGIDA"""
