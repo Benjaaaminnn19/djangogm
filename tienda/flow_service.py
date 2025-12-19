@@ -45,7 +45,7 @@ class FlowService:
             "commerceOrder": str(datos["commerceOrder"]),
             "subject": str(datos["subject"]),
             "currency": "CLP",
-            "amount": int(datos["amount"]),
+            "amount": str(datos["amount"]),  # 🔥 CLAVE
             "email": str(datos["email"]),
             "urlConfirmation": str(datos["urlConfirmation"]),
             "urlReturn": str(datos["urlReturn"]),
@@ -64,9 +64,9 @@ class FlowService:
                 query.append(f"{k}={urllib.parse.quote_plus(str(v))}")
 
         url = f"{self.base_url}/payment/create?" + "&".join(query)
-
         response = requests.get(url, timeout=30)
         return response.json()
+
 
     # ===============================
     # GET PAYMENT STATUS
