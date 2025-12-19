@@ -44,7 +44,8 @@ def iniciar_pago(request):
         result = flow_service.create_payment(order_data)
         
         if 'error' in result:
-            return JsonResponse({'error': result['error']}, status=400)
+            # Devolver toda la respuesta de Flow para ver el detalle del problema
+            return JsonResponse(result, status=400)
         
         # Guardar token de Flow
         orden.flow_token = result.get('token')
