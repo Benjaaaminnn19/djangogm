@@ -63,8 +63,21 @@ class FlowService:
                 data=params,
                 timeout=30
             )
-            response.raise_for_status()
-            return response.json()
+            # Intentamos siempre devolver el JSON de Flow para ver el detalle del error
+            try:
+                data = response.json()
+            except ValueError:
+                data = {'raw_response': response.text}
+
+            if response.status_code != 200:
+                # Adjuntamos código de estado para depuración
+                return {
+                    'error': 'Flow API returned an error',
+                    'status_code': response.status_code,
+                    'data': data,
+                }
+
+            return data
         except requests.exceptions.RequestException as e:
             return {'error': str(e)}
     
