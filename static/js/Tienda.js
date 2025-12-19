@@ -78,11 +78,13 @@
             for (let producto of productos) {
                 const nombreProducto = producto.querySelector('.producto-nombre').textContent;
                 if (nombreProducto === nombre) {
-                    const precio = producto.querySelector('.producto-precio').textContent.replace('$', '');
+                    const precioTexto = producto.querySelector('.producto-precio').textContent;
+                    // Limpiar el precio: quitar $ y puntos, convertir a número
+                    const precio = parseInt(precioTexto.replace(/[$\.]/g, ''));
                     const imagen = producto.querySelector('.producto-imagen').src;
                     return {
                         nombre: nombreProducto,
-                        precio: parseFloat(precio),
+                        precio: precio,
                         imagen: imagen
                     };
                 }
@@ -259,9 +261,86 @@
         }
 
         function procederPago() {
-            alert('¡Redirigiendo al proceso de pago!');
+            cerrarCarritoModal();
+            mostrarCheckout();
         }
-
+        
+        function mostrarCheckout() {
+            // Crear modal de checkout
+            const modal = document.createElement('div');
+            modal.className = 'carrito-modal-overlay';
+            modal.innerHTML = `
+                <div class="carrito-modal" style="max-width: 500px;">
+                    <div class="carrito-modal-header">
+                        <h4><i class="fas fa-lock me-2"></i>Finalizar Compra</h4>
+                        <button class="carrito-cerrar" onclick="cerrarCheckoutModal()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <form method="POST" action="/tienda/pago/iniciar/" id="formCheckout">
+                        <div class="carrito-modal-body">
+                            <div class="mb-3">
+                                <label for="emailCheckout" class="form-label">Email *</label>
+                                <input type="email" class="form-control" id="emailCheckout" name="email" required>
+                                <small class="text-muted">Enviaremos la confirmación a este email</small>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="nombreCheckout" class="form-label">Nombre Completo</label>
+                                <input type="text" class="form-control" id="nombreCheckout" name="nombre">
+                            </div>
+                            
+                            <input type="hidden" name="total" value="${carrito.reduce((total, item) => total + (item.precio * item.cantidad), 0)}">
+                            <input type="hidden" name="productos" value='${JSON.stringify(carrito)}'>
+                            
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>Total a pagar: $${calcularTotal()}</strong>
+                            </div>
+                            
+                            <p class="text-muted small">
+                                <i class="fas fa-shield-alt me-1"></i>
+                                Pago seguro procesado por Flow
+                            </p>
+                        </div>
+                        <div class="carrito-modal-footer">
+                            <button type="button" class="btn btn-secondary" onclick="cerrarCheckoutModal()">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-credit-card me-2"></i>Pagar con Flow
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Obtener CSRF token
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+            if (csrfToken) {
+                const form = modal.querySelector('#formCheckout');
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = 'csrfmiddlewaretoken';
+                csrfInput.value = csrfToken;
+                form.appendChild(csrfInput);
+            }
+            
+            // Mostrar animación
+            setTimeout(() => {
+                modal.classList.add('mostrar');
+            }, 100);
+        }
+        
+        function cerrarCheckoutModal() {
+            const modal = document.querySelector('.carrito-modal-overlay');
+            if (modal) {
+                modal.classList.remove('mostrar');
+                setTimeout(() => {
+                    modal.remove();
+                }, 300);
+            }
+        }   
 
     
    
