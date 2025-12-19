@@ -18,12 +18,12 @@ class FlowService:
         sorted_params = sorted(params.items())
         # Crear string con formato key=value&key=value
         params_string = urlencode(sorted_params)
-        # Crear firma HMAC-SHA256
+        # Crear firma HMAC-SHA256 (Flow espera el hash en HEX mayúsculas)
         signature = hmac.new(
             self.secret_key.encode(),
             params_string.encode(),
             hashlib.sha256
-        ).hexdigest()
+        ).hexdigest().upper()
         return signature
     
     def create_payment(self, order_data):
