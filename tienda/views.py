@@ -68,7 +68,8 @@ def iniciar_pago(request):
                 "optional": f"Orden {orden_id}",
             }
 
-            result = flow_service.create_payment(order_data)
+            result = flow_service.crear_pago(order_data)
+
 
             # 🔴 VALIDACIÓN REAL DE FLOW
             if not result or "url" not in result or "token" not in result:
@@ -144,7 +145,8 @@ def confirmar_pago(request):
         usar_sandbox = getattr(settings, "FLOW_SANDBOX", settings.DEBUG)
         flow_service = FlowService(sandbox=usar_sandbox)
 
-        estado = flow_service.get_payment_status(token)
+        estado = flow_service.obtener_estado_pago(token)
+
 
         if "status" not in estado:
             orden.estado = "error_verificacion"
