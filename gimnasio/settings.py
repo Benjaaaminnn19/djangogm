@@ -22,9 +22,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-j)$i8#vx-^gdg#apoumb9gkb*u6b)=viy(rcm&1=jb@(f+e$l8'
-FLOW_API_KEY = config('FLOW_API_KEY')   
-FLOW_SECRET_KEY = config('FLOW_SECRET_KEY')
-FLOW_API_URL = config('FLOW_API_URL', default='https://sandbox.flow.cl/api')
+FLOW_API_KEY = ('FLOW_API_KEY')   
+FLOW_SECRET_KEY = ('FLOW_SECRET_KEY')
+FLOW_API_URL = ('https://sandbox.flow.cl/api')
 
 
 if not FLOW_API_KEY or not FLOW_SECRET_KEY:
