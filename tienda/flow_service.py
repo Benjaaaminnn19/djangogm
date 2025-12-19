@@ -64,7 +64,7 @@ class FlowService:
         # Timestamp EN SEGUNDOS (no milisegundos)
         timestamp = str(int(time.time()))
         
-        # PARÁMETROS EXACTOS como Flow los espera
+        # PARÁMETROS para payment/create según documentación de Flow
         params = {
             'apiKey': self.api_key,  # ¡CASE SENSITIVE!
             'commerceOrder': str(order_data['commerceOrder']),
@@ -74,7 +74,6 @@ class FlowService:
             'email': str(order_data['email']),
             'urlConfirmation': str(order_data['urlConfirmation']),
             'urlReturn': str(order_data['urlReturn']),
-            'timestamp': timestamp  # ¡OBLIGATORIO!
         }
         
         # Opcionales
