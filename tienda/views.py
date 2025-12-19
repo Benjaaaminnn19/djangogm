@@ -5,27 +5,26 @@ from django.urls import reverse
 from django.conf import settings
 import uuid
 import json
-import time
 
-from .flow_service import FlowService
 from .models import Orden, Producto
+from .flow_service import FlowService
 
 
-# ==============================================
-# UTILIDADES
-# ==============================================
+# =====================================================
+# UTILIDAD
+# =====================================================
 
 def formatear_precio(precio):
-    """Formatea precio al estilo chileno: 27900 -> $27.900"""
+    """27900 -> $27.900"""
     try:
         return f"${int(precio):,}".replace(",", ".")
-    except (ValueError, TypeError):
+    except Exception:
         return f"${precio}"
 
 
-# ==============================================
-# PAGO FLOW
-# ==============================================
+# =====================================================
+# INICIAR PAGO
+# =====================================================
 
 def iniciar_pago(request):
     if request.method == "POST":
@@ -40,7 +39,7 @@ def iniciar_pago(request):
             try:
                 total_int = int(total)
                 if total_int <= 0:
-                    raise ValueError
+                    raise ValueError()
             except ValueError:
                 return JsonResponse({"error": True, "message": "Monto inválido"}, status=400)
 
@@ -51,7 +50,7 @@ def iniciar_pago(request):
                 email=email,
                 total=total_int,
                 productos=productos_json,
-                estado="pendiente"
+                estado="pendiente",
             )
 
             usar_sandbox = getattr(settings, "FLOW_SANDBOX", settings.DEBUG)
@@ -61,55 +60,75 @@ def iniciar_pago(request):
 
             order_data = {
                 "commerceOrder": orden_id,
-                "subject": f"Compra en Gimnasio Leblon - {orden_id}",
+                "subject": f"Compra Gimnasio Leblon - {orden_id}",
                 "amount": total_int,
                 "email": email,
                 "urlConfirmation": f"{base_url}{reverse('confirmar_pago')}",
                 "urlReturn": f"{base_url}{reverse('resultado_pago')}",
+                "optional": f"Orden {orden_id}",
             }
 
             result = flow_service.create_payment(order_data)
 
-            if result.get("error"):
+            # 🔴 VALIDACIÓN REAL DE FLOW
+            if not result or "url" not in result or "token" not in result:
                 orden.estado = "error_flow"
                 orden.save()
 
-                return JsonResponse({
-                    "error": True,
-                    "message": "Error al crear pago en Flow",
-                    "flow_error_code": result.get("code"),
-                    "flow_error_message": result.get("message"),
-                    "orden_id": orden_id
-                }, status=400)
+                return JsonResponse(
+                    {
+                        "error": True,
+                        "message": "Flow no creó el pago",
+                        "flow_response": result,
+                        "orden_id": orden_id,
+                    },
+                    status=400,
+                )
 
-            orden.flow_token = result.get("token")
+            orden.flow_token = result["token"]
             orden.flow_order = result.get("flowOrder")
             orden.save()
 
-            return JsonResponse({
-                "success": True,
-                "url": result.get("url"),
-                "token": result.get("token"),
-                "orden_id": orden_id
-            })
+            return JsonResponse(
+                {
+                    "success": True,
+                    "url": result["url"],
+                    "token": result["token"],
+                    "orden_id": orden_id,
+                }
+            )
 
         except Exception as e:
-            return JsonResponse({"error": True, "message": str(e)}, status=500)
+            return JsonResponse(
+                {"error": True, "message": f"Error interno: {str(e)}"},
+                status=500,
+            )
 
+    # GET
     productos = Producto.objects.filter(activo=True)
-    productos_data = [{
-        "id": p.id,
-        "nombre": p.nombre,
-        "precio": p.precio,
-        "precio_formateado": formatear_precio(p.precio),
-        "imagen": p.imagen.url if p.imagen else ""
-    } for p in productos]
+    productos_data = []
 
-    return render(request, "checkout.html", {
-        "productos_json": json.dumps(productos_data),
-        "DEBUG": settings.DEBUG
-    })
+    for p in productos:
+        productos_data.append(
+            {
+                "id": p.id,
+                "nombre": p.nombre,
+                "precio": p.precio,
+                "precio_formateado": formatear_precio(p.precio),
+                "imagen": p.imagen.url if p.imagen else "",
+            }
+        )
 
+    return render(
+        request,
+        "checkout.html",
+        {"productos_json": json.dumps(productos_data), "DEBUG": settings.DEBUG},
+    )
+
+
+# =====================================================
+# CONFIRMACIÓN FLOW (WEBHOOK)
+# =====================================================
 
 @csrf_exempt
 def confirmar_pago(request):
@@ -117,7 +136,7 @@ def confirmar_pago(request):
     token = data.get("token")
 
     if not token:
-        return JsonResponse({"error": True, "message": "Token no proporcionado"}, status=400)
+        return JsonResponse({"error": True, "message": "Token no recibido"}, status=400)
 
     try:
         orden = Orden.objects.get(flow_token=token)
@@ -125,9 +144,14 @@ def confirmar_pago(request):
         usar_sandbox = getattr(settings, "FLOW_SANDBOX", settings.DEBUG)
         flow_service = FlowService(sandbox=usar_sandbox)
 
-        payment_status = flow_service.get_payment_status(token)
+        estado = flow_service.get_payment_status(token)
 
-        status_code = payment_status.get("status")
+        if "status" not in estado:
+            orden.estado = "error_verificacion"
+            orden.save()
+            return JsonResponse({"error": True, "message": "Error al verificar pago"}, status=400)
+
+        status_code = estado["status"]
 
         if status_code == 2:
             orden.estado = "pagado"
@@ -147,39 +171,52 @@ def confirmar_pago(request):
         return JsonResponse({"error": True, "message": "Orden no encontrada"}, status=404)
 
 
+# =====================================================
+# RESULTADO DEL PAGO
+# =====================================================
+
 def resultado_pago(request):
     token = request.GET.get("token")
 
     if not token:
-        return render(request, "resultado_pago.html", {
-            "error": True,
-            "mensaje": "Token no recibido"
-        })
+        return render(
+            request,
+            "resultado_pago.html",
+            {"error": True, "mensaje": "Token no recibido"},
+        )
 
     try:
         orden = Orden.objects.get(flow_token=token)
 
-        context = {
-            "orden": orden,
-            "exitoso": orden.estado == "pagado",
-            "fallido": orden.estado in ["rechazado", "anulado", "error_flow"],
-            "pendiente": orden.estado == "pendiente",
-            "total_formateado": formatear_precio(orden.total),
-            "productos": json.loads(orden.productos)
-        }
+        try:
+            productos = json.loads(orden.productos)
+        except Exception:
+            productos = []
 
-        return render(request, "resultado_pago.html", context)
+        return render(
+            request,
+            "resultado_pago.html",
+            {
+                "orden": orden,
+                "productos": productos,
+                "exitoso": orden.estado == "pagado",
+                "fallido": orden.estado in ["rechazado", "anulado", "error_flow"],
+                "pendiente": orden.estado == "pendiente",
+                "total_formateado": formatear_precio(orden.total),
+            },
+        )
 
     except Orden.DoesNotExist:
-        return render(request, "resultado_pago.html", {
-            "error": True,
-            "mensaje": "Orden no encontrada"
-        })
+        return render(
+            request,
+            "resultado_pago.html",
+            {"error": True, "mensaje": "Orden no encontrada"},
+        )
 
 
-# ==============================================
+# =====================================================
 # TIENDA
-# ==============================================
+# =====================================================
 
 def tienda(request):
     productos = Producto.objects.filter(activo=True)
@@ -192,15 +229,16 @@ def detalle_producto(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id, activo=True)
     producto.precio_formateado = formatear_precio(producto.precio)
 
-    relacionados = Producto.objects.filter(
-        categoria=producto.categoria,
-        activo=True
-    ).exclude(id=producto_id)[:3]
+    relacionados = (
+        Producto.objects.filter(categoria=producto.categoria, activo=True)
+        .exclude(id=producto_id)[:3]
+    )
 
     for p in relacionados:
         p.precio_formateado = formatear_precio(p.precio)
 
-    return render(request, "detalle_producto.html", {
-        "producto": producto,
-        "productos_relacionados": relacionados
-    })
+    return render(
+        request,
+        "detalle_producto.html",
+        {"producto": producto, "productos_relacionados": relacionados},
+    )
