@@ -1,0 +1,12 @@
+[variables]
+    # Estas variables temporales engañan al instalador de MySQL
+    # para que no busque los secretos reales durante el build.
+    MYSQLDATABASE = "temp_db"
+    MYSQLUSER = "temp_user"
+    MYSQLPASSWORD = "temp_pass"
+    MYSQLHOST = "localhost"
+    MYSQLPORT = "3306"
+
+[phases.setup]
+    # Aseguramos que se instalen las librerías necesarias para mysqlclient
+    aptPkgs = ["default-libmysqlclient-dev", "build-essential", "pkg-config"]
