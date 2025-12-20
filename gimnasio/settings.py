@@ -86,20 +86,22 @@ TEMPLATES = [
 WSGI_APPLICATION = 'gimnasio.wsgi.application'
 
 # Database
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'gym',
-        'USER': 'root',
-        'PASSWORD': '2006',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'NAME': os.environ.get('MYSQLDATABASE'),
+        'USER': os.environ.get('MYSQLUSER'),
+        'PASSWORD': os.environ.get('MYSQLPASSWORD'),
+        'HOST': os.environ.get('MYSQLHOST'),
+        'PORT': os.environ.get('MYSQLPORT'),
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES', time_zone='+00:00'"
         }
-
     }
 }
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
