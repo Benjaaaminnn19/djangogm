@@ -29,11 +29,13 @@
     
 </head>
 <body>
+   
     {% csrf_token %}
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
     <div class="container">
             <a class="navbar-brand text-white" href="/">
+                <img src="{% static 'img/logo.jpg' %}" alt="Logo Gimnasio Leblon" class="logo-absolute">
                 <i class="fas fa-dumbbell me-2"></i>GIMNASIO LEBLON
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -41,14 +43,13 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
+                  
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/#inicio">Inicio</a>
+                        <a class="nav-link text-white" href="/#inicio"><i class="fa-solid fa-house"></i></a>
                     </li>
+                    
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/#planes">Planes</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white fw-bold" href="/tienda/">Tienda</a>
+                        <a class="nav-link text-white fw-bold" href="/tienda/"><i class="fa-solid fa-cart-shopping"></i></a>
                     </li>
                 </ul>
     </div>
@@ -57,8 +58,12 @@
 
     <!-- Header con Banner -->
     <header class="tienda-header">
+        
+        
         <div class="banner-container">
+            
             <img src="{% static 'img/img18.jpg' %}" alt="Banner LEBLON FITNESS" class="banner-image">
+            
             <div class="banner-overlay">
                 <div class="container text-center">
                     <h1 class="display-2 fw-bold mb-4" style="font-family: 'Arial Black', sans-serif; text-transform: uppercase; letter-spacing: 3px;">LEBLON FITNESS</h1>
@@ -224,7 +229,7 @@
             <i class="fas fa-shopping-cart"></i>
             <span id="carrito-contador">0</span>
         </div>
-        <div class="carrito-texto">Ver Carrito</div>
+        
     </div>
 
 </body>

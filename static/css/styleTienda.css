@@ -9,6 +9,7 @@ body, html {
     padding-right: 0;
 }
 
+
 /* Navbar styling */
 .navbar-custom {
     background: #1a1a1a;
@@ -75,6 +76,7 @@ body, html {
     color: white;
     padding: 60px 0;
 }
+
 
 .header-badge {
     background: #8B4513;
@@ -1136,3 +1138,33 @@ body, html {
     font-size: 12px;
     font-weight: bold;
 }
+
+
+
+
+
+.logo-absolute {
+    position: absolute !important;
+    width: 50px !important;
+    height: 50px !important;
+    max-width: 50px !important;
+    max-height: 50px !important;
+    top: 8px !important;
+    left: 8px !important;
+    right: auto !important;
+    object-fit: contain !important;
+    z-index: 1000 !important;
+    border-radius: 50% !important;
+  }
+
+  img {
+    filter: brightness(0.95);
+  }
+
+  /* Excepto imágenes de productos y hero */
+  .producto-promo img,
+  .spartan-hero-section img,
+  .card-img-top img,
+  .logo-absolute {
+    filter: none !important;
+  }

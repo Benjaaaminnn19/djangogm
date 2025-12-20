@@ -40,8 +40,8 @@
     width: 100% !important;
     max-width: 100% !important;
     height: 70vh !important;
-    max-height: 70vh !important;
-    min-height: 70vh !important;
+    max-height: 50vh !important;
+    min-height: 10vh !important;
     overflow: hidden !important;
     position: relative !important;
     left: 0 !important;
@@ -894,4 +894,942 @@
 .whatsapp-float:hover {
   background-color: #128C7E;
   transform: scale(1.05);
+}
+
+/* =====================================================
+   DARK MODE AUTOMÁTICO – VERSIÓN ULTRA AGRESIVA
+   Sobrescribe estilos inline y Bootstrap
+===================================================== */
+
+@media (prefers-color-scheme: dark) {
+
+  /* =====================
+     VARIABLES
+  ====================== */
+  :root {
+    --bg-main: #181818;
+    --bg-section: #1f1f1f;
+    --bg-card: #2a2a2a;
+    --text-main: #eaeaea;
+    --text-muted: #bdbdbd;
+    --border-soft: #404040;
+    --primary: #1abc9c;
+    --primary-soft: #16a085;
+  }
+
+  /* =====================
+     RESET BASE AGRESIVO
+  ====================== */
+  body {
+    background-color: var(--bg-main) !important;
+    color: var(--text-main) !important;
+  }
+
+  /* =====================
+     SECCIONES - Sobrescribir .bg-light
+  ====================== */
+  section,
+  section.py-5,
+  section.bg-light,
+  .section,
+  #inicio,
+  #promociones,
+  #clases,
+  #beneficios,
+  #contacto {
+    background-color: var(--bg-section) !important;
+  }
+
+  section:nth-child(even),
+  section#promociones,
+  section#planes {
+    background-color: #222 !important;
+  }
+
+  /* =====================
+     TODOS LOS TEXTOS - MÁXIMA VISIBILIDAD
+  ====================== */
+  
+  /* Títulos y encabezados - BLANCO PURO */
+  h1, h2, h3, h4, h5, h6,
+  .h1, .h2, .h3, .h4, .h5, .h6,
+  .display-3, .display-4,
+  section h1, section h2, section h3, section h4, section h5, section h6,
+  .section-title,
+  .card-title,
+  .modal-title,
+  .alert-heading,
+  strong, b {
+    color: #ffffff !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  }
+
+  /* Párrafos y texto general - GRIS CLARO */
+  p, span, li, div, label,
+  .lead, .card-text,
+  section p,
+  section .lead,
+  section span,
+  .container p,
+  .container .lead,
+  .col-md-6 p,
+  tbody td,
+  td, th {
+    color: #e0e0e0 !important;
+  }
+
+  /* Texto muted debe ser visible */
+  .text-muted,
+  small,
+  .small {
+    color: #b0b0b0 !important;
+  }
+
+  /* =====================
+     HERO SECTION
+  ====================== */
+  .spartan-hero-section::after {
+    background: rgba(0,0,0,0.65) !important;
+  }
+
+  /* =====================
+     NAVBAR
+  ====================== */
+  .modern-navbar {
+    background: linear-gradient(90deg, #0f2027, #203a43, #2c5364) !important;
+  }
+
+  .navbar-brand,
+  .nav-link {
+    color: #e0e0e0 !important;
+  }
+
+  .nav-link:hover,
+  .nav-link.active {
+    color: var(--primary) !important;
+  }
+
+  /* =====================
+     CARDS - Bootstrap override
+  ====================== */
+  .card,
+  .plan-card,
+  .producto-promo,
+  div.card,
+  div.producto-promo {
+    background-color: var(--bg-card) !important;
+    border: 1px solid var(--border-soft) !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.7) !important;
+  }
+
+  /* Sobrescribir .bg-white en productos */
+  .producto-promo.bg-white,
+  .card.bg-white {
+    background-color: var(--bg-card) !important;
+  }
+
+  .card-body {
+    background-color: var(--bg-card) !important;
+  }
+
+  .card-footer {
+    background-color: transparent !important;
+    border-top: 1px solid var(--border-soft) !important;
+  }
+
+  /* =====================
+     PROMOCIONES - Texto de productos visible
+  ====================== */
+  
+  /* Título de la sección con brillo */
+  #promociones h2,
+  section#promociones h2 {
+    color: #ffffff !important;
+    text-shadow: 0 0 20px rgba(26, 188, 156, 0.6), 0 0 10px rgba(26, 188, 156, 0.4);
+    font-weight: bold;
+  }
+
+  #promociones .lead,
+  #promociones p.lead {
+    color: #e0e0e0 !important;
+  }
+
+  /* Cards de productos */
+  .card-img-top,
+  .producto-promo .card-img-top {
+    background: #ffffff !important;
+  }
+
+  .producto-promo img {
+    background-color: #ffffff !important;
+    padding: 20px;
+    border-radius: 12px;
+  }
+
+  /* TEXTO DE PRODUCTOS - TODO EN BLANCO */
+  .producto-promo h5,
+  .producto-promo h6,
+  .producto-promo .card-title,
+  .producto-promo p,
+  .producto-promo .card-text,
+  #promociones .card-title,
+  #promociones .card-text,
+  #promociones h5,
+  #promociones p {
+    color: #ffffff !important;
+  }
+
+  /* Precios verdes brillantes */
+  .text-success,
+  .producto-promo .text-success,
+  .h4.text-success,
+  span.text-success,
+  #promociones .text-success {
+    color: #4CAF50 !important;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+  }
+
+  /* Títulos de productos en color primario */
+  .text-primary,
+  .producto-promo .text-primary,
+  h5.text-primary,
+  #promociones .text-primary {
+    color: var(--primary) !important;
+    text-shadow: 0 0 10px rgba(26, 188, 156, 0.4);
+  }
+
+  /* Texto muted en productos */
+  .producto-promo .text-muted,
+  #promociones .text-muted {
+    color: #b0b0b0 !important;
+  }
+
+  /* Small text en descuentos */
+  .producto-promo small,
+  #promociones small {
+    color: #b0b0b0 !important;
+  }
+
+  /* =====================
+     CLASES - Iconos, texto con brillo y botones
+  ====================== */
+  
+  /* Título con brillo */
+  #clases h2,
+  section#clases h2 {
+    color: #ffffff !important;
+    text-shadow: 0 0 20px rgba(26, 188, 156, 0.6), 0 0 10px rgba(26, 188, 156, 0.4);
+    font-weight: bold;
+  }
+
+  /* Iconos circulares */
+  .rounded-circle {
+    border: 2px solid rgba(255,255,255,0.2) !important;
+  }
+
+  /* Mantener colores de iconos pero más visibles */
+  .bg-primary.rounded-circle {
+    background-color: #2196F3 !important;
+  }
+
+  .bg-warning.rounded-circle {
+    background-color: #FFC107 !important;
+  }
+
+  .bg-success.rounded-circle {
+    background-color: #4CAF50 !important;
+  }
+
+  .bg-info.rounded-circle {
+    background-color: #00BCD4 !important;
+  }
+
+  .rounded-circle i {
+    color: #ffffff !important;
+  }
+
+  /* TEXTO DE LAS CLASES - MÁS BRILLANTE */
+  .text-center h5,
+  .text-center p,
+  #clases h5,
+  #clases p,
+  #clases .card-title {
+    color: #ffffff !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  }
+
+  #clases .text-muted {
+    color: #b0b0b0 !important;
+  }
+
+  /* BOTONES DE AGENDAR - Con bordes visibles */
+  .btn-outline-primary {
+    background-color: transparent !important;
+    border: 2px solid var(--primary) !important;
+    color: var(--primary) !important;
+    box-shadow: 0 0 10px rgba(26, 188, 156, 0.3);
+  }
+
+  .btn-outline-primary:hover {
+    background-color: var(--primary) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 20px rgba(26, 188, 156, 0.5);
+  }
+
+  .btn-outline-warning {
+    background-color: transparent !important;
+    border: 2px solid #FFC107 !important;
+    color: #FFC107 !important;
+    box-shadow: 0 0 10px rgba(255, 193, 7, 0.3);
+  }
+
+  .btn-outline-warning:hover {
+    background-color: #FFC107 !important;
+    color: #ffffff !important;
+  }
+
+  .btn-outline-success {
+    background-color: transparent !important;
+    border: 2px solid #4CAF50 !important;
+    color: #4CAF50 !important;
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+  }
+
+  .btn-outline-success:hover {
+    background-color: #4CAF50 !important;
+    color: #ffffff !important;
+  }
+
+  .btn-outline-info {
+    background-color: transparent !important;
+    border: 2px solid #00BCD4 !important;
+    color: #00BCD4 !important;
+    box-shadow: 0 0 10px rgba(0, 188, 212, 0.3);
+  }
+
+  .btn-outline-info:hover {
+    background-color: #00BCD4 !important;
+    color: #ffffff !important;
+  }
+
+  /* =====================
+     TABLA DE HORARIOS - Fondo oscuro y texto blanco
+  ====================== */
+  
+  /* Título de horarios */
+  #clases h3,
+  section#clases h3 {
+    color: #ffffff !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  }
+
+  table,
+  .table {
+    background-color: var(--bg-card) !important;
+    border: 2px solid var(--border-soft) !important;
+    color: var(--text-main) !important;
+  }
+
+  /* Header de la tabla */
+  thead,
+  .table thead {
+    background: linear-gradient(135deg, var(--primary), var(--primary-soft)) !important;
+  }
+
+  thead th,
+  .table thead th {
+    color: #ffffff !important;
+    border-color: var(--border-soft) !important;
+    font-weight: bold;
+    background-color: transparent !important;
+  }
+
+  /* Body de la tabla - FONDO OSCURO */
+  tbody,
+  .table tbody {
+    background-color: var(--bg-card) !important;
+  }
+
+  tbody tr,
+  .table tbody tr {
+    background-color: var(--bg-card) !important;
+  }
+
+  tbody td,
+  .table tbody td,
+  tbody th,
+  tbody td strong {
+    color: #ffffff !important;
+    border-color: var(--border-soft) !important;
+    background-color: transparent !important;
+  }
+
+  /* Hover en filas */
+  tbody tr:hover,
+  .table-hover tbody tr:hover {
+    background-color: #333 !important;
+  }
+
+  tbody tr:hover td {
+    background-color: transparent !important;
+  }
+
+  /* Striped */
+  .table-striped tbody tr:nth-of-type(odd) {
+    background-color: #2d2d2d !important;
+  }
+
+  .table-striped tbody tr:nth-of-type(odd) td {
+    color: #ffffff !important;
+    background-color: transparent !important;
+  }
+
+  .table-striped tbody tr:nth-of-type(even) {
+    background-color: var(--bg-card) !important;
+  }
+
+  .table-striped tbody tr:nth-of-type(even) td {
+    background-color: transparent !important;
+  }
+
+  /* =====================
+     PLANES - Cards con texto brillante
+  ====================== */
+  
+  /* Título de la sección con brillo */
+  #planes h2,
+  section#planes h2,
+  .section-title {
+    color: #ffffff !important;
+    text-shadow: 0 0 20px rgba(26, 188, 156, 0.6), 0 0 10px rgba(26, 188, 156, 0.4);
+    font-weight: bold;
+  }
+
+  .plan-card {
+    background-color: var(--bg-card) !important;
+  }
+
+  .plan-card .card-body {
+    background-color: var(--bg-card) !important;
+  }
+
+  .plan-card .card-body ul,
+  .plan-features {
+    list-style: none;
+    padding: 0;
+  }
+
+  /* TEXTO DE PLANES EN BLANCO BRILLANTE */
+  .plan-card .card-body ul li,
+  .plan-features li {
+    color: #ffffff !important;
+    border-bottom: 1px solid #404040 !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  }
+
+  .plan-card .card-body ul li i,
+  .plan-features li i {
+    color: var(--primary) !important;
+    filter: drop-shadow(0 0 3px rgba(26, 188, 156, 0.5));
+  }
+
+  /* Títulos y precios de planes - MÁS BRILLANTES */
+  .plan-title,
+  .plan-price,
+  .plan-price *,
+  .currency,
+  .amount,
+  .period,
+  .plan-card h4,
+  .plan-card .card-header h4 {
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  }
+
+  /* Headers de planes - colores originales mejorados */
+  .plan-azul .card-header,
+  .plan-azul .card-header * {
+    background: linear-gradient(135deg, #2196F3, #1976D2) !important;
+    color: #ffffff !important;
+  }
+
+  .plan-amarillo .card-header,
+  .plan-amarillo .card-header * {
+    background: linear-gradient(135deg, #FFC107, #F57C00) !important;
+    color: #ffffff !important;
+  }
+
+  .plan-verde .card-header,
+  .plan-verde .card-header * {
+    background: linear-gradient(135deg, #4CAF50, #388E3C) !important;
+    color: #ffffff !important;
+  }
+
+  /* =====================
+     SECCIÓN INICIO - Primera sección
+  ====================== */
+  
+  #inicio h2,
+  #inicio h1,
+  #inicio .display-4 {
+    color: #ffffff !important;
+  }
+
+  #inicio p,
+  #inicio .lead,
+  #inicio strong {
+    color: #e0e0e0 !important;
+  }
+
+  /* ULTRA ESPECÍFICO: Checks y badges de inicio */
+  #inicio .d-flex.flex-wrap.gap-3 .d-flex.align-items-center span,
+  #inicio .d-flex.align-items-center.animate-fade-in-up span,
+  section#inicio .d-flex span,
+  #inicio .animate-fade-in-up span,
+  #inicio div.d-flex span {
+    color: #ffffff !important;
+  }
+
+  #inicio .fas.fa-check-circle,
+  #inicio i.fas.fa-check-circle,
+  #inicio .text-success {
+    color: #4CAF50 !important;
+  }
+
+  /* Para la imagen */
+  #inicio .col-lg-6 img {
+    filter: brightness(0.95);
+  }
+
+  /* =====================
+     BENEFICIOS / POR QUÉ ELEGIRNOS - Logos e iconos
+  ====================== */
+  
+  #beneficios h2,
+  section#beneficios h2 {
+    color: #ffffff !important;
+    text-shadow: 0 0 20px rgba(26, 188, 156, 0.6), 0 0 10px rgba(26, 188, 156, 0.4);
+    font-weight: bold;
+  }
+
+  #beneficios .card,
+  section#beneficios .card {
+    background-color: var(--bg-card) !important;
+  }
+
+  #beneficios h4,
+  #beneficios .card-title {
+    color: #ffffff !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  }
+
+  #beneficios p,
+  #beneficios .card-text {
+    color: #e0e0e0 !important;
+  }
+
+  /* ICONOS DE BENEFICIOS - BRILLANTES */
+  .feature-icon,
+  #beneficios i.fas,
+  section#beneficios i.fas {
+    color: var(--primary) !important;
+    font-size: 3rem;
+    filter: drop-shadow(0 0 15px rgba(26, 188, 156, 0.7)) drop-shadow(0 0 8px rgba(26, 188, 156, 0.5));
+  }
+
+  .hover-effect:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.8) !important;
+  }
+
+  /* Asegurar que los iconos sean visibles */
+  #beneficios .fas.fa-dumbbell,
+  #beneficios .fas.fa-users,
+  #beneficios .fas.fa-calendar-alt {
+    color: var(--primary) !important;
+  }
+
+  /* =====================
+     BOTONES - Override inline styles
+  ====================== */
+  .btn {
+    border: none !important;
+    font-weight: 600 !important;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--primary-soft)) !important;
+    color: #ffffff !important;
+    border: none !important;
+  }
+
+  .btn-primary:hover {
+    filter: brightness(1.2);
+    color: #ffffff !important;
+  }
+
+  .btn-success {
+    background: linear-gradient(135deg, #4CAF50, #388E3C) !important;
+    color: #ffffff !important;
+    border: none !important;
+  }
+
+  .btn-warning {
+    background: linear-gradient(135deg, #FFC107, #F57C00) !important;
+    color: #ffffff !important;
+    border: none !important;
+  }
+
+  .btn-info {
+    background: linear-gradient(135deg, #2196F3, #1976D2) !important;
+    color: #ffffff !important;
+    border: none !important;
+  }
+
+  .btn-outline-primary {
+    background-color: transparent !important;
+    border: 2px solid var(--primary) !important;
+    color: var(--primary) !important;
+  }
+
+  .btn-outline-primary:hover {
+    background-color: var(--primary) !important;
+    color: #ffffff !important;
+  }
+
+  .btn-outline-success,
+  .btn-outline-warning,
+  .btn-outline-info {
+    background-color: transparent !important;
+  }
+
+  .btn-outline-success:hover,
+  .btn-outline-warning:hover,
+  .btn-outline-info:hover {
+    color: #ffffff !important;
+  }
+
+  /* Botones específicos de planes */
+  .btn-plan-azul {
+    background: linear-gradient(135deg, #2196F3, #1976D2) !important;
+    color: #ffffff !important;
+    border: none !important;
+  }
+
+  .btn-plan-verde {
+    background: linear-gradient(135deg, #4CAF50, #388E3C) !important;
+    color: #ffffff !important;
+    border: none !important;
+  }
+
+  /* =====================
+     FORMULARIOS
+  ====================== */
+  input,
+  textarea,
+  select,
+  .form-control,
+  .form-select,
+  .form-control-lg,
+  .form-select-lg {
+    background-color: #2d2d2d !important;
+    color: #e0e0e0 !important;
+    border: 2px solid #444 !important;
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus,
+  .form-control:focus,
+  .form-select:focus {
+    background-color: #333 !important;
+    color: #ffffff !important;
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 0.25rem rgba(26, 188, 156, 0.25) !important;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: #999 !important;
+  }
+
+  label,
+  .form-label {
+    color: #d0d0d0 !important;
+  }
+
+  /* =====================
+     CONTACTO - Badges, cards y texto
+  ====================== */
+  
+  /* Header de contacto */
+  #contacto h2,
+  #contacto .display-4 {
+    color: #ffffff !important;
+    text-shadow: 0 0 20px rgba(26, 188, 156, 0.6), 0 0 10px rgba(26, 188, 156, 0.4);
+  }
+
+  #contacto p,
+  #contacto .lead {
+    color: #e0e0e0 !important;
+  }
+
+  /* ULTRA ESPECÍFICO: Badges superiores de contacto */
+  #contacto .d-flex.justify-content-center.gap-3.flex-wrap .d-flex.align-items-center span,
+  #contacto .d-flex.align-items-center.animate-fade-in-up span,
+  section#contacto .d-flex span,
+  #contacto .animate-fade-in-up span,
+  #contacto div.d-flex.align-items-center span,
+  #contacto .text-center .d-flex span {
+    color: #ffffff !important;
+  }
+
+  #contacto .fas,
+  #contacto i.fas {
+    color: var(--primary) !important;
+  }
+
+  #contacto .text-primary {
+    color: var(--primary) !important;
+  }
+
+  /* Cards de contacto */
+  .contact-icon {
+    background: linear-gradient(135deg, var(--primary), var(--primary-soft)) !important;
+    color: #ffffff !important;
+  }
+
+  .contact-form-container .card,
+  .contact-info-container .card {
+    background-color: var(--bg-card) !important;
+    border: 1px solid var(--border-soft) !important;
+  }
+
+  .contact-form-container .card-header {
+    background: linear-gradient(135deg, var(--primary), var(--primary-soft)) !important;
+  }
+
+  /* Texto dentro de cards de contacto */
+  .contact-info-container h5,
+  .contact-info-container p,
+  .contact-info-container .card-title,
+  .contact-info-container .card-text,
+  #contacto .card h5,
+  #contacto .card p {
+    color: #ffffff !important;
+  }
+
+  .contact-info-container .text-muted,
+  #contacto .card .text-muted {
+    color: #b0b0b0 !important;
+  }
+
+  /* Horarios de contacto */
+  #contacto .card-body strong,
+  #contacto .card-body p strong {
+    color: #ffffff !important;
+  }
+
+  /* Alert de Instagram */
+  #contacto .alert {
+    background: rgba(26, 188, 156, 0.15) !important;
+    border: 1px solid rgba(26, 188, 156, 0.4) !important;
+  }
+
+  #contacto .alert h5,
+  #contacto .alert-heading {
+    color: #ffffff !important;
+  }
+
+  #contacto .alert p {
+    color: #e0e0e0 !important;
+  }
+
+  /* =====================
+     ALERTS
+  ====================== */
+  .alert,
+  .alert-info,
+  .alert-success,
+  .alert-primary {
+    background: rgba(26, 188, 156, 0.15) !important;
+    border: 1px solid rgba(26, 188, 156, 0.4) !important;
+    color: #e0e0e0 !important;
+  }
+
+  .alert-heading {
+    color: #ffffff !important;
+  }
+
+  /* =====================
+     MODALES
+  ====================== */
+  .modal-content {
+    background-color: var(--bg-card) !important;
+    color: var(--text-main) !important;
+    border: 1px solid var(--border-soft) !important;
+  }
+
+  .modal-header {
+    border-bottom: 1px solid var(--border-soft) !important;
+    background: linear-gradient(135deg, var(--primary), var(--primary-soft)) !important;
+    color: #ffffff !important;
+  }
+
+  .modal-header * {
+    color: #ffffff !important;
+  }
+
+  .modal-footer {
+    border-top: 1px solid var(--border-soft) !important;
+  }
+
+  .modal-body {
+    background-color: var(--bg-card) !important;
+  }
+
+  /* =====================
+     WHATSAPP
+  ====================== */
+  .whatsapp-float {
+    background: #25D366 !important;
+    box-shadow: 0 4px 20px rgba(37, 211, 102, 0.6) !important;
+  }
+
+  /* =====================
+     CHECKS Y ICONOS CON TEXTO
+  ====================== */
+  .fas.fa-check-circle,
+  .fa-check-circle {
+    color: var(--primary) !important;
+  }
+
+  .text-success i,
+  i.text-success {
+    color: var(--primary) !important;
+  }
+
+  /* Texto junto a los checks */
+  .d-flex.align-items-center span,
+  .d-flex span,
+  .animate-fade-in-up span {
+    color: #ffffff !important;
+  }
+
+  /* Contenedores flex con checks */
+  .d-flex.flex-wrap.gap-3 span,
+  .d-flex.gap-3 span {
+    color: #ffffff !important;
+  }
+
+  /* =====================
+     IMAGENES - Ajustar brillo
+  ====================== */
+  img {
+    filter: brightness(0.95);
+  }
+
+  /* Excepto imágenes de productos y hero */
+  .producto-promo img,
+  .spartan-hero-section img,
+  .card-img-top img,
+  .logo-absolute {
+    filter: none !important;
+  }
+
+  /* =====================
+     RATIO Y CONTENEDORES
+  ====================== */
+  .ratio {
+    filter: brightness(0.95);
+  }
+
+  /* =====================
+     INVALID FEEDBACK
+  ====================== */
+  .invalid-feedback,
+  .valid-feedback {
+    color: #ff6b6b !important;
+  }
+
+  /* =====================
+     SCROLLBAR
+  ====================== */
+  ::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #1a1a1a;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 6px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-soft);
+  }
+
+  /* =====================
+     FIXES ESPECÍFICOS PARA ELEMENTOS INVISIBLES
+  ====================== */
+  
+  /* Arreglar texto en checkmarks y badges */
+  .d-flex.align-items-center span,
+  .d-flex span {
+    color: #ffffff !important;
+  }
+
+  /* Pequeños textos */
+  small,
+  .small {
+    color: #b0b0b0 !important;
+  }
+
+  /* Separadores */
+  hr {
+    border-color: var(--border-soft) !important;
+    opacity: 0.3;
+  }
+
+  /* Badges */
+  .badge {
+    background-color: var(--primary) !important;
+    color: #ffffff !important;
+  }
+
+  /* Links en general */
+  a {
+    color: var(--primary) !important;
+  }
+
+  a:hover {
+    color: var(--primary-soft) !important;
+  }
+
+  /* Pero los botones no */
+  .btn,
+  button.btn {
+    color: #ffffff !important;
+  }
+
+  /* ESPECÍFICO: Textos con iconos en sección de contacto */
+  #contacto .d-flex span,
+  #contacto .animate-fade-in-up span {
+    color: #ffffff !important;
+  }
+
+  #contacto i {
+    color: var(--primary) !important;
+  }
+
+  /* Textos en row y col */
+  .row span,
+  .col-lg-6 span,
+  .col-md-6 span {
+    color: #ffffff !important;
+  }
 }
