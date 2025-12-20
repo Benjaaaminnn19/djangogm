@@ -1,23 +1,15 @@
 from pathlib import Path
 import os
 from decouple import config
-import sys
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-j)$i8#vx-^gdg#apoumb9gkb*u6b)=viy(rcm&1=jb@(f+e$l8'
 
 
-# Si estamos en la fase de construcción de Railway, no requerimos DB real
-IS_BUILDING = 'collectstatic' in sys.argv or 'compilemessages' in sys.argv
+# Si estamos en la fase de construcción de Railway, no requerimos DB rea
 
-if IS_BUILDING:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': ':memory:',
-        }
-    }
 
 # CONFIGURACIÓN FLOW - ¡CRÍTICO!
 FLOW_API_KEY = config('FLOW_API_KEY', default='')
@@ -103,17 +95,11 @@ WSGI_APPLICATION = 'gimnasio.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': config('MYSQLDATABASE', default='railway'),
-        'USER': config('MYSQLUSER', default='root'),
-        'PASSWORD': config('MYSQLPASSWORD', default=''),
-        'HOST': config('MYSQLHOST', default='127.0.0.1'), # Evita que busque el socket .sock
-        'PORT': config('MYSQLPORT', default='3306'),
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES', time_zone='+00:00'"
-        }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
