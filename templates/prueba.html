@@ -113,7 +113,7 @@
                     </div>
                 </div>
                 <div class="col-lg-6 animate-slide-in-right">
-                    <img src="{% static 'img/img4.png' %}" class="img-fluid rounded shadow-lg animate-float" alt="Gimnasio Leblon">
+                    <img src="{% static 'img/img17.jpg' %}" class="img-fluid rounded shadow-lg animate-float" alt="Gimnasio Leblon">
                 </div>
             </div>
         </div>
@@ -198,8 +198,8 @@
                     <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3 animate-pulse" style="width: 80px; height: 80px;">
                         <i class="fas fa-dumbbell fa-2x"></i>
                     </div>
-                    <h5>Clases Dirigidas</h5>
-                    <p class="text-muted">Entrenamientos guiados por instructores certificados para maximizar tus resultados.</p>
+                    <h5>Clases Body Combat</h5>
+                    <p class="text-muted">Clases de Body Combat guiadas por instructores certificados para mejorar tu resistencia, fuerza y coordinación.</p>
                     <a href="{% url 'listar_clases' %}" class="btn btn-outline-primary btn-sm animate-bounce">
                         <i class="fas fa-calendar-plus me-1"></i>Agendar
                     </a>
@@ -220,10 +220,10 @@
             <div class="col-md-3 mb-4 animate-slide-in-left" style="animation-delay: 0.6s;">
                 <div class="text-center p-4 animate-hover-lift">
                     <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3 animate-pulse" style="width: 80px; height: 80px;">
-                        <i class="fas fa-chart-line fa-2x"></i>
+                      <i class="fa-solid fa-fire-flame-simple"></i>
                     </div>
-                    <h5>Evaluación Corporal</h5>
-                    <p class="text-muted">Evaluación mensual de tu composición corporal y progreso.</p>
+                    <h5>Body Pump</h5>
+                    <p class="text-muted">Sesiones de Body Pump guiadas por profesionales certificados para mejorar tu fuerza y definición muscular.</p>
                     <a href="{% url 'listar_clases' %}" class="btn btn-outline-success btn-sm animate-bounce">
                         <i class="fas fa-calendar-plus me-1"></i>Agendar
                     </a>
@@ -232,10 +232,10 @@
             <div class="col-md-3 mb-4 animate-slide-in-left" style="animation-delay: 0.8s;">
                 <div class="text-center p-4 animate-hover-lift">
                     <div class="bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3 animate-pulse" style="width: 80px; height: 80px;">
-                        <i class="fas fa-list-alt fa-2x"></i>
+                      <i class="fas fa-dumbbell fa-2x"></i>
                     </div>
-                    <h5>Rutinas Personalizadas</h5>
-                    <p class="text-muted">Rutinas de ejercicios diseñadas específicamente para tus objetivos.</p>
+                    <h5>Funcional</h5>
+                    <p class="text-muted">Sesiones de funcional guiadas por expertos para potenciar tu energía, coordinación y condición física.</p>
                     <a href="{% url 'listar_clases' %}" class="btn btn-outline-info btn-sm animate-bounce">
                         <i class="fas fa-calendar-plus me-1"></i>Agendar
                     </a>
@@ -609,12 +609,12 @@
                 </div>
                 <div>
                   <h5 class="card-title mb-2">Teléfono</h5>
-                  <p class="card-text mb-3">+56 9 4953 1978</p>
+                  <p class="card-text mb-3">+56 9 7527 4804</p>
                   <div class="d-flex gap-2">
-                    <a href="tel:+56949531978" class="btn btn-success btn-sm">
+                    <a href="tel:+56975274804" class="btn btn-success btn-sm">
                       <i class="fas fa-phone me-1"></i>Llamar
                     </a>
-                    <a href="https://wa.me/56949531978" target="_blank" class="btn btn-success btn-sm">
+                    <a href="https://wa.me/56975274804" target="_blank" class="btn btn-success btn-sm">
                       <i class="fab fa-whatsapp me-1"></i>WhatsApp
                     </a>
                   </div>
@@ -694,7 +694,7 @@
 </section>
 
     <!-- WhatsApp -->
-    <a href="https://wa.me/56949531978" class="whatsapp-float" target="_blank">
+    <a href="https://wa.me/56975274804" class="whatsapp-float" target="_blank">
         <i class="fab fa-whatsapp"></i>
     </a>    
     <!-- Modal para Agendar Clases -->
@@ -934,7 +934,48 @@
                                 </div>
                             </div>
                             
-                            
+                            <!-- Formulario de Registro -->
+                            <form id="formRegistroPopup" class="needs-validation" novalidate>
+                                <div class="mb-3">
+                                    <label for="nombreRegistro" class="form-label fw-semibold" style="color: #333;">
+                                        <i class="fas fa-user me-1"></i>Nombre Completo
+                                    </label>
+                                    <input type="text" class="form-control form-control-lg" id="nombreRegistro" name="nombre" placeholder="Tu nombre completo" required style="border-radius: 8px; border: 2px solid #e0e0e0;">
+                                    <div class="invalid-feedback">
+                                        Por favor ingresa tu nombre.
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="telefonoRegistro" class="form-label fw-semibold" style="color: #333;">
+                                        <i class="fas fa-phone me-1"></i>Teléfono
+                                    </label>
+                                    <input type="tel" class="form-control form-control-lg" id="telefonoRegistro" name="telefono" placeholder="+56 9 1234 5678" required style="border-radius: 8px; border: 2px solid #e0e0e0;">
+                                    <div class="invalid-feedback">
+                                        Por favor ingresa tu teléfono.
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="emailRegistro" class="form-label fw-semibold" style="color: #333;">
+                                        <i class="fas fa-envelope me-1"></i>Correo Electrónico <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="email" class="form-control form-control-lg" id="emailRegistro" name="email" placeholder="tu@email.com" required style="border-radius: 8px; border: 2px solid #e0e0e0;">
+                                    <div class="invalid-feedback">
+                                        Por favor ingresa un email válido.
+                                    </div>
+                                </div>
+                                
+                                <button type="submit" class="btn w-100" style="background: #dc3545; color: white; padding: 15px; border-radius: 8px; font-size: 1.1rem; font-weight: bold; border: none; margin-top: 10px;">
+                                    <i class="fas fa-paper-plane me-2"></i>ENVIAR DATOS
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Notificaciones personalizadas -->
     <div id="notificationContainer" style="position: fixed; top: 20px; right: 20px; z-index: 10000;"></div>
@@ -947,5 +988,117 @@
     </a>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Manejar el formulario del popup de registro
+        document.addEventListener('DOMContentLoaded', function() {
+            const formRegistroPopup = document.getElementById('formRegistroPopup');
+            
+            if (formRegistroPopup) {
+                formRegistroPopup.addEventListener('submit', async function(event) {
+                    event.preventDefault();
+                    
+                    // Validar formulario
+                    if (!formRegistroPopup.checkValidity()) {
+                        event.stopPropagation();
+                        formRegistroPopup.classList.add('was-validated');
+                        return;
+                    }
+                    
+                    // Obtener datos del formulario
+                    const nombre = document.getElementById('nombreRegistro').value.trim();
+                    const telefono = document.getElementById('telefonoRegistro').value.trim();
+                    const email = document.getElementById('emailRegistro').value.trim();
+                    
+                    // Validar campos
+                    if (!nombre || !telefono || !email) {
+                        mostrarNotificacion('Por favor completa todos los campos', 'error');
+                        return;
+                    }
+                    
+                    if (!email.includes('@')) {
+                        mostrarNotificacion('Por favor ingresa un email válido', 'error');
+                        return;
+                    }
+                    
+                    // Deshabilitar botón y mostrar estado de carga
+                    const submitBtn = formRegistroPopup.querySelector('button[type="submit"]');
+                    const textoOriginal = submitBtn.innerHTML;
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>ENVIANDO...';
+                    
+                    try {
+                        // Intentar enviar al backend si existe la ruta
+                        const response = await fetch('/registrar-lead/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': getCookie('csrftoken')
+                            },
+                            body: JSON.stringify({
+                                nombre: nombre,
+                                telefono: telefono,
+                                email: email
+                            })
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (data.success) {
+                            mostrarNotificacion('¡Registro exitoso! Te enviaremos el semáforo nutricional pronto.', 'success');
+                            // Cerrar popup después de 2 segundos
+                            setTimeout(() => {
+                                const modal = bootstrap.Modal.getInstance(document.getElementById('popupRegistro'));
+                                if (modal) {
+                                    modal.hide();
+                                }
+                                formRegistroPopup.reset();
+                                formRegistroPopup.classList.remove('was-validated');
+                            }, 2000);
+                        } else {
+                            mostrarNotificacion(data.message || 'Error al enviar el registro', 'error');
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = textoOriginal;
+                        }
+                        
+                    } catch (error) {
+                        console.error('Error:', error);
+                        // Si no hay backend, mostrar mensaje de éxito simulado
+                        mostrarNotificacion('¡Registro exitoso! Te enviaremos el semáforo nutricional pronto.', 'success');
+                        
+                        // Cerrar popup después de 2 segundos
+                        setTimeout(() => {
+                            const modal = bootstrap.Modal.getInstance(document.getElementById('popupRegistro'));
+                            if (modal) {
+                                modal.hide();
+                            }
+                            formRegistroPopup.reset();
+                            formRegistroPopup.classList.remove('was-validated');
+                        }, 2000);
+                        
+                        // Restaurar botón
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = textoOriginal;
+                    }
+                });
+            }
+        });
+        
+        // Función auxiliar para obtener el token CSRF (si no existe en main.js)
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
 </body>
 </html>

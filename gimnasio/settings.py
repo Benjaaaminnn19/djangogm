@@ -88,8 +88,16 @@ WSGI_APPLICATION = 'gimnasio.wsgi.application'
 # Database
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'gym',
+        'USER': 'root',
+        'PASSWORD': '2006',
+        'HOST': 'localhost',
+        'PORT': '3306',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES', time_zone='+00:00'"
+        }
+
     }
 }
 
@@ -113,7 +121,7 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'es-cl'
 TIME_ZONE = 'America/Santiago'
 USE_I18N = True
-USE_TZ = True
+USE_TZ = False
 USE_THOUSAND_SEPARATOR = True
 THOUSAND_SEPARATOR = '.'
 DECIMAL_SEPARATOR = ','
