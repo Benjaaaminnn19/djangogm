@@ -30,7 +30,7 @@
     matplotlib==3.10.0
     mysqlclient==2.2.4
     
-
+    whitenoise==6.8.2
     narwhals==2.7.0
     numpy==2.1.2
     packaging==24.2
