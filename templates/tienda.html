@@ -11,7 +11,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/styleTienda.css' %}">
-    <script src="{% static 'js/Tienda.js' %}"></script>
+    
     <script>
         // Forzamos que el botón "Proceder al Pago" lleve al checkout de Django,
         // incluso si el JS estático del servidor está desactualizado.
@@ -35,7 +35,7 @@
     <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
     <div class="container">
             <a class="navbar-brand text-white" href="/">
-                <img src="{% static 'img/logo.jpg' %}" alt="Logo Gimnasio Leblon" class="logo-absolute">
+            
                 <i class="fas fa-dumbbell me-2"></i>GIMNASIO LEBLON
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -89,29 +89,29 @@
                         </div>
 
                         <!-- Filtro por Categoría -->
-                        <div class="filtro-grupo">
-                            <h5><i class="fas fa-tags me-2"></i>Categoría</h5>
-                            <div class="filtro-opcion" data-categoria="ropa">
-                                <input type="checkbox" id="filtro-ropa" value="ropa">
-                                <label for="filtro-ropa">Ropa Deportiva</label>
-                            </div>
-                            <div class="filtro-opcion" data-categoria="suplementos">
-                                <input type="checkbox" id="filtro-suplementos" value="suplementos">
-                                <label for="filtro-suplementos">Suplementos</label>
-                            </div>
-                            <div class="filtro-opcion" data-categoria="accesorios">
-                                <input type="checkbox" id="filtro-accesorios" value="accesorios">
-                                <label for="filtro-accesorios">Accesorios</label>
-                            </div>
+                        <div class="filtro-opcion">
+                            <input type="checkbox" id="filtro-ropa" value="ropa deportiva">
+                            <label for="filtro-ropa">Ropa Deportiva</label>
                         </div>
+                        
+                        <div class="filtro-opcion">
+                            <input type="checkbox" id="filtro-suplementos" value="suplementos">
+                            <label for="filtro-suplementos">Suplementos</label>
+                        </div>
+                        
+                        <div class="filtro-opcion">
+                            <input type="checkbox" id="filtro-accesorios" value="accesorios">
+                            <label for="filtro-accesorios">Accesorios</label>
+                        </div>
+                        
 
                         <!-- Filtro por Rango de Precio -->
                         <div class="filtro-grupo">
                             <h5><i class="fas fa-dollar-sign me-2"></i>Rango de Precio</h5>
                             <div class="rango-precio">
-                                <input type="number" id="precio-min" placeholder="Min" min="0">
-                                <span>-</span>
-                                <input type="number" id="precio-max" placeholder="Max" min="0">
+                                <input type="number" id="precio-min" placeholder="Min" min="10000">
+                                <span></span>
+                                <input type="number" id="precio-max" placeholder="Max" min="35000">
                             </div>
                         </div>
 
@@ -126,35 +126,44 @@
                 </div>
 
                 <!-- Productos -->
-                <div class="col-lg-9 col-md-8">
-                    <div class="row" id="productos-container">
-                {% for producto in productos %}
-                <div class="col-lg-3 col-md-6 mb-4 producto-item" data-categoria="{{ producto.categoria|lower }}" data-precio="{{ producto.precio }}" data-nombre="{{ producto.nombre|lower }}">
-                    <div class="producto-card animate-fade-in">
-                        <a href="{% url 'detalle_producto' producto.id %}" style="text-decoration: none; color: inherit;">
-                            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="producto-imagen" loading="lazy">
-                            <div class="producto-info">
-                                <h4 class="producto-nombre">{{ producto.nombre }}</h4>
-                                <div class="producto-marca">{{ producto.categoria|title }}</div>
-                                <p class="producto-descripcion">{{ producto.descripcion|truncatewords:15 }}</p>
-                                <div class="producto-precio">{{ producto.precio_formateado }}</div>
-                                <button class="btn btn-comprar" onclick="event.preventDefault(); agregarAlCarrito('{{ producto.nombre }}', {{ producto.precio }}, '{{ producto.imagen.url }}', {{ producto.id }})">
-                                    <i class="fas fa-shopping-cart me-1"></i>AGREGAR
-                                </button>
-                            </div>
-                        </a>
+                <!-- Productos -->
+<div class="col-lg-9 col-md-8">
+    <div class="row" id="productos-container">
+        {% for producto in productos %}
+        <div class="col-lg-3 col-md-6 mb-4 producto-item" data-categoria="{{ producto.categoria|lower }}" data-precio="{{ producto.precio }}" data-nombre="{{ producto.nombre|lower }}">
+            <div class="producto-card animate-fade-in">
+                <a href="{% url 'detalle_producto' producto.id %}" style="text-decoration: none; color: inherit;">
+                    <!-- CAMBIO 1: Aquí está la imagen del producto -->
+                    {% if producto.imagenes.first %}
+                        <img src="{{ producto.imagenes.first.imagen.url }}" alt="{{ producto.nombre }}" class="producto-imagen" loading="lazy">
+                    {% else %}
+                        <img src="{% static 'img/no-image.png' %}" alt="Sin imagen" class="producto-imagen" loading="lazy">
+                    {% endif %}
+                    
+                    <div class="producto-info">
+                        <h4 class="producto-nombre">{{ producto.nombre }}</h4>
+                        <div class="producto-marca">{{ producto.categoria|title }}</div>
+                        <p class="producto-descripcion">{{ producto.descripcion|truncatewords:15 }}</p>
+                        <div class="producto-precio">{{ producto.precio_formateado }}</div>
+                        
+                        <!-- CAMBIO 2: En el botón también necesitas la imagen -->
+                        <button class="btn btn-comprar" onclick="event.preventDefault(); agregarAlCarrito('{{ producto.nombre }}', {{ producto.precio }}, '{% if producto.imagenes.first %}{{ producto.imagenes.first.imagen.url }}{% else %}{% static 'img/no-image.png' %}{% endif %}', {{ producto.id }})">
+                            <i class="fas fa-shopping-cart me-1"></i>AGREGAR
+                        </button>
                     </div>
+                </a>
             </div>
-                {% empty %}
-                <div class="col-12 text-center">
-                    <div class="alert alert-warning">
-                        <h4>No hay productos disponibles</h4>
-                        <p>Próximamente tendremos más productos en stock.</p>
-          </div>
-                </div>
-                {% endfor %}
-                    </div>
-                </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center">
+            <div class="alert alert-warning">
+                <h4>No hay productos disponibles</h4>
+                <p>Próximamente tendremos más productos en stock.</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
             </div>
         </div>
     </section>
@@ -231,6 +240,8 @@
         </div>
         
     </div>
+
+    <script src="{% static 'js/Tienda.js' %}"></script>
 
 </body>
 </html> 

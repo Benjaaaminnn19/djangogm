@@ -13,7 +13,6 @@ class Producto(models.Model):
     descripcion = models.TextField()
     precio = models.IntegerField()
 
-    imagen = models.ImageField(upload_to='productos/')
     categoria = models.CharField(max_length=20, choices=CATEGORIAS)
     stock = models.IntegerField(default=0)
     activo = models.BooleanField(default=True)
@@ -52,3 +51,18 @@ class Orden(models.Model):
     
     def __str__(self):
         return f"Orden {self.orden_id} - {self.estado}"
+
+
+class ImagenProducto(models.Model):
+    producto = models.ForeignKey(Producto, related_name='imagenes', on_delete=models.CASCADE)
+    imagen = models.ImageField(upload_to='productos/')
+    orden = models.IntegerField(default=0)
+    es_principal = models.BooleanField(default=False)
+    
+    class Meta:
+        ordering = ['orden']
+        verbose_name = 'Imagen del Producto'
+        verbose_name_plural = 'Imágenes del Producto'
+    
+    def __str__(self):
+        return f"Imagen de {self.producto.nombre}"  

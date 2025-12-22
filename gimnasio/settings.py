@@ -11,27 +11,8 @@ SECRET_KEY = 'django-insecure-j)$i8#vx-^gdg#apoumb9gkb*u6b)=viy(rcm&1=jb@(f+e$l8
 # Si estamos en la fase de construcción de Railway, no requerimos DB rea
 
 
-# CONFIGURACIÓN FLOW - ¡CRÍTICO!
-FLOW_API_KEY = config('FLOW_API_KEY', default='')
-FLOW_SECRET_KEY = config('FLOW_SECRET_KEY', default='')
-FLOW_API_URL = config('FLOW_API_URL', default='https://sandbox.flow.cl/api')
-
-# Validar que las credenciales existan
-if not FLOW_API_KEY or not FLOW_SECRET_KEY:
-    import warnings
-    warnings.warn(
-        "⚠️ ADVERTENCIA: Credenciales de Flow no configuradas. "
-        "El sistema de pagos NO funcionará. "
-        "Configura FLOW_API_KEY y FLOW_SECRET_KEY en tus variables de entorno.",
-        RuntimeWarning
-    )
-else:
-    print(f"✅ Flow configurado correctamente")
-    print(f"   API Key: {FLOW_API_KEY[:8]}...")
-    print(f"   URL: {FLOW_API_URL}")
-
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     "proud-integrity-production.up.railway.app",
@@ -68,6 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 ROOT_URLCONF = 'gimnasio.urls'
@@ -133,6 +115,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Media files
 MEDIA_URL = '/media/'

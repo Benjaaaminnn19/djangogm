@@ -8,8 +8,9 @@
     <title>{{ producto.nombre }} - Gimnasio Leblon</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="{% static 'js/producto.js' %}"></script>
+   
     <link rel="stylesheet" href="{% static 'css/producto.css' %}">
+
 
    
 </head>
@@ -58,12 +59,204 @@
         <div class="container">
             <div class="row">
                 <!-- Product Images -->
-                <div class="col-lg-6">
-                    <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="product-image" id="main-image">
-                    <div class="product-thumbnails">
-                        <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="thumbnail active" onclick="changeImage(this.src)">
-                    </div>
-                </div>
+<div class="col-lg-6">
+    <style>
+        /* Contenedor de imagen principal */
+.product-image-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 10px;
+    background: #f8f8f8;
+    margin-bottom: 20px;
+}
+
+.product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    transform: scale(0.95);
+}
+
+.product-image.active {
+    opacity: 1;
+    transform: scale(1);
+    z-index: 1;
+}
+
+/* Animación de entrada desde la derecha */
+.product-image.slide-in-right {
+    animation: slideInRight 0.5s ease-in-out;
+}
+
+/* Animación de entrada desde la izquierda */
+.product-image.slide-in-left {
+    animation: slideInLeft 0.5s ease-in-out;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(50px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-50px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+/* Efecto de zoom al hover */
+.product-image-container:hover .product-image.active {
+    transform: scale(1.05);
+}
+
+/* Miniaturas */
+.product-thumbnails {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+
+.thumbnail {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: all 0.3s ease;
+    opacity: 0.6;
+}
+
+.thumbnail:hover {
+    opacity: 1;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.thumbnail.active {
+    border-color: #007bff;
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+/* Flechas de navegación */
+.nav-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 2;
+}
+
+.nav-arrow:hover {
+    background: rgba(0, 0, 0, 0.8);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.nav-arrow.left {
+    left: 10px;
+}
+
+.nav-arrow.right {
+    right: 10px;
+}
+
+/* Indicadores de puntos */
+.dots-indicator {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ddd;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.dot.active {
+    background: #007bff;
+    transform: scale(1.2);
+}
+
+.dot:hover {
+    background: #999;
+}
+    </style>
+    {% if producto.imagenes.all %}
+        <!-- Contenedor de imagen principal con navegación -->
+        <div class="product-image-container" id="imageContainer">
+            <!-- Flechas de navegación -->
+            <button class="nav-arrow left" onclick="previousImage()">‹</button>
+            <button class="nav-arrow right" onclick="nextImage()">›</button>
+            
+            <!-- Imágenes del producto -->
+            {% for imagen in producto.imagenes.all %}
+                <img src="{{ imagen.imagen.url }}" 
+                     alt="{{ producto.nombre }}" 
+                     class="product-image {% if forloop.first %}active{% endif %}" 
+                     id="img-{{ forloop.counter0 }}">
+            {% endfor %}
+        </div>
+        
+        <!-- Miniaturas de todas las imágenes -->
+        <div class="product-thumbnails">
+            {% for imagen in producto.imagenes.all %}
+                <img src="{{ imagen.imagen.url }}" 
+                     alt="{{ producto.nombre }}" 
+                     class="thumbnail {% if forloop.first %}active{% endif %}" 
+                     onclick="changeImage({{ forloop.counter0 }})">
+            {% endfor %}
+        </div>
+
+        <!-- Indicadores de puntos -->
+        <div class="dots-indicator">
+            {% for imagen in producto.imagenes.all %}
+                <span class="dot {% if forloop.first %}active{% endif %}" onclick="changeImage({{ forloop.counter0 }})"></span>
+            {% endfor %}
+        </div>
+    {% else %}
+        <!-- Imagen por defecto si no hay imágenes -->
+        <img src="{% static 'img/no-image.png' %}" 
+             alt="Sin imagen" 
+             class="product-image">
+    {% endif %}
+</div>
                 
                 <!-- Product Info -->
                 <div class="col-lg-6">
@@ -82,103 +275,65 @@
                         
                         <div class="producto-precio">{{ producto.precio|clp }}</div>
                         
-                        <!-- Color Options -->
-                        <div class="option-group">
-                            <label class="option-label">Color:</label>
-                            <div class="option-buttons">
-                                <button class="option-btn active">NEGRO</button>
-                                <button class="option-btn">BLANCO</button>
-                                <button class="option-btn">NARANJA</button>
-                            </div>
-                        </div>
+                      
                         
-                        <!-- Size Options -->
-                        <div class="option-group">
-                            <label class="option-label">Talla:</label>
-                            <div class="option-buttons">
-                                <button class="option-btn active">ESTÁNDAR</button>
-                                <button class="option-btn">GRANDE</button>
-                            </div>
-                        </div>
+                     
                         
-                        <!-- Quantity -->
-                        <div class="quantity-selector">
-                            <label class="option-label">Cantidad:</label>
-                            <div class="quantity-controls">
-                                <button class="quantity-btn" onclick="decreaseQuantity()">-</button>
-                                <input type="number" class="quantity-input" id="quantity" value="1" min="1" max="10">
-                                <button class="quantity-btn" onclick="increaseQuantity()">+</button>
-                            </div>
-                        </div>
-                        
-                        <button class="add-to-cart-btn" onclick="addToCart()">
-                            <i class="fas fa-shopping-cart me-2"></i>Agregar al Carrito
+                        <button class="btn btn-comprar" 
+                                id="btn-agregar-carrito"
+                                data-nombre="{{ producto.nombre }}"
+                                data-precio="{{ producto.precio }}"
+                                data-id="{{ producto.id }}"
+                                data-imagen="{% if producto.imagenes.first %}{{ producto.imagenes.first.imagen.url }}{% else %}{% static 'img/no-image.png' %}{% endif %}">
+                                <i class="fas fa-shopping-cart me-1"></i>AGREGAR
                         </button>
                         
-                        <!-- Detailed Description -->
-                        <div class="detailed-description">
-                            <h4>Características del Producto</h4>
-                            {% if producto.nombre == "Strong Wrist Wrap" %}
-                            <ul>
-                                <li>Ideal para press y movimientos de empuje</li>
-                                <li>Material de alta calidad resistente al desgaste</li>
-                                <li>Diseño ergonómico para comodidad durante el entrenamiento</li>
-                            </ul>
-                            {% elif producto.nombre == "BLEND WHEY STRONGEST" %}
-                            <ul>
-                                <li>23 porciones</li>
-                                <li>22 gr de proteína</li>
-                                <li>Libre de azúcar</li>
-                                <li>Contiene gluten</li>
-                            </ul>
-                            {% elif producto.nombre == "WHEY BLEND STRONG 900G" %}
-                            <ul>
-                                <li>23 porciones</li>
-                                <li>22 gr de proteína</li>
-                                <li>Libre de azúcar</li>
-                                <li>Contiene gluten</li>
-                            </ul>
-                            {% else %}
-                            <p>Diseñado específicamente para proporcionar el máximo rendimiento y durabilidad. Este producto está fabricado con los más altos estándares de calidad para satisfacer las necesidades de los atletas más exigentes.</p>
-                            <p>Características principales:</p>
-                            <ul>
-                                <li>Material de alta calidad</li>
-                                <li>Diseño ergonómico</li>
-                                <li>Durabilidad excepcional</li>
-                                <li>Fácil mantenimiento</li>
-                            </ul>
-                            {% endif %}
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+<!-- Carrito Flotante -->
+<div class="carrito-flotante" onclick="verCarrito()">
+    <div class="carrito-icono">
+        <i class="fas fa-shopping-cart"></i>
+        <span id="carrito-contador">0</span>
+    </div>
+</div>
 
     <!-- Related Products -->
-    {% if productos_relacionados %}
-    <section class="related-products">
-        <div class="container">
-            <h3>Productos Relacionados</h3>
-            <div class="row">
-                {% for producto_rel in productos_relacionados %}
-                <div class="col-lg-4 col-md-6">
-                    <div class="related-product-card">
-                        <img src="{{ producto_rel.imagen.url }}" alt="{{ producto_rel.nombre }}" class="related-product-image">
-                        <div class="related-product-info">
-                            <h5>{{ producto_rel.nombre }}</h5>
-                            <div class="product-price">{{ producto.precio_formateado }}</div>   
-                            <a href="{% url 'detalle_producto' producto_rel.id %}" class="btn btn-outline-primary btn-sm">
-                                Ver Detalle
-                            </a>
-                        </div>
+{% if productos_relacionados %}
+<section class="related-products">
+    <div class="container">
+        <h3>Productos Relacionados</h3>
+        <div class="row">
+            {% for producto_rel in productos_relacionados %}
+            <div class="col-lg-4 col-md-6">
+                <div class="related-product-card">
+                    <!-- CAMBIO: Usar producto_rel.imagenes.first.imagen.url -->
+                    {% if producto_rel.imagenes.first %}
+                        <img src="{{ producto_rel.imagenes.first.imagen.url }}" alt="{{ producto_rel.nombre }}" class="related-product-image">
+                    {% else %}
+                        <img src="{% static 'img/no-image.png' %}" alt="Sin imagen" class="related-product-image">
+                    {% endif %}
+                    
+                    <div class="related-product-info">
+                        <h5>{{ producto_rel.nombre }}</h5>
+                        <!-- CAMBIO 2: Usar producto_rel.precio_formateado en lugar de producto.precio_formateado -->
+                        <div class="product-price">{{ producto_rel.precio_formateado }}</div>   
+                        <a href="{% url 'detalle_producto' producto_rel.id %}" class="btn btn-outline-primary btn-sm">
+                            Ver Detalle
+                        </a>
                     </div>
                 </div>
-                {% endfor %}
             </div>
+            {% endfor %}
         </div>
-    </section>
-    {% endif %}
+    </div>
+</section>
+{% endif %}
+    <script src="{% static 'js/Tienda.js' %}"></script>
+    <script src="{% static 'js/producto.js' %}"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   
