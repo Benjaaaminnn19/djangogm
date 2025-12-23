@@ -307,93 +307,88 @@
 </section>
 
 
-
-<!-- Sección Planes -->
 <section id="planes" class="py-5">
-  <div class="container">
-    <h2 class="text-center mb-5 section-title animate-fade-in-up">NUESTROS PLANES</h2>
-    <div class="row justify-content-center">
-      <!-- Plan Azul -->
-      <div class="col-lg-4 col-md-6 mb-4 animate-slide-in-left" style="animation-delay: 0.2s;">
-        <div class="card plan-card plan-azul h-100 animate-hover-lift">
-          <div class="card-header text-center">
-            <h4 class="plan-title">PLAN TRIMESTRAL</h4>
-            <div class="plan-price">
-              <span class="currency">$</span>
-              <span class="amount">91.000</span>
-              <span class="period"> 3 meses</span>
-            </div>
-            
-          </div>
-          <div class="card-body">
-            <ul class="plan-features">
+    <div class="container">
+      <h2 class="text-center mb-5 section-title animate-fade-in-up">NUESTROS PLANES</h2>
+      <div class="row justify-content-center">
         
-              <li><i class="fas fa-list-alt"></i> Rutinas de ejercicios</li>
-              <li><i class="fas fa-user-tie"></i> Apoyo de instructor </li>
-            </ul>
-          </div>
-          <div class="card-footer text-center">
-            <button type="button" class="btn btn-plan-azul" data-bs-toggle="modal" data-bs-target="#modalComprarPlan" onclick="abrirModalPlan('Plan Azul', 29000, 14000)">
-              <i class="fas fa-check me-2"></i>Elegir Plan
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Plan Amarillo -->
-      <div class="col-lg-4 col-md-6 mb-4 animate-slide-in-left" style="animation-delay: 0.4s;">
-        <div class="card plan-card plan-amarillo h-100 animate-hover-lift">
-          <div class="card-header text-center">
-            <h4 class="plan-title">PLAN ANUAL</h4>
-            <div class="plan-price">
-              <span class="currency">$</span>
-              <span class="amount">298.000</span>
-              <span class="period"> 12 meses</span>
+        <div class="col-lg-4 col-md-6 mb-4 animate-slide-in-left" style="animation-delay: 0.2s;">
+          <div class="card plan-card plan-azul h-100 animate-hover-lift">
+            <div class="card-header text-center">
+              <h4 class="plan-title">PLAN TRIMESTRAL</h4>
+              <div class="plan-price">
+                <span class="currency">$</span>
+                <span class="amount">91.000</span>
+                <span class="period"> 3 meses</span>
+              </div>
             </div>
-            
-          </div>
-          <div class="card-body">
-            <ul class="plan-features">
-              <li><i class="fas fa-list-alt"></i> Rutinas de ejercicios</li>
-              <li><i class="fas fa-user-tie"></i> Apoyo de instructor </li>
-            </ul>
-          </div>
-          <div class="card-footer text-center">
-            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalComprarPlan" onclick="abrirModalPlan('Plan Amarillo', 32000, 14000)">
-              <i class="fas fa-check me-2"></i>Elegir Plan
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Plan Verde -->
-      <div class="col-lg-4 col-md-6 mb-4 animate-slide-in-left" style="animation-delay: 0.6s;">
-        <div class="card plan-card plan-verde h-100 animate-hover-lift">
-          <div class="card-header text-center">
-            <h4 class="plan-title">PLAN SEMESTRAL</h4>
-            <div class="plan-price">
-              <span class="currency">$</span>
-              <span class="amount">171.000</span>
-              <span class="period"> 3 meses</span>
+            <div class="card-body">
+              <ul class="plan-features">
+                <li><i class="fas fa-list-alt"></i> Rutinas de ejercicios</li>
+                <li><i class="fas fa-user-tie"></i> Apoyo de instructor </li>
+              </ul>
             </div>
-            
-          </div>
-          <div class="card-body">
-            <ul class="plan-features">
-              <li><i class="fas fa-list-alt"></i> Rutinas de ejercicios</li>
-              <li><i class="fas fa-user-tie"></i> Apoyo de instructor </li>
-            </ul>
-          </div>
-          <div class="card-footer text-center">
-            <button type="button" class="btn btn-plan-verde" data-bs-toggle="modal" data-bs-target="#modalComprarPlan" onclick="abrirModalPlan('Plan Verde', 38000, 14000)">
-              <i class="fas fa-check me-2"></i>Elegir Plan
-            </button>
+            <div class="card-footer text-center">
+              <button type="button" class="btn btn-plan-azul" 
+                      onclick="abrirModalPlan('Plan Trimestral', 91000, 0, 'https://www.flow.cl/uri/nH6QpyJ8R')">
+                <i class="fas fa-check me-2"></i>Elegir Plan
+              </button>
+            </div>
           </div>
         </div>
+  
+        <div class="col-lg-4 col-md-6 mb-4 animate-slide-in-left" style="animation-delay: 0.4s;">
+          <div class="card plan-card plan-amarillo h-100 animate-hover-lift">
+            <div class="card-header text-center">
+              <h4 class="plan-title">PLAN ANUAL</h4>
+              <div class="plan-price">
+                <span class="currency">$</span>
+                <span class="amount">298.000</span>
+                <span class="period"> 12 meses</span>
+              </div>
+            </div>
+            <div class="card-body">
+              <ul class="plan-features">
+                <li><i class="fas fa-list-alt"></i> Rutinas de ejercicios</li>
+                <li><i class="fas fa-user-tie"></i> Apoyo de instructor </li>
+              </ul>
+            </div>
+            <div class="card-footer text-center">
+              <button type="button" class="btn btn-warning" 
+                      onclick="abrirModalPlan('Plan Anual', 298000, 0, 'https://www.flow.cl/uri/0fvN97Jcb')">
+                <i class="fas fa-check me-2"></i>Elegir Plan
+              </button>
+            </div>
+          </div>
+        </div>
+  
+        <div class="col-lg-4 col-md-6 mb-4 animate-slide-in-left" style="animation-delay: 0.6s;">
+          <div class="card plan-card plan-verde h-100 animate-hover-lift">
+            <div class="card-header text-center">
+              <h4 class="plan-title">PLAN SEMESTRAL</h4>
+              <div class="plan-price">
+                <span class="currency">$</span>
+                <span class="amount">171.000</span>
+                <span class="period"> 6 meses</span> </div>
+            </div>
+            <div class="card-body">
+              <ul class="plan-features">
+                <li><i class="fas fa-list-alt"></i> Rutinas de ejercicios</li>
+                <li><i class="fas fa-user-tie"></i> Apoyo de instructor </li>
+              </ul>
+            </div>
+            <div class="card-footer text-center">
+               <button type="button" class="btn btn-plan-verde" 
+                      onclick="abrirModalPlan('Plan Mensual', 171000, 0, 'https://www.flow.cl/uri/Vg3KTRfLX')">
+                <i class="fas fa-check me-2"></i>Elegir Plan
+              </button>
+            </div>
+          </div>
+        </div>
+  
       </div>
     </div>
-  </div>
-</section>
+  </section>
 <section id="tienda"></section>
 
 
@@ -718,7 +713,6 @@
         </div>
     </div>
     
-    <!-- Modal para Comprar Plan -->
     <div class="modal fade" id="modalComprarPlan" tabindex="-1" aria-labelledby="modalComprarPlanLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -733,7 +727,6 @@
                         {% csrf_token %}
                         <input type="hidden" id="planSeleccionado" name="plan">
                         
-                        <!-- Resumen del Plan -->
                         <div class="alert alert-info mb-4">
                             <h5 class="alert-heading mb-2" id="planNombreModal">Plan Seleccionado</h5>
                             <div class="d-flex justify-content-between align-items-center">
@@ -747,58 +740,37 @@
                             </div>
                         </div>
                         
-                        <!-- Formulario -->
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="nombrePlan" class="form-label fw-semibold">
-                                    <i class="fas fa-user me-1"></i>Nombre Completo <span class="text-danger">*</span>
-                                </label>
+                                <label for="nombrePlan" class="form-label fw-semibold">Nombre Completo <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="nombrePlan" name="nombre" required>
-                                <div class="invalid-feedback">
-                                    Por favor ingresa tu nombre completo.
-                                </div>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="telefonoPlan" class="form-label fw-semibold">
-                                    <i class="fas fa-phone me-1"></i>Teléfono <span class="text-danger">*</span>
-                                </label>
-                                <input type="tel" class="form-control" id="telefonoPlan" name="telefono" placeholder="+56 9 1234 5678" required>
-                                <div class="invalid-feedback">
-                                    Por favor ingresa tu teléfono.
-                                </div>
+                                <label for="telefonoPlan" class="form-label fw-semibold">Teléfono <span class="text-danger">*</span></label>
+                                <input type="tel" class="form-control" id="telefonoPlan" name="telefono" required>
                             </div>
                         </div>
                         
                         <div class="mb-3">
-                            <label for="emailPlan" class="form-label fw-semibold">
-                                <i class="fas fa-envelope me-1"></i>Correo Electrónico <span class="text-danger">*</span>
-                            </label>
-                            <input type="email" class="form-control" id="emailPlan" name="email" placeholder="tu@email.com" required>
-                            <div class="invalid-feedback">
-                                Por favor ingresa un email válido.
-                            </div>
+                            <label for="emailPlan" class="form-label fw-semibold">Correo Electrónico <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control" id="emailPlan" name="email" required>
                         </div>
                         
                         <div class="mb-4">
-                            <label for="mensajePlan" class="form-label fw-semibold">
-                                <i class="fas fa-comment me-1"></i>Mensaje o Comentarios (Opcional)
-                            </label>
-                            <textarea class="form-control" id="mensajePlan" name="mensaje" rows="3" placeholder="Cuéntanos sobre tus objetivos o cualquier información adicional..."></textarea>
-                        </div>
-                        
-                        <div class="alert alert-success">
-                            <i class="fas fa-check-circle me-2"></i>
-                            <strong>¡Compra Inmediata!</strong> Al completar este formulario, tu plan quedará activado automáticamente. Recibirás un correo de confirmación con los detalles de tu membresía.
+                            <label for="mensajePlan" class="form-label fw-semibold">Mensaje (Opcional)</label>
+                            <textarea class="form-control" id="mensajePlan" name="mensaje" rows="3"></textarea>
                         </div>
                     </form>
                 </div>
+    
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    
                     <button type="button" class="btn btn-success" onclick="enviarSolicitudPlan()">
-                        <i class="fas fa-check-circle me-2"></i>Confirmar Compra
+                        <i class="fas fa-shopping-cart me-2"></i>Ir a Pagar
                     </button>
                 </div>
-            </div>
+                </div>
         </div>
     </div>
     
@@ -1021,5 +993,80 @@
             return cookieValue;
         }
     </script>
+
+<script>
+    // 1. Variable para guardar el link del plan seleccionado
+    let urlPagoActual = '';
+
+    // 2. Función que se activa al hacer clic en "Elegir Plan"
+    function abrirModalPlan(nombrePlan, mensualidad, matricula, urlFlow) {
+        console.log("Abriendo plan:", nombrePlan); // Esto ayuda a saber si el botón funciona
+        
+        // Guardamos el link específico
+        urlPagoActual = urlFlow;
+
+        // Llenamos los datos visuales en el Modal
+        
+        // Título del plan
+        const titulo = document.getElementById('planNombreModal');
+        if(titulo) titulo.textContent = nombrePlan;
+        
+        // Input oculto (para tu base de datos)
+        const inputPlan = document.getElementById('planSeleccionado');
+        if(inputPlan) inputPlan.value = nombrePlan;
+
+        // Precios
+        const txtMensualidad = document.getElementById('planMensualidad');
+        if(txtMensualidad) txtMensualidad.textContent = '$' + mensualidad.toLocaleString('es-CL');
+
+        const txtMatricula = document.getElementById('planMatricula');
+        if(txtMatricula) txtMatricula.textContent = '$' + matricula.toLocaleString('es-CL');
+
+        const txtTotal = document.getElementById('planTotal');
+        const total = mensualidad + matricula;
+        if(txtTotal) txtTotal.textContent = '$' + total.toLocaleString('es-CL');
+
+        // FORZAR APERTURA DEL MODAL
+        // Usamos Bootstrap para mostrar la ventana manualmente
+        const modalElement = document.getElementById('modalComprarPlan');
+        if (modalElement) {
+            const modalInstance = new bootstrap.Modal(modalElement);
+            modalInstance.show();
+        } else {
+            alert("Error: No se encuentra el modal 'modalComprarPlan' en el HTML");
+        }
+    }
+
+    // 3. Función que se activa al hacer clic en "Ir a Pagar"
+    function enviarSolicitudPlan() {
+        // Verificamos si tenemos un link guardado
+        if(!urlPagoActual) {
+            alert("Error: No hay un link de pago cargado. Por favor recarga la página.");
+            return;
+        }
+
+        // Validación visual del formulario (opcional, para que no envíe vacíos)
+        const form = document.getElementById('formComprarPlan');
+        if (form && !form.checkValidity()) {
+            form.classList.add('was-validated');
+            return; // Si faltan datos, no seguimos
+        }
+
+        // Efecto de carga en el botón
+        const btn = document.querySelector('#modalComprarPlan .btn-success');
+        if(btn) {
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Redirigiendo...';
+            btn.disabled = true;
+        }
+
+        // REDIRECCIÓN A FLOW
+        console.log("Redirigiendo a:", urlPagoActual);
+        setTimeout(() => {
+            window.location.href = urlPagoActual;
+        }, 800); // Pequeña espera de 0.8 seg para que el usuario vea que algo pasa
+    }
+</script>
+</body>
+</html>
 </body>
 </html>

@@ -659,85 +659,73 @@
             });
         }
 
-        // Funciones para el modal de compra de plan
-        function abrirModalPlan(nombrePlan, mensualidad, matricula) {
-            // Establecer valores en el modal
-            document.getElementById('planSeleccionado').value = nombrePlan;
-            document.getElementById('planNombreModal').textContent = nombrePlan;
-            document.getElementById('planMensualidad').textContent = '$' + mensualidad.toLocaleString('es-CL');
-            document.getElementById('planMatricula').textContent = '$' + matricula.toLocaleString('es-CL');
-            
-            const total = mensualidad + matricula;
-            document.getElementById('planTotal').textContent = '$' + total.toLocaleString('es-CL');
-            
-            // Limpiar formulario
-            document.getElementById('formComprarPlan').reset();
-            document.getElementById('planSeleccionado').value = nombrePlan;
-            
-            // Remover validación previa
-            document.getElementById('formComprarPlan').classList.remove('was-validated');
-        }
+            // Funciones para el modal de compra de plan
+            // Variable global para guardar el link del plan seleccionado temporalmente
 
-        async function enviarSolicitudPlan() {
-            const form = document.getElementById('formComprarPlan');
-            
-            // Validar formulario
-            if (!form.checkValidity()) {
-                form.classList.add('was-validated');
-                return;
-            }
-            
-            // Recopilar datos
-            const datosPlan = {
-                plan: document.getElementById('planSeleccionado').value,
-                nombre: document.getElementById('nombrePlan').value.trim(),
-                telefono: document.getElementById('telefonoPlan').value.trim(),
-                email: document.getElementById('emailPlan').value.trim(),
-                mensaje: document.getElementById('mensajePlan').value.trim()
-            };
-            
-            // Botón de envío
-            const btnEnviar = document.querySelector('#modalComprarPlan .btn-primary');
-            const textoOriginal = btnEnviar.innerHTML;
-            btnEnviar.disabled = true;
-            btnEnviar.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Enviando...';
-            
-            try {
-                const response = await fetch('/comprar-plan/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': getCookie('csrftoken')
-                    },
-                    body: JSON.stringify(datosPlan)
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    mostrarNotificacion(data.message, 'success');
-                    // Cerrar modal después de 3 segundos
-                    setTimeout(() => {
-                        const modal = bootstrap.Modal.getInstance(document.getElementById('modalComprarPlan'));
-                        if (modal) {
-                            modal.hide();
-                        }
-                        form.reset();
-                        form.classList.remove('was-validated');
-                    }, 3000);
-                } else {
-                    mostrarNotificacion(data.message, 'error');
-                    btnEnviar.disabled = false;
-                    btnEnviar.innerHTML = textoOriginal;
-                }
-                
-            } catch (error) {
-                console.error('Error:', error);
-                mostrarNotificacion('Error al enviar la solicitud. Intenta nuevamente.', 'error');
-                btnEnviar.disabled = false;
-                btnEnviar.innerHTML = textoOriginal;
-            }
-        }
+
+// Variable para guardar el link de pago temporalmente
+// --- VARIABLES GLOBALES (Al inicio del archivo) ---
+let urlPagoActual = ''; // Aquí se guardará el link temporalmente
+
+// --- FUNCIONES ---
+
+function abrirModalPlan(nombrePlan, mensualidad, matricula, urlFlow) {
+    console.log("Abriendo plan:", nombrePlan, "Link:", urlFlow); // Para verificar en consola
+
+    // 1. Guardar el link
+    urlPagoActual = urlFlow;
+
+    // 2. Actualizar textos visuales (Precio, Nombre)
+    document.getElementById('planSeleccionado').value = nombrePlan;
+    
+    // Aquí actualizamos el título del alert azul
+    const tituloElement = document.getElementById('planNombreModal');
+    if(tituloElement) tituloElement.textContent = nombrePlan;
+
+    // Actualizamos precios
+    const mesElement = document.getElementById('planMensualidad');
+    if(mesElement) mesElement.textContent = '$' + mensualidad.toLocaleString('es-CL');
+
+    const matElement = document.getElementById('planMatricula');
+    if(matElement) matElement.textContent = '$' + matricula.toLocaleString('es-CL');
+    
+    const total = mensualidad + matricula;
+    const totalElement = document.getElementById('planTotal');
+    if(totalElement) totalElement.textContent = '$' + total.toLocaleString('es-CL');
+    
+    // 3. Mostrar el modal MANUALMENTE
+    // Asegúrate de que bootstrap esté cargado en tu proyecto
+    const modalElement = document.getElementById('modalComprarPlan');
+    const modal = new bootstrap.Modal(modalElement);
+    modal.show();
+}
+
+async function enviarSolicitudPlan() {
+    console.log("Intentando enviar. Link actual:", urlPagoActual);
+
+    // Validar link antes de hacer nada
+    if (!urlPagoActual) {
+        alert('Error: No se ha cargado el link de pago. Por favor recarga la página e intenta de nuevo.');
+        return;
+    }
+
+    const form = document.getElementById('formComprarPlan');
+    if (!form.checkValidity()) {
+        form.classList.add('was-validated');
+        return;
+    }
+    
+    // Cambiar botón a "Cargando..."
+    const btnEnviar = document.querySelector('#modalComprarPlan .btn-success');
+    btnEnviar.disabled = true;
+    btnEnviar.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Redirigiendo...';
+
+    // --- REDIRECCIÓN DIRECTA ---
+    // Si quieres saltarte el guardado en base de datos por ahora para probar:
+    setTimeout(() => {
+        window.location.href = urlPagoActual;
+    }, 1000);
+}
 
         // Función auxiliar para obtener el token CSRF
         function getCookie(name) {
