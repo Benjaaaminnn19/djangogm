@@ -9,5 +9,6 @@ urlpatterns = [
     path('pago/confirmar/', views.confirmar_pago, name='confirmar_pago'),
     path('pago/resultados/', views.resultado_pago, name='resultado_pago'),
     path('return/', views.return_view, name='payment_return'),
+    path('pago/multiplo/', views.pago_multiplo, name='pago_multiplo'),
 
 ]

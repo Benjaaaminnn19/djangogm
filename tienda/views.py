@@ -7,7 +7,7 @@ from django.http import HttpResponse
 import uuid
 import json
 import logging
-
+import time
 from .models import Orden, Producto
 from .flow_service import FlowService
 
@@ -192,3 +192,32 @@ def detalle_producto(request, producto_id):
         "detalle_producto.html",
         {"producto": producto, "productos_relacionados": relacionados},
     )
+
+
+def pago_multiplo(request):
+    try:
+        amount = int(request.GET.get('amount', 0))
+        subject = request.GET.get('subject', 'Compra en Leblon Gym')
+    except:
+        return HttpResponse("Error en los parámetros")
+
+    if amount < 1000:
+        return HttpResponse("Monto mínimo $1.000 CLP")
+
+    order_data = {
+        "commerceOrder": f"ORD-MULTI-{int(time.time())}",  # Ahora time está definido
+        "subject": subject,
+        "amount": amount,
+        "email": request.user.email if request.user.is_authenticated else "pergadetonao14@gmail.com",
+        "urlConfirmation": "https://gimnasiolebloncalama.cl/confirm/",
+        "urlReturn": "https://gimnasiolebloncalama.cl/tienda/return/"
+    }
+
+    flow = FlowService(environment="sandbox")
+    result = flow.create_payment(order_data)
+
+    if result and 'url' in result and 'token' in result:
+        redirect_url = f"{result['url']}?token={result['token']}"
+        return redirect(redirect_url)
+    else:
+        return HttpResponse("Error al conectar con Flow")

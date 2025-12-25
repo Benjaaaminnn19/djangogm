@@ -29,6 +29,7 @@ urlpatterns = [
     
     
     
+    
 ]
 
 if not settings.DEBUG:
@@ -37,3 +38,10 @@ if not settings.DEBUG:
             'document_root': settings.MEDIA_ROOT,
         }),
     ]
+
+# ← NUEVO: Sirve archivos media en desarrollo y producción
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+else:
+    # En producción también (WhiteNoise lo maneja)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)    
