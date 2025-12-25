@@ -1,73 +1,51 @@
-import hashlib
+# tienda/flow_service.py
 import requests
-from django.conf import settings
-
+import hashlib
+import hmac
 
 class FlowService:
+    def __init__(self, environment="sandbox"):
+        FLOW_CONFIG = {
+            "prod": {
+                "base_url": "https://www.flow.cl/api/",
+                "api_key": "TU_API_KEY_PROD",
+                "secret_key": "TU_SECRET_KEY_PROD",
+            },
+            "sandbox": {
+                "base_url": "https://sandbox.flow.cl/api/",
+                "api_key": "346F180A-05F3-4C5A-8846-20LEBCB5EF2B",       # ← Pon aquí tu API Key real del sandbox
+                "secret_key": "346F180A-05F3-4C5A-8846-20LEBCB5EF2B", # ← Pon aquí tu Secret Key real del sandbox
+            }
+        }
 
-    def __init__(self, sandbox=True):
-        self.api_key = settings.FLOW_API_KEY.strip()
-        self.secret_key = settings.FLOW_SECRET_KEY.strip()
+        config = FLOW_CONFIG[environment]
+        self.api_key = config["api_key"]
+        self.secret_key = config["secret_key"]
+        self.create_url = config["base_url"] + "payment/create"
 
-        self.base_url = (
-            "https://sandbox.flow.cl/api"
-            if sandbox
-            else "https://www.flow.cl/api"
-        )
-
-        if not self.api_key or not self.secret_key:
-            raise ValueError("Credenciales Flow no configuradas")
-
-    # -------------------------------------------------
-
-    def _generar_firma(self, params):
-        params = {k: str(v) for k, v in params.items() if k != "s"}
-        ordered = sorted(params.items())
-
-        base_string = "&".join(f"{k}={v}" for k, v in ordered)
-        base_string += f"&secretKey={self.secret_key}"
-
-        return hashlib.sha256(base_string.encode("utf-8")).hexdigest()
-
-    # -------------------------------------------------
-
-    def crear_pago(self, datos):
+    def create_payment(self, order_data):
         params = {
             "apiKey": self.api_key,
-            "commerceOrder": str(datos["commerceOrder"]),
-            "subject": str(datos["subject"]),
+            "commerceOrder": order_data["commerceOrder"],
+            "subject": order_data["subject"],
             "currency": "CLP",
-            "amount": str(datos["amount"]),
-            "email": str(datos["email"]),
-            "urlConfirmation": str(datos["urlConfirmation"]),
-            "urlReturn": str(datos["urlReturn"]),
+            "amount": order_data["amount"],
+            "email": order_data["email"],
+            "paymentMethod": 9,
+            "urlConfirmation": order_data["urlConfirmation"],
+            "urlReturn": order_data["urlReturn"]
         }
 
-        params["s"] = self._generar_firma(params)
+        # Ordenar y firmar
+        sorted_params = sorted(params.items())
+        to_sign = "".join([f"{k}{v}" for k, v in sorted_params])
+        signature = hmac.new(
+            self.secret_key.encode('utf-8'),
+            to_sign.encode('utf-8'),
+            hashlib.sha256
+        ).hexdigest()
 
-        # 🔴 POST (NO GET)
-        response = requests.post(
-            f"{self.base_url}/payment/create",
-            data=params,
-            timeout=30
-        )
+        params["s"] = signature
 
-        return response.json()
-
-    # -------------------------------------------------
-
-    def obtener_estado_pago(self, token):
-        params = {
-            "apiKey": self.api_key,
-            "token": str(token),
-        }
-
-        params["s"] = self._generar_firma(params)
-
-        response = requests.post(
-            f"{self.base_url}/payment/getStatus",
-            data=params,
-            timeout=30
-        )
-
-        return response.json()
+        response = requests.post(self.create_url, data=params)
+        return response.json() if response.status_code == 200 else None

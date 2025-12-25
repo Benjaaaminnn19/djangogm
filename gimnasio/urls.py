@@ -19,11 +19,16 @@ from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.static import serve
+from . import views
 
 urlpatterns = [
     path('Androie/', admin.site.urls),
     path('', include('principal.urls')),
     path('tienda/', include('tienda.urls')),
+    path('confirm/', views.confirm_view, name='flow_confirm'),
+    
+    
+    
 ]
 
 if not settings.DEBUG:

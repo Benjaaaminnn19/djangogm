@@ -279,14 +279,10 @@
                         
                      
                         
-                        <button class="btn btn-comprar" 
-                                id="btn-agregar-carrito"
-                                data-nombre="{{ producto.nombre }}"
-                                data-precio="{{ producto.precio }}"
-                                data-id="{{ producto.id }}"
-                                data-imagen="{% if producto.imagenes.first %}{{ producto.imagenes.first.imagen.url }}{% else %}{% static 'img/no-image.png' %}{% endif %}">
-                                <i class="fas fa-shopping-cart me-1"></i>AGREGAR
-                        </button>
+                        <a href="{% url 'iniciar_pago' producto.id %}" class="btn-pagar">
+                            Pagar con Flow
+                        </a>
+
                         
                     </div>
                 </div>

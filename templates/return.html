@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resultado del Pago - Leblon Gym</title>
+</head>
+<body>
+    <h1>¡Gracias por tu compra!</h1>
+    {% if status == 'SUCCESS' %}
+        <p>Tu pago ha sido <strong>aprobado</strong>. ¡Bienvenido al plan mensual!</p>
+    {% else %}
+        <p>El pago no se completó. Por favor, intenta nuevamente.</p>
+    {% endif %}
+    <a href="{% url 'tienda' %}">Volver a la tienda</a>
+</body>
+</html>

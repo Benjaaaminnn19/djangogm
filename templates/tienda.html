@@ -12,21 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/styleTienda.css' %}">
     
-    <script>
-        // Forzamos que el botón "Proceder al Pago" lleve al checkout de Django,
-        // incluso si el JS estático del servidor está desactualizado.
-        function procederPago() {
-            try {
-                if (typeof cerrarCarritoModal === 'function') {
-                    cerrarCarritoModal();
-                }
-            } catch (e) {
-                console.error(e);
-            }
-            window.location.href = "{% url 'iniciar_pago' %}";
-        }
-    </script>
-    
+  
 </head>
 <body>
    
@@ -146,9 +132,8 @@
                         <p class="producto-descripcion">{{ producto.descripcion|truncatewords:15 }}</p>
                         <div class="producto-precio">{{ producto.precio_formateado }}</div>
                         
-                        <!-- CAMBIO 2: En el botón también necesitas la imagen -->
-                        <button class="btn btn-comprar" onclick="event.preventDefault(); agregarAlCarrito('{{ producto.nombre }}', {{ producto.precio }}, '{% if producto.imagenes.first %}{{ producto.imagenes.first.imagen.url }}{% else %}{% static 'img/no-image.png' %}{% endif %}', {{ producto.id }})">
-                            <i class="fas fa-shopping-cart me-1"></i>AGREGAR
+                       
+                            
                         </button>
                     </div>
                 </a>

@@ -1,13 +1,31 @@
 from django.shortcuts import render, get_object_or_404
+from django.template import context
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.urls import reverse
 from django.conf import settings
+from django.http import HttpResponse
 import uuid
 import json
 
 from .models import Orden, Producto
 from .flow_service import FlowService
+
+
+
+
+@csrf_exempt
+def return_view(request):
+    token = request.GET.get('token')
+    status = request.GET.get('status')  # opcional, Flow a veces lo envía
+    
+    context = {
+        'token': token,
+        'status': status,
+    }
+    return render(request, 'tienda/return.html', context)  # crea esta plantilla
+
+
 
 
 # =====================================================

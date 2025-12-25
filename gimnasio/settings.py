@@ -7,12 +7,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-j)$i8#vx-^gdg#apoumb9gkb*u6b)=viy(rcm&1=jb@(f+e$l8'
 
+FLOW_API_KEY = "346F180A-05F3-4C5A-8846-20LEBCB5EF2B"
+FLOW_SECRET_KEY = "2f49d0c08940ba4de53d387edaf76ac3b6a93cc3"
+FLOW_SANDBOX = True
 
 # Si estamos en la fase de construcción de Railway, no requerimos DB rea
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     "proud-integrity-production.up.railway.app",
@@ -26,6 +29,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://proud-integrity-production.up.railway.app",
     "https://gimnasiolebloncalama.cl",
     "https://www.gimnasiolebloncalama.cl",
+    "https://gimnasiolebloncalama.cl/tienda/"
 ]
 
 # Application definition
