@@ -44,105 +44,32 @@ def formatear_precio(precio):
 # INICIAR PAGO
 # =====================================================
 
-def iniciar_pago(request):
-    if request.method == "POST":
-        try:
-            email = request.POST.get("email", "").strip()
-            total = request.POST.get("total", "0")
-            productos_json = request.POST.get("productos", "[]")
+def iniciar_pago(request, producto_id):  # ← parámetro posicional, sin default
+    # Obtener el producto de forma segura
+    producto = get_object_or_404(Producto, id=producto_id)
 
-            if not email or "@" not in email:
-                return JsonResponse({"error": True, "message": "Email inválido"}, status=400)
+    # Datos para Flow (usa valores reales del producto)
+    order_data = {
+        "commerceOrder": f"ORD-{producto_id}-{request.user.id if request.user.is_authenticated else 'anon'}",
+        "subject": f"Compra: {producto.nombre}",
+        "amount": int(producto.precio.replace('.', '') if isinstance(producto.precio, str) else producto.precio),
+        "email": request.user.email if request.user.is_authenticated else "pergadetonao14@gmail.com",
+        "urlConfirmation": "https://gimnasiolebloncalama.cl/confirm/",
+        "urlReturn": "https://gimnasiolebloncalama.cl/tienda/return/"
+    }
 
-            try:
-                total_int = int(total)
-                if total_int <= 0:
-                    raise ValueError()
-            except ValueError:
-                return JsonResponse({"error": True, "message": "Monto inválido"}, status=400)
+    # Crear instancia de Flow (sandbox para pruebas)
+    flow = FlowService(environment="sandbox")  # Cambia a "prod" cuando estés listo
 
-            orden_id = f"ORD-{uuid.uuid4().hex[:8].upper()}"
+    result = flow.create_payment(order_data)
 
-            orden = Orden.objects.create(
-                orden_id=orden_id,
-                email=email,
-                total=total_int,
-                productos=productos_json,
-                estado="pendiente",
-            )
-
-            usar_sandbox = getattr(settings, "FLOW_SANDBOX", settings.DEBUG)
-            flow_service = FlowService(sandbox=usar_sandbox)
-
-            base_url = request.build_absolute_uri("/").rstrip("/")
-
-            order_data = {
-                "commerceOrder": orden_id,
-                "subject": f"Compra Gimnasio Leblon - {orden_id}",
-                "amount": total_int,
-                "email": email,
-                "urlConfirmation": f"{base_url}{reverse('confirmar_pago')}",
-                "urlReturn": f"{base_url}{reverse('resultado_pago')}",
-                "optional": f"Orden {orden_id}",
-            }
-
-            result = flow_service.crear_pago(order_data)
-
-
-            # 🔴 VALIDACIÓN REAL DE FLOW
-            if not result or "url" not in result or "token" not in result:
-                orden.estado = "error_flow"
-                orden.save()
-
-                return JsonResponse(
-                    {
-                        "error": True,
-                        "message": "Flow no creó el pago",
-                        "flow_response": result,
-                        "orden_id": orden_id,
-                    },
-                    status=400,
-                )
-
-            orden.flow_token = result["token"]
-            orden.flow_order = result.get("flowOrder")
-            orden.save()
-
-            return JsonResponse(
-                {
-                    "success": True,
-                    "url": result["url"],
-                    "token": result["token"],
-                    "orden_id": orden_id,
-                }
-            )
-
-        except Exception as e:
-            return JsonResponse(
-                {"error": True, "message": f"Error interno: {str(e)}"},
-                status=500,
-            )
-
-    # GET
-    productos = Producto.objects.filter(activo=True)
-    productos_data = []
-
-    for p in productos:
-        productos_data.append(
-            {
-                "id": p.id,
-                "nombre": p.nombre,
-                "precio": p.precio,
-                "precio_formateado": formatear_precio(p.precio),
-                "imagen": p.imagen.url if p.imagen else "",
-            }
-        )
-
-    return render(
-        request,
-        "checkout.html",
-        {"productos_json": json.dumps(productos_data), "DEBUG": settings.DEBUG},
-    )
+    if result and 'url' in result and 'token' in result:
+        redirect_url = f"{result['url']}?token={result['token']}"
+        return redirect(redirect_url)
+    else:
+        # Si falla, muestra error (puedes crear una plantilla)
+        from django.http import HttpResponse
+        return HttpResponse("Error al conectar con Flow. Intenta nuevamente.", status=500)
 
 
 # =====================================================
