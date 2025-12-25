@@ -17,7 +17,7 @@ class FlowService:
             "sandbox": {
                 "base_url": "https://sandbox.flow.cl/api/",
                 "api_key": "346F180A-05F3-4C5A-8846-20LEBCB5EF2B",     # ← CLAVE CORRECTA
-                "secret_key": "d94486228bf9290b6116ee24cd9c93645318d9c0"  # ← CLAVE SECRETA LARGA
+                "secret_key": "346F180A-05F3-4C5A-8846-20LEBCB5EF2B"  # ← CLAVE SECRETA LARGA
             }
         }
 
@@ -39,7 +39,6 @@ class FlowService:
             "urlReturn": order_data["urlReturn"]
         }
 
-        # Generar firma
         sorted_params = sorted(params.items())
         to_sign = "".join([f"{key}{value}" for key, value in sorted_params])
         signature = hmac.new(
@@ -47,27 +46,23 @@ class FlowService:
             to_sign.encode('utf-8'),
             hashlib.sha256
         ).hexdigest()
-
         params["s"] = signature
 
-        # Debug temporal (verás esto en los logs de Railway)
-        logger.info("=== FLOW REQUEST ===")
-        logger.info("URL: %s", self.create_url)
-        logger.info("Params: %s", params)
-        logger.info("String to sign: %s", to_sign)
-        logger.info("Signature: %s", signature)
+   
+        logger = logging.getLogger(__name__)
+        logger.info(f"Flow URL: {self.create_url}")
+        logger.info(f"Params: {params}")
+        logger.info(f"String to sign: {to_sign}")
+        logger.info(f"Signature: {signature}")
 
-        response = requests.post(self.create_url, data=params)
-
-        logger.info("Flow Status Code: %s", response.status_code)
-        logger.info("Flow Response: %s", response.text)
-
-        if response.status_code == 200:
-            try:
+        try:
+            response = requests.post(self.create_url, data=params, timeout=30)
+            logger.info(f"Status Code: {response.status_code}")
+            logger.info(f"Response Text: {response.text}")
+            if response.status_code == 200:
                 return response.json()
-            except ValueError:
-                logger.error("Respuesta no es JSON válido: %s", response.text)
-                return None
-        else:
-            logger.error("Error HTTP %s: %s", response.status_code, response.text)
+            else:
+                return {"error": response.text, "status": response.status_code}
+        except Exception as e:
+            logger.error(f"Error de conexión: {str(e)}")
             return None
