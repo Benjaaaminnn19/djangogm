@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.template import context
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
@@ -7,6 +7,7 @@ from django.conf import settings
 from django.http import HttpResponse
 import uuid
 import json
+import logging
 
 from .models import Orden, Producto
 from .flow_service import FlowService
@@ -44,11 +45,11 @@ def formatear_precio(precio):
 # INICIAR PAGO
 # =====================================================
 
-def iniciar_pago(request, producto_id):  # ← parámetro posicional, sin default
-    # Obtener el producto de forma segura
+
+logger = logging.getLogger(__name__)
+def iniciar_pago(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
 
-    # Datos para Flow (usa valores reales del producto)
     order_data = {
         "commerceOrder": f"ORD-{producto_id}-{request.user.id if request.user.is_authenticated else 'anon'}",
         "subject": f"Compra: {producto.nombre}",
@@ -58,19 +59,26 @@ def iniciar_pago(request, producto_id):  # ← parámetro posicional, sin defaul
         "urlReturn": "https://gimnasiolebloncalama.cl/tienda/return/"
     }
 
-    # Crear instancia de Flow (sandbox para pruebas)
-    flow = FlowService(environment="sandbox")  # Cambia a "prod" cuando estés listo
+    flow = FlowService(environment="sandbox")
 
+    # === DEBUG: Esto es lo importante ===
     result = flow.create_payment(order_data)
-
+    
+    logger.info("FLOW RESULT: %s", result)  # Verás esto en los logs de Railway
+    
     if result and 'url' in result and 'token' in result:
         redirect_url = f"{result['url']}?token={result['token']}"
         return redirect(redirect_url)
     else:
-        # Si falla, muestra error (puedes crear una plantilla)
-        from django.http import HttpResponse
-        return HttpResponse("Error al conectar con Flow. Intenta nuevamente.", status=500)
-
+        # Mostramos más info para debug
+        error_msg = "Error al conectar con Flow.<br><br>"
+        if result is None:
+            error_msg += "No se recibió respuesta (posible error de conexión o status != 200)."
+        else:
+            error_msg += f"Respuesta de Flow: {result}"
+        
+        return HttpResponse(error_msg, status=500)
+  
 
 # =====================================================
 # CONFIRMACIÓN FLOW (WEBHOOK)
