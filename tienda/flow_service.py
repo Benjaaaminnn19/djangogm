@@ -17,7 +17,7 @@ class FlowService:
             "sandbox": {
                 "base_url": "https://sandbox.flow.cl/api/",
                 "api_key": "346F180A-05F3-4C5A-8846-20LEBCB5EF2B",     # ← CLAVE CORRECTA
-                "secret_key": "346F180A-05F3-4C5A-8846-20LEBCB5EF2B"  # ← CLAVE SECRETA LARGA
+                "secret_key": "4f6f6e8c837d9043cd6e8f2cac83f34c3c2116a2"  # ← CLAVE SECRETA LARGA
             }
         }
 
@@ -39,30 +39,40 @@ class FlowService:
             "urlReturn": order_data["urlReturn"]
         }
 
-        sorted_params = sorted(params.items())
-        to_sign = "".join([f"{key}{value}" for key, value in sorted_params])
+    # === CÁLCULO DE FIRMA OFICIAL ===
+    # 1. Ordenar parámetros alfabéticamente por clave
+        sorted_items = sorted(params.items(), key=lambda x: x[0])
+    
+    # 2. Concatenar clave + valor sin separadores
+        to_sign = "".join([f"{k}{v}" for k, v in sorted_items])
+    
+    # 3. HMAC-SHA256 con la Secret Key
         signature = hmac.new(
-            self.secret_key.encode('utf-8'),
-            to_sign.encode('utf-8'),
+            self.secret_key.encode("utf-8"),
+            to_sign.encode("utf-8"),
             hashlib.sha256
         ).hexdigest()
+
+    # 4. Agregar la firma
         params["s"] = signature
 
-   
+    # Debug (mantén esto temporalmente)
+  
         logger = logging.getLogger(__name__)
-        logger.info(f"Flow URL: {self.create_url}")
-        logger.info(f"Params: {params}")
-        logger.info(f"String to sign: {to_sign}")
-        logger.info(f"Signature: {signature}")
+        logger.info("=== FLOW DEBUG ===")
+        logger.info("To sign: %s", to_sign)
+        logger.info("Signature generada: %s", signature)
+        logger.info("Params finales: %s", params)
 
-        try:
-            response = requests.post(self.create_url, data=params, timeout=30)
-            logger.info(f"Status Code: {response.status_code}")
-            logger.info(f"Response Text: {response.text}")
-            if response.status_code == 200:
+        response = requests.post(self.create_url, data=params)
+
+        logger.info("Status: %s", response.status_code)
+        logger.info("Response: %s", response.text)
+
+        if response.status_code == 200:
+            try:
                 return response.json()
-            else:
-                return {"error": response.text, "status": response.status_code}
-        except Exception as e:
-            logger.error(f"Error de conexión: {str(e)}")
+            except:
+                return None
+        else:
             return None
