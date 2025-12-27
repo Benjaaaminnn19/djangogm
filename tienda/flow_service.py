@@ -17,7 +17,7 @@ class FlowService:
             "sandbox": {
                 "base_url": "https://sandbox.flow.cl/api/",
                 "api_key": "346F180A-05F3-4C5A-8846-20LEBCB5EF2B",     # ← CLAVE CORRECTA
-                "secret_key": "4f6f6e8c837d9043cd6e8f2cac83f34c3c2116a2"  # ← CLAVE SECRETA LARGA
+                "secret_key": "8ede55f7557f210c0497596ef4b6fc039825d30a"  # ← CLAVE SECRETA LARGA
             }
         }
 
