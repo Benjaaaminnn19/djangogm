@@ -8,10 +8,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-j)$i8#vx-^gdg#apoumb9gkb*u6b)=viy(rcm&1=jb@(f+e$l8'
 
 FLOW_API_KEY = "346F180A-05F3-4C5A-8846-20LEBCB5EF2B"
-FLOW_SECRET_KEY = "2f49d0c08940ba4de53d387edaf76ac3b6a93cc3"
+FLOW_SECRET_KEY = "8ede55f7557f210c0497596ef4b6fc039825d30a"
 FLOW_SANDBOX = True
 
-# Si estamos en la fase de construcción de Railway, no requerimos DB rea
+
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
