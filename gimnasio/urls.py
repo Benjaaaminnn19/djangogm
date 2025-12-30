@@ -21,11 +21,17 @@ from django.conf.urls.static import static
 from django.views.static import serve
 from . import views
 
+
+
 urlpatterns = [
     path('Androie/', admin.site.urls),
     path('', include('principal.urls')),
     path('tienda/', include('tienda.urls')),
     path('confirm/', views.confirm_view, name='flow_confirm'),
+    path('', include('participaciones.urls')),
+    
+    
+
     
     
     
@@ -45,3 +51,6 @@ if settings.DEBUG:
 else:
     # En producción también (WhiteNoise lo maneja)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)    
+
+
+  

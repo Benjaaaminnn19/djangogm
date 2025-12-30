@@ -1,15 +1,90 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+    <meta charset="UTF-8">
     <title>Resultado del Pago - Leblon Gym</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f4f6f8;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 80px auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-weight: normal;
+        }
+
+        p {
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .success {
+            color: #2e7d32;
+        }
+
+        .error {
+            color: #c62828;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .btn:hover {
+            background-color: #000;
+        }
+
+        .footer {
+            margin-top: 40px;
+            font-size: 13px;
+            color: #777;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>¡Gracias por tu compra!</h1>
-    {% if status == 'SUCCESS' %}
-        <p>Tu pago ha sido <strong>aprobado</strong>. ¡Bienvenido al plan mensual!</p>
-    {% else %}
-        <p>El pago no se completó. Por favor, intenta nuevamente.</p>
-    {% endif %}
-    <a href="{% url 'tienda' %}">Volver a la tienda</a>
+    <div class="container">
+        <h1>Resultado del pago</h1>
+
+        {% if status == 'SUCCESS' %}
+            <p class="success">
+                Tu pago fue procesado correctamente.  
+                Ya tienes acceso al plan mensual de Leblon Gym.
+            </p>
+        {% else %}
+            <p class="error">
+                No fue posible completar el pago.  
+                Puedes intentarlo nuevamente desde la tienda.
+            </p>
+        {% endif %}
+
+        <a href="{% url 'tienda' %}" class="btn">Volver a la tienda</a>
+
+        <div class="footer">
+            Leblon Gym · Soporte disponible en horario laboral
+        </div>
+    </div>
 </body>
 </html>

@@ -553,7 +553,7 @@
                 <div class="col-lg-6">
                     <div class="product-info">
                         <h1 class="product-title">{{ producto.nombre }}</h1>
-                        <p class="product-description">{{ producto.descripcion }}</p>
+                        <p class="product-description">{{ producto.descripcion|linebreaksbr }}</p>
                         <p class="product-sku">SKU: {{ producto.id }}{{ producto.nombre|length }}</p>
                         
                         <div class="brand-logo">
