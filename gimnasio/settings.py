@@ -1,38 +1,41 @@
 from pathlib import Path
 import os
-from decouple import config
+from decouple import config, Csv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-j)$i8#vx-^gdg#apoumb9gkb*u6b)=viy(rcm&1=jb@(f+e$l8'
+# ==========================================
+# SECURITY SETTINGS
+# ==========================================
 
-FLOW_API_KEY = "346F180A-05F3-4C5A-8846-20LEBCB5EF2B"
-FLOW_SECRET_KEY = "8ede55f7557f210c0497596ef4b6fc039825d30a"
-FLOW_SANDBOX = True
-
-
-
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-
-ALLOWED_HOSTS = [
-    "proud-integrity-production.up.railway.app",
-    "gimnasiolebloncalama.cl",
-    "www.gimnasiolebloncalama.cl",
-    "localhost",
-    "127.0.0.1",
-]
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-j)$i8#vx-^gdg#apoumb9gkb*u6b)=viy(rcm&1=jb@(f+e$l8')
+DEBUG = config('DEBUG', default=False, cast=bool)
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='proud-integrity-production.up.railway.app,gimnasiolebloncalama.cl,www.gimnasiolebloncalama.cl,localhost,127.0.0.1', cast=Csv())
 
 CSRF_TRUSTED_ORIGINS = [
     "https://proud-integrity-production.up.railway.app",
     "https://gimnasiolebloncalama.cl",
     "https://www.gimnasiolebloncalama.cl",
-    "https://gimnasiolebloncalama.cl/tienda/"
 ]
 
-# Application definition
+# ==========================================
+# FLOW API CONFIGURATION
+# ==========================================
+
+FLOW_SANDBOX = config('FLOW_SANDBOX', default=True, cast=bool)
+
+# Sandbox credentials
+FLOW_SANDBOX_API_KEY = config('FLOW_SANDBOX_API_KEY', default='346F180A-05F3-4C5A-8846-20LEBCB5EF2B')
+FLOW_SANDBOX_SECRET_KEY = config('FLOW_SANDBOX_SECRET_KEY', default='2f49d0c08940ba4de53d387edaf76ac3b6a93cc3')
+
+# Production credentials
+FLOW_PROD_API_KEY = config('FLOW_PROD_API_KEY', default='')
+FLOW_PROD_SECRET_KEY = config('FLOW_PROD_SECRET_KEY', default='')
+
+# ==========================================
+# APPLICATION DEFINITION
+# ==========================================
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -48,13 +51,13 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 ROOT_URLCONF = 'gimnasio.urls'
@@ -66,6 +69,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -76,9 +80,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'gimnasio.wsgi.application'
 
-# Database
-
-
+# ==========================================
+# DATABASE
+# ==========================================
 
 DATABASES = {
     'default': {
@@ -87,8 +91,10 @@ DATABASES = {
     }
 }
 
+# ==========================================
+# PASSWORD VALIDATION
+# ==========================================
 
-# Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -104,7 +110,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Internationalization
+# ==========================================
+# INTERNATIONALIZATION
+# ==========================================
+
 LANGUAGE_CODE = 'es-cl'
 TIME_ZONE = 'America/Santiago'
 USE_I18N = True
@@ -114,7 +123,10 @@ THOUSAND_SEPARATOR = '.'
 DECIMAL_SEPARATOR = ','
 NUMBER_GROUPING = 3
 
-# Static files
+# ==========================================
+# STATIC FILES
+# ==========================================
+
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
@@ -122,20 +134,54 @@ STATICFILES_DIRS = [
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# Media files
+# ==========================================
+# MEDIA FILES
+# ==========================================
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Default primary key field type
+# ==========================================
+# DEFAULT PRIMARY KEY
+# ==========================================
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Logging configuration
+# ==========================================
+# EMAIL CONFIGURATION
+# ==========================================
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
+EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='benjaminjavier46@gmail.com')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# ==========================================
+# LOGGING
+# ==========================================
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+    },
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs' / 'django.log',
+            'formatter': 'verbose',
         },
     },
     'root': {
@@ -144,23 +190,40 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers': ['console'],
+            'handlers': ['console', 'file'],
             'level': 'INFO',
             'propagate': False,
         },
         'principal': {
-            'handlers': ['console'],
+            'handlers': ['console', 'file'],
             'level': 'DEBUG',
+            'propagate': False,
+        },
+        'tienda': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
             'propagate': False,
         },
     },
 }
 
-# Email configuration
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'benjaminjavier46@gmail.com'
-EMAIL_HOST_PASSWORD = 'mgvq uhwb ttwk lhxm'
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+# Crear carpeta de logs
+(BASE_DIR / 'logs').mkdir(exist_ok=True)
+
+# ==========================================
+# SECURITY SETTINGS FOR PRODUCTION
+# ==========================================
+
+if not DEBUG:
+    # HTTPS settings
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = 'DENY'
+    
+    # HSTS settings
+    SECURE_HSTS_SECONDS = 31536000  # 1 año
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True

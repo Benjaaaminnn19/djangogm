@@ -1,18 +1,29 @@
-
-.env
-
-
-__pycache__/
+# Python
 *.py[cod]
 *$py.class
+*.so
+__pycache__/
+*.pyc
 
+# Django
+*.log
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+logs/
 
-venv/
-env/
-.venv/
+# Environment - ¡CRÍTICO!
+.env
+.env.*
+*.env
+!.env.example
 
+# IDEs
 .vscode/
 .idea/
+*.swp
 
+# OS
 .DS_Store
-Thumbs.db
+Thumbs.db.env
