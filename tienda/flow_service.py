@@ -36,59 +36,66 @@ class FlowService:
         logger.info(f"FlowService inicializado en modo: {environment}")
     
     def _generate_signature(self, params: Dict) -> str:
-        """Genera la firma HMAC-SHA256 para los parámetros"""
-        sorted_params = sorted(params.items())
-        to_sign = "".join([f"{key}{value}" for key, value in sorted_params])
-        
-        signature = hmac.new(
-            self.secret_key.encode('utf-8'),
-            to_sign.encode('utf-8'),
+        """
+        Firma oficial Flow Chile (sandbox y producción)
+        - Incluye apiKey
+        - Excluye solo 's'
+        """
+        sorted_items = sorted(params.items())
+
+        to_sign = ""
+        for key, value in sorted_items:
+            if key == "s":
+                continue
+            to_sign += f"{key}{value}"
+
+        return hmac.new(
+            self.secret_key.encode("utf-8"),
+            to_sign.encode("utf-8"),
             hashlib.sha256
         ).hexdigest()
-        
-        return signature
+
+
     
-    def create_payment(self, 
-                      commerce_order: str,
-                      subject: str,
-                      amount: int,
-                      email: str,
-                      url_confirmation: str,
-                      url_return: str,
-                      payment_method: int = 9) -> Optional[Dict]:
-        """
-        Crea un pago en Flow
-        """
+    def create_payment(
+        self,
+        commerce_order: str,
+        subject: str,
+        amount: int,
+        email: str,
+        url_confirmation: str,
+        url_return: str,
+        payment_method: int = 9
+    ):
+
         params = {
             "apiKey": self.api_key,
             "commerceOrder": commerce_order,
             "subject": subject,
             "currency": "CLP",
-            "amount": amount,
+            "amount": int(amount),
             "email": email,
             "paymentMethod": payment_method,
             "urlConfirmation": url_confirmation,
-            "urlReturn": url_return
+            "urlReturn": url_return,
         }
-        
+
+    # 🔐 Firma DESPUÉS de tener TODOS los params
         params["s"] = self._generate_signature(params)
-        
-        url = self.base_url + "payment/create"
-        
-        try:
-            logger.info(f"Creando pago en Flow: {commerce_order} - ${amount} - {email}")
-            response = requests.post(url, data=params, timeout=30)
-            
-            if response.status_code == 200:
-                logger.info(f"Pago creado exitosamente: {commerce_order}")
-                return response.json()
-            else:
-                logger.error(f"Flow Error: {response.status_code} - {response.text}")
-                return None
-                
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Flow Request Exception: {str(e)}")
-            return None
+
+        response = requests.post(
+            self.base_url + "payment/create",
+            data=params,
+            timeout=30
+        )
+
+        if response.status_code == 200:
+            return response.json()
+
+        logger.error(f"Flow Error: {response.status_code} - {response.text}")
+        return None
+
+
     
     def get_payment_status(self, token: str) -> Optional[Dict]:
         """

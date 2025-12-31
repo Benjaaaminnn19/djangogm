@@ -45,34 +45,28 @@ logger = logging.getLogger(__name__)
 def iniciar_pago(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
 
-    order_data = {
-        "commerceOrder": f"ORD-{producto_id}-{request.user.id if request.user.is_authenticated else 'anon'}",
-        "subject": f"Compra: {producto.nombre}",
-        "amount": int(producto.precio.replace('.', '') if isinstance(producto.precio, str) else producto.precio),
-        "email": request.user.email if request.user.is_authenticated else "pergadetonao14@gmail.com",
-        "urlConfirmation": "https://gimnasiolebloncalama.cl/confirm/",
-        "urlReturn": "https://gimnasiolebloncalama.cl/tienda/return/"
-    }
+    commerce_order = f"ORD-{producto_id}-{request.user.id if request.user.is_authenticated else 'anon'}"
+
+    amount = int(producto.precio.replace('.', '') if isinstance(producto.precio, str) else producto.precio)
+
+    email = obtener_email_usuario(request)  # ✅ FIX CLAVE
 
     flow = FlowService(environment="sandbox")
 
-    # === DEBUG: Esto es lo importante ===
-    result = flow.create_payment(order_data)
-    
-    logger.info("FLOW RESULT: %s", result)  # Verás esto en los logs de Railway
-    
+    result = flow.create_payment(
+        commerce_order=commerce_order,
+        subject=f"Compra: {producto.nombre}",
+        amount=amount,
+        email=email,  # ✅ nunca vacío
+        url_confirmation="https://gimnasiolebloncalama.cl/confirm/",
+        url_return="https://gimnasiolebloncalama.cl/tienda/return/",
+    )
+
     if result and 'url' in result and 'token' in result:
-        redirect_url = f"{result['url']}?token={result['token']}"
-        return redirect(redirect_url)
-    else:
-        # Mostramos más info para debug
-        error_msg = "Error al conectar con Flow.<br><br>"
-        if result is None:
-            error_msg += "No se recibió respuesta (posible error de conexión o status != 200)."
-        else:
-            error_msg += f"Respuesta de Flow: {result}"
-        
-        return HttpResponse(error_msg, status=500)
+        return redirect(f"{result['url']}?token={result['token']}")
+
+    return HttpResponse("Error al conectar con Flow", status=500)
+
   
 
 # =====================================================
@@ -204,20 +198,28 @@ def pago_multiplo(request):
     if amount < 1000:
         return HttpResponse("Monto mínimo $1.000 CLP")
 
-    order_data = {
-        "commerceOrder": f"ORD-MULTI-{int(time.time())}",  # Ahora time está definido
-        "subject": subject,
-        "amount": amount,
-        "email": request.user.email if request.user.is_authenticated else "pergadetonao14@gmail.com",
-        "urlConfirmation": "https://gimnasiolebloncalama.cl/confirm/",
-        "urlReturn": "https://gimnasiolebloncalama.cl/tienda/return/"
-    }
+    commerce_order = f"ORD-MULTI-{int(time.time())}"
+
+    email = obtener_email_usuario(request)  # ✅ FIX CLAVE
 
     flow = FlowService(environment="sandbox")
-    result = flow.create_payment(order_data)
+
+    result = flow.create_payment(
+        commerce_order=commerce_order,
+        subject=subject,
+        amount=amount,
+        email=email,  # ✅ nunca vacío
+        url_confirmation="https://gimnasiolebloncalama.cl/confirm/",
+        url_return="https://gimnasiolebloncalama.cl/tienda/return/",
+    )
 
     if result and 'url' in result and 'token' in result:
-        redirect_url = f"{result['url']}?token={result['token']}"
-        return redirect(redirect_url)
-    else:
-        return HttpResponse("Error al conectar con Flow")
+        return redirect(f"{result['url']}?token={result['token']}")
+
+    return HttpResponse("Error al conectar con Flow", status=500)
+
+
+def obtener_email_usuario(request):
+    if request.user.is_authenticated and request.user.email:
+        return request.user.email.strip()
+    return "benjaminjavier46@gmail.com"
