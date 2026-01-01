@@ -7,13 +7,17 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-
 class FlowService:
-    def __init__(self, environment="sandbox"):
+    def __init__(self, environment=None):
         """
-        Inicializa el servicio de Flow
-        environment: "sandbox" o "prod"
+        Si environment es None, usamos lo que diga settings.FLOW_SANDBOX
         """
+        # Determinar ambiente automáticamente si no se pasa uno
+        if environment is None:
+            env_type = "sandbox" if settings.FLOW_SANDBOX else "prod"
+        else:
+            env_type = environment
+
         self.config = {
             "prod": {
                 "base_url": "https://www.flow.cl/api/",
@@ -27,36 +31,37 @@ class FlowService:
             }
         }
         
-        self.environment = environment
-        self.api_key = self.config[environment]["api_key"]
-        self.secret_key = self.config[environment]["secret_key"]
-        self.base_url = self.config[environment]["base_url"]
+        self.environment = env_type
+        # IMPORTANTE: .strip() elimina espacios accidentales de las keys del .env
+        self.api_key = str(self.config[env_type]["api_key"]).strip()
+        self.secret_key = str(self.config[env_type]["secret_key"]).strip()
+        self.base_url = self.config[env_type]["base_url"]
         
-        # Log del ambiente
-        logger.info(f"FlowService inicializado en modo: {environment}")
+        logger.info(f"FlowService inicializado en modo: {self.environment}")
     
     def _generate_signature(self, params: Dict) -> str:
         """
-        Firma oficial Flow Chile (sandbox y producción)
-        - Incluye apiKey
-        - Excluye solo 's'
+        Genera la firma digital requerida por Flow
         """
-        sorted_items = sorted(params.items())
+        # 1. Ordenar los parámetros alfabéticamente por llave
+        sorted_keys = sorted(params.keys())
 
+        # 2. Concatenar llave+valor (excluyendo la firma 's')
         to_sign = ""
-        for key, value in sorted_items:
+        for key in sorted_keys:
             if key == "s":
                 continue
+            # Aseguramos que el valor sea string y no tenga espacios nulos
+            value = str(params[key]).strip()
             to_sign += f"{key}{value}"
 
+        # 3. Firmar usando HMAC SHA256
         return hmac.new(
             self.secret_key.encode("utf-8"),
             to_sign.encode("utf-8"),
             hashlib.sha256
         ).hexdigest()
 
-
-    
     def create_payment(
         self,
         commerce_order: str,
@@ -67,10 +72,9 @@ class FlowService:
         url_return: str,
         payment_method: int = 9
     ):
-
         params = {
             "apiKey": self.api_key,
-            "commerceOrder": commerce_order,
+            "commerceOrder": str(commerce_order),
             "subject": subject,
             "currency": "CLP",
             "amount": int(amount),
@@ -80,48 +84,38 @@ class FlowService:
             "urlReturn": url_return,
         }
 
-    # 🔐 Firma DESPUÉS de tener TODOS los params
+        # Generar firma con los parámetros finales
         params["s"] = self._generate_signature(params)
 
-        response = requests.post(
-            self.base_url + "payment/create",
-            data=params,
-            timeout=30
-        )
+        try:
+            response = requests.post(
+                f"{self.base_url}payment/create",
+                data=params,
+                timeout=30
+            )
+            
+            if response.status_code == 200:
+                return response.json()
+            
+            logger.error(f"Flow Error ({self.environment}): {response.status_code} - {response.text}")
+            return None
+        except Exception as e:
+            logger.error(f"Error de conexión con Flow: {str(e)}")
+            return None
 
-        if response.status_code == 200:
-            return response.json()
-
-        logger.error(f"Flow Error: {response.status_code} - {response.text}")
-        return None
-
-
-    
     def get_payment_status(self, token: str) -> Optional[Dict]:
-        """
-        Obtiene el estado de un pago
-        """
         params = {
             "apiKey": self.api_key,
-            "token": token
+            "token": str(token).strip()
         }
         
         params["s"] = self._generate_signature(params)
         
-        url = self.base_url + "payment/getStatus"
-        
         try:
-            logger.info(f"Consultando estado de pago: {token}")
-            response = requests.post(url, data=params, timeout=30)
-            
+            response = requests.post(f"{self.base_url}payment/getStatus", data=params, timeout=30)
             if response.status_code == 200:
-                data = response.json()
-                logger.info(f"Estado de pago {token}: {data.get('status')}")
-                return data
-            else:
-                logger.error(f"Flow Status Error: {response.status_code} - {response.text}")
-                return None
-                
-        except requests.exceptions.RequestException as e:
+                return response.json()
+            return None
+        except Exception as e:
             logger.error(f"Flow Status Exception: {str(e)}")
             return None
