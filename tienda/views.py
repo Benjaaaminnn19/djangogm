@@ -41,31 +41,39 @@ def formatear_precio(precio):
 # =====================================================
 
 
-logger = logging.getLogger(__name__)
 def iniciar_pago(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
+    
+    # Lógica de precio: quitar puntos si es string
+    try:
+        if isinstance(producto.precio, str):
+            amount = int(producto.precio.replace('.', ''))
+        else:
+            amount = int(producto.precio)
+    except Exception as e:
+        logger.error(f"Error procesando precio: {e}")
+        return HttpResponse("Precio del producto inválido", status=400)
 
-    commerce_order = f"ORD-{producto_id}-{request.user.id if request.user.is_authenticated else 'anon'}"
+    commerce_order = f"ORD-{producto_id}-{int(time.time())}"
+    email = obtener_email_usuario(request)
 
-    amount = int(producto.precio.replace('.', '') if isinstance(producto.precio, str) else producto.precio)
-
-    email = obtener_email_usuario(request)  # ✅ FIX CLAVE
-
-    flow = FlowService(environment="sandbox")
+    # ✅ CORRECCIÓN: Dejar que FlowService elija el ambiente solo
+    flow = FlowService() 
 
     result = flow.create_payment(
         commerce_order=commerce_order,
         subject=f"Compra: {producto.nombre}",
         amount=amount,
-        email=email,  # ✅ nunca vacío
+        email=email,
         url_confirmation="https://gimnasiolebloncalama.cl/confirm/",
         url_return="https://gimnasiolebloncalama.cl/tienda/return/",
     )
 
     if result and 'url' in result and 'token' in result:
+        # IMPORTANTE: Guardar el token en tu modelo Orden aquí si es necesario
         return redirect(f"{result['url']}?token={result['token']}")
 
-    return HttpResponse("Error al conectar con Flow", status=500)
+    return HttpResponse("Error al conectar con Flow. Revisa los logs de Railway.", status=500)
 
   
 
