@@ -13,6 +13,7 @@
     <script src="{% static 'js/main.js' %}"></script>
     
 </head>
+
 <body style="margin: 0; padding: 0;">
    
   
@@ -100,6 +101,7 @@
     </div>
     {% endif %}
      <!-- Navbar -->
+      
      <nav class="navbar navbar-expand-lg navbar-dark sticky-top modern-navbar">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="#">
@@ -112,23 +114,48 @@
             </button>
             <div class="collapse navbar-collapse" id="menu">
                 <ul class="navbar-nav ms-auto align-items-lg-center">
-                    <li class="nav-item"><a class="icon-btn"href="#inicio"><i class="fa-solid fa-house"></i></a></li>
-                    <!-- NUEVO BOTÓN AQUÍ -->
-            
-                </li>
-                    <li class="nav-item ms-lg-3 d-flex">
-                        <div class="navbar-icons d-flex align-items-center gap-3">
-                            <a href="#"  title="Mi cuenta">
-                                <i class="far fa-user"></i>
-                            </a>
-                           
-                           
+                    <li class="nav-item"><a class="nav-link" href="#inicio"><i class="fa-solid fa-house"></i> </a></li>
+                    
+                    
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'registro' %}">
+                                    <i class="fa-solid fa-circle-user"></i> 
+                                </a>
+                            </li>
+                            {% if user.is_authenticated %}
+                            <!-- Usuario logueado -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user me-1"></i> {{ user.nombre|default:user.email|truncatechars:15 }}
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{% url 'checkin' %}">
+                                        <i class="fas fa-door-open me-2"></i> Hacer Check-in
+                                    </a></li>
+                                    
+                                    </a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    
+                                </ul>
+                            </li>
+                        {% else %}
+                            <!-- Usuario NO logueado -->
+                          
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'checkin' %}">
+                                    
+                                </a>
+                            </li>
+                        {% endif %}
                         </div>
+                        
                     </li>
                 </ul>
             </div>                
         </div>
+        
     </nav>
+   
 
 
     
@@ -910,107 +937,6 @@
         </div>
     </div>
     
-    <!-- Popup de Registro de Leads -->
-    <div class="modal fade" id="popupRegistro" tabindex="-1" aria-labelledby="popupRegistroLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content" style="border: none; border-radius: 15px; overflow: hidden;">
-                <div class="modal-header" style="border: none; padding: 0; position: relative;">
-                    <button type="button" class="btn-close" style="position: absolute; top: 15px; right: 15px; z-index: 1000;" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" style="padding: 40px;">
-                    <div class="row align-items-center">
-                        <!-- Columna Izquierda - Texto -->
-                        <div class="col-md-6">
-                            <div class="text-left">
-                                <h1 style="font-size: 3.5rem; font-weight: 900; color: #dc3545; margin-bottom: 0; line-height: 0.8;">
-                                    SÚMATE
-                                </h1>
-                                <h2 style="font-size: 1.8rem; font-weight: 600; color: #000; margin-bottom: 20px;">
-                                    AL ESTILO DE VIDA
-                                </h2>
-                                <div style="font-size: 2rem; font-weight: 800; color: #000; margin-bottom: 30px; letter-spacing: 2px;">
-                                    LEBLON FITNESS
-                                </div>
-                                
-                                <p style="color: #666; font-size: 1rem; margin-bottom: 20px;">
-                                    DEJA TUS DATOS Y RECIBE NUESTRO
-                                </p>
-                                
-                                <div style="background: #dc3545; color: white; padding: 15px 20px; border-radius: 8px; font-size: 1.2rem; font-weight: bold; margin-bottom: 20px; text-align: center;">
-                                    SEMÁFORO NUTRICIONAL
-                                </div>
-                                
-                                <p style="color: #666; font-size: 0.9rem; margin-bottom: 15px;">
-                                    ADEMÁS TODOS LOS MESES ESTAREMOS SORTEANDO
-                                </p>
-                                
-                                <div style="margin-bottom: 30px;">
-                                    <div style="font-size: 1.8rem; font-weight: bold; color: #000; margin-bottom: 5px;">
-                                        6 MESES DE GIMNASIO
-                                    </div>
-                                    <div style="font-size: 1.8rem; font-weight: bold; color: #dc3545;">
-                                        GRATIS
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Columna Derecha - Imagen y Formulario -->
-                        <div class="col-md-6">
-                            <!-- Imagen de alimentos -->
-                            <div style="text-align: center; margin-bottom: 30px;">
-                                <div style="position: relative; display: inline-block;">
-                                    <div style="width: 200px; height: 200px; border-radius: 50%; background: linear-gradient(45deg, #ffd700, #ffed4e); display: flex; align-items: center; justify-content: center; position: relative;">
-                                        <div style="font-size: 3rem;">🥗</div>
-                                    </div>
-                                    <div style="position: absolute; top: -10px; right: -10px; width: 40px; height: 40px; background: #dc3545; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
-                                        ✓
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Formulario de Registro -->
-                            <form id="formRegistroPopup" class="needs-validation" novalidate>
-                                <div class="mb-3">
-                                    <label for="nombreRegistro" class="form-label fw-semibold" style="color: #333;">
-                                        <i class="fas fa-user me-1"></i>Nombre Completo
-                                    </label>
-                                    <input type="text" class="form-control form-control-lg" id="nombreRegistro" name="nombre" placeholder="Tu nombre completo" required style="border-radius: 8px; border: 2px solid #e0e0e0;">
-                                    <div class="invalid-feedback">
-                                        Por favor ingresa tu nombre.
-                                    </div>
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label for="telefonoRegistro" class="form-label fw-semibold" style="color: #333;">
-                                        <i class="fas fa-phone me-1"></i>Teléfono
-                                    </label>
-                                    <input type="tel" class="form-control form-control-lg" id="telefonoRegistro" name="telefono" placeholder="+56 9 1234 5678" required style="border-radius: 8px; border: 2px solid #e0e0e0;">
-                                    <div class="invalid-feedback">
-                                        Por favor ingresa tu teléfono.
-                                    </div>
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label for="emailRegistro" class="form-label fw-semibold" style="color: #333;">
-                                        <i class="fas fa-envelope me-1"></i>Correo Electrónico <span class="text-danger">*</span>
-                                    </label>
-                                    <input type="email" class="form-control form-control-lg" id="emailRegistro" name="email" placeholder="tu@email.com" required style="border-radius: 8px; border: 2px solid #e0e0e0;">
-                                    <div class="invalid-feedback">
-                                        Por favor ingresa un email válido.
-                                    </div>
-                                </div>
-                                
-                                <button type="submit" class="btn w-100" style="background: #dc3545; color: white; padding: 15px; border-radius: 8px; font-size: 1.1rem; font-weight: bold; border: none; margin-top: 10px;">
-                                    <i class="fas fa-paper-plane me-2"></i>ENVIAR DATOS
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Notificaciones personalizadas -->
     <div id="notificationContainer" style="position: fixed; top: 20px; right: 20px; z-index: 10000;"></div>
@@ -1281,6 +1207,13 @@
         });
     }
 </script>
+
+
+
+
+
+
+
 </body>
 </html>
 </body>

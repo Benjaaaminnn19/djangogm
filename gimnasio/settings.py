@@ -91,6 +91,21 @@ DATABASES = {
     }
 }
 
+
+
+
+# ==========================================
+# USER AUTH
+# ==========================================
+
+AUTH_USER_MODEL = 'principal.Miembro'
+AUTHENTICATION_BACKENDS = [
+    'principal.authentication.EmailOrPhoneBackend',  
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+
+
 # ==========================================
 # PASSWORD VALIDATION
 # ==========================================

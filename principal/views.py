@@ -11,7 +11,9 @@ from .models import Lead
 from django.core.mail import send_mail
 from django.conf import settings
 from .models import Clase, Reserva, SolicitudPlan
-
+from .models import Miembro, Asistencia
+from django.contrib import messages
+from django.contrib.auth import authenticate, login
 # Configurar logger
 logger = logging.getLogger(__name__)
 
@@ -323,3 +325,117 @@ Este es un correo automático de confirmación.''',
                 'success': False, 
                 'message': 'Error interno del servidor. Por favor intenta nuevamente.'
             })
+
+
+def checkin_view(request):
+    """Vista de check-in que redirige al registro si no está logueado"""
+    
+    # Si YA está autenticado, mostrar check-in normal
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            # Registrar asistencia
+            hoy = timezone.now().date()
+            if not Asistencia.objects.filter(miembro=request.user, fecha_entrada__date=hoy).exists():
+                Asistencia.objects.create(miembro=request.user)
+                messages.success(request, "¡Entrada registrada exitosamente!")
+            else:
+                messages.info(request, "Ya registraste entrada hoy.")
+            
+            return render(request, 'checkin.html', {
+                'mensaje_exito': True,
+                'nombre_miembro': request.user.nombre or request.user.email or request.user.telefono,
+                'hora_entrada': timezone.now(),
+            })
+        
+        return render(request, 'checkin.html')
+    
+    # Si NO está autenticado
+    else:
+        if request.method == 'POST':
+            # Login tradicional
+            identificador = request.POST.get('identificador', '').strip()
+            password = request.POST.get('password', '')
+
+            user = authenticate(request, username=identificador, password=password)
+
+            if user is not None:
+                if not user.activo:
+                    messages.error(request, "Tu membresía está inactiva.")
+                else:
+                    login(request, user)
+                    
+                    # Registrar asistencia
+                    hoy = timezone.now().date()
+                    if not Asistencia.objects.filter(miembro=user, fecha_entrada__date=hoy).exists():
+                        Asistencia.objects.create(miembro=user)
+                        messages.success(request, "¡Entrada registrada exitosamente!")
+                    else:
+                        messages.info(request, "Ya registraste entrada hoy.")
+
+                    return render(request, 'checkin.html', {
+                        'mensaje_exito': True,
+                        'nombre_miembro': user.nombre or user.email or user.telefono,
+                        'hora_entrada': timezone.now(),
+                    })
+            else:
+                messages.error(request, "Credenciales incorrectas. Intenta nuevamente.")
+        
+        # Mostrar página de check-in (con o sin modal)
+        return render(request, 'checkin.html')
+
+
+
+def registro_view(request):
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre', '').strip()
+        email = request.POST.get('email', '').strip()
+        telefono = request.POST.get('telefono', '').strip()
+        password1 = request.POST.get('password1', '')
+        password2 = request.POST.get('password2', '')
+
+        # Validaciones básicas
+        if not nombre or not email or not telefono or not password1 or not password2:
+            messages.error(request, "Todos los campos son obligatorios.")
+        elif password1 != password2:
+            messages.error(request, "Las contraseñas no coinciden.")
+        elif len(password1) < 6:
+            messages.error(request, "La contraseña debe tener al menos 6 caracteres.")
+        elif Miembro.objects.filter(email=email).exists():
+            messages.error(request, "Ya existe un miembro con ese email.")
+        elif Miembro.objects.filter(telefono=telefono).exists():
+            messages.error(request, "Ya existe un miembro con ese teléfono.")
+        else:
+            try:
+                # Crear el miembro
+                miembro = Miembro.objects.create_user(
+                    email=email,
+                    telefono=telefono,
+                    password=password1,
+                    nombre=nombre
+                )
+                
+                # Hacer login automático
+                user = authenticate(request, username=email, password=password1)
+                if user is not None:
+                    login(request, user)
+                    messages.success(request, f"¡Bienvenido {nombre}! Tu cuenta ha sido creada exitosamente.")
+                    
+                    # Redirigir al check-in o a la página principal
+                    return redirect('checkin')  # o 'home' si prefieres
+                
+            except Exception as e:
+                messages.error(request, f"Error al crear la cuenta: {str(e)}")
+                return render(request, 'registro.html', {
+                    'nombre': nombre,
+                    'email': email,
+                    'telefono': telefono,
+                })
+
+        # Si hay errores, vuelve al formulario con los datos
+        return render(request, 'registro.html', {
+            'nombre': nombre,
+            'email': email,
+            'telefono': telefono,
+        })
+
+    return render(request, 'registro.html')

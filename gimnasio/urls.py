@@ -29,6 +29,8 @@ urlpatterns = [
     path('tienda/', include('tienda.urls')),
     path('confirm/', views.confirm_view, name='flow_confirm'),
     path('', include('participaciones.urls')),
+    path('', include('principal.urls')),
+    
     
     
 

@@ -3,7 +3,9 @@ from .models import Lead
 from .models import Clase, Reserva, SolicitudPlan
 from django.core.mail import send_mail
 from django.conf import settings
-
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from .models import Miembro, Asistencia
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 @admin.register(Lead)
 class LeadAdmin(admin.ModelAdmin):
     list_display = ['nombre', 'email', 'fecha_registro', 'activo']
@@ -103,23 +105,43 @@ Este es un correo automático, por favor no responder.''',
         # Guardar el modelo (tanto para cambios como para nuevos)
         super().save_model(request, obj, form, change)
 
-@admin.register(SolicitudPlan)
-class SolicitudPlanAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'plan', 'telefono', 'email', 'fecha_compra', 'estado', 'activado')
-    list_filter = ('plan', 'estado', 'activado', 'fecha_compra')
-    search_fields = ('nombre', 'email', 'telefono', 'plan')
-    readonly_fields = ('fecha_compra',)
-    date_hierarchy = 'fecha_compra'
-    list_editable = ('estado', 'activado')
+class MiembroCreationForm(UserCreationForm):
+    class Meta:
+        model = Miembro
+        fields = ('email', 'telefono', 'nombre')
+
+class MiembroChangeForm(UserChangeForm):
+    class Meta:
+        model = Miembro
+        fields = '__all__'
+
+@admin.register(Miembro)
+class MiembroAdmin(BaseUserAdmin):
+    form = MiembroChangeForm
+    add_form = MiembroCreationForm
+    
+    list_display = ('email', 'telefono', 'nombre', 'is_active', 'fecha_inicio', 'activo')
+    list_filter = ('activo', 'is_staff', 'is_superuser', 'fecha_inicio')
+    search_fields = ('email', 'telefono', 'nombre')
+    ordering = ('nombre',)
     
     fieldsets = (
-        ('Información del Cliente', {
-            'fields': ('nombre', 'telefono', 'email')
-        }),
-        ('Detalles del Plan', {
-            'fields': ('plan', 'mensaje')
-        }),
-        ('Estado de la Compra', {
-            'fields': ('estado', 'activado', 'fecha_compra')
+        (None, {'fields': ('email', 'telefono', 'password')}),
+        ('Información Personal', {'fields': ('nombre', 'fecha_inicio', 'activo')}),
+        ('Permisos', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
+    )
+    
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email', 'telefono', 'nombre', 'password1', 'password2', 'activo'),
         }),
     )
+
+@admin.register(Asistencia)
+class AsistenciaAdmin(admin.ModelAdmin):
+    list_display = ('miembro', 'fecha_entrada')
+    list_filter = ('fecha_entrada',)
+    search_fields = ('miembro__nombre', 'miembro__email', 'miembro__telefono')
+    readonly_fields = ('miembro', 'fecha_entrada')
+    ordering = ('-fecha_entrada',)
