@@ -13,11 +13,10 @@ from django.conf import settings
 from .models import Clase, Reserva, SolicitudPlan
 from .models import Miembro, Asistencia
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+
 # Configurar logger
 logger = logging.getLogger(__name__)
-
-# Create your views here.
 
 def home(request):
     """Vista para mostrar la página principal del gimnasio"""
@@ -72,7 +71,7 @@ class RegistrarLeadView(View):
             return JsonResponse({'success': False, 'message': 'Error en los datos enviados'})
         except Exception as e:
             return JsonResponse({'success': False, 'message': 'Error interno del servidor'})
-        
+
 def agendar_clase(request, clase_id):
     try:
         clase = Clase.objects.get(id=clase_id)
@@ -227,6 +226,12 @@ class ComprarPlanView(View):
             email = data.get('email')
             mensaje = data.get('mensaje', '')
             
+            # Obtener el email del usuario logueado si existe
+            if request.user.is_authenticated:
+                email = request.user.email
+                nombre = nombre or request.user.nombre
+                telefono = telefono or request.user.telefono
+            
             if not plan or not nombre or not telefono or not email:
                 return JsonResponse({
                     'success': False, 
@@ -235,67 +240,60 @@ class ComprarPlanView(View):
             
             # Determinar precios según el plan
             precios = {
-                'Plan Azul': {'mensualidad': 29000, 'matricula': 14000},
-                'Plan Amarillo': {'mensualidad': 32000, 'matricula': 14000},
-                'Plan Verde': {'mensualidad': 38000, 'matricula': 14000},
+                'Plan Trimestral': {'mensualidad': 91000, 'matricula': 0},
+                'Plan Anual': {'mensualidad': 298000, 'matricula': 0},
+                'Plan Semestral': {'mensualidad': 171000, 'matricula': 0},
             }
             
             precio_plan = precios.get(plan, {'mensualidad': 0, 'matricula': 0})
             total = precio_plan['mensualidad'] + precio_plan['matricula']
             
-            # Crear compra de plan (activada automáticamente)
+            # Crear compra de plan
             compra = SolicitudPlan.objects.create(
                 plan=plan,
                 nombre=nombre,
                 telefono=telefono,
                 email=email,
                 mensaje=mensaje if mensaje else None,
-                estado='pagado',
-                activado=True
+                estado='pendiente',
+                activado=False
             )
             
-            # Enviar correo de confirmación de compra
+            # Enviar correo de confirmación de solicitud
             try:
                 from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@gimnasioleblon.com')
                 
                 send_mail(
-                    subject=f'¡Bienvenido a {plan} - Gimnasio Leblon!',
+                    subject=f'Solicitud de {plan} - Gimnasio Leblon',
                     message=f'''╔═══════════════════════════════════════════════════════╗
-║         🏋️ GIMNASIO LEBLON - COMPRA CONFIRMADA 🏋️        ║
+║         🏋️ GIMNASIO LEBLON - SOLICITUD RECIBIDA 🏋️        ║
 ╚═══════════════════════════════════════════════════════╝
 
 ¡Hola {nombre}!
 
-🎉 ¡FELICIDADES! Tu compra ha sido confirmada exitosamente.
+✅ Tu solicitud ha sido recibida exitosamente.
 
-📋 DETALLES DE TU COMPRA:
+📋 DETALLES DE TU SOLICITUD:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    🎯 Plan: {plan}
-   💰 Mensualidad: ${precio_plan['mensualidad']:,}
-   💵 Matrícula: ${precio_plan['matricula']:,}
-   💳 Total Pagado: ${total:,}
-   ✅ Estado: ACTIVADO
-   📅 Fecha de Activación: {compra.fecha_compra.strftime('%d/%m/%Y %H:%M')}
+   💰 Precio: ${precio_plan['mensualidad']:,}
+   📧 Email: {email}
+   📱 Teléfono: {telefono}
+   📅 Fecha de Solicitud: {compra.fecha_compra.strftime('%d/%m/%Y %H:%M')}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-🚀 TU PLAN ESTÁ ACTIVO
+📍 PRÓXIMOS PASOS:
+   1. Nuestro equipo revisará tu solicitud
+   2. Te contactaremos para coordinar el pago
+   3. Una vez confirmado el pago, activaremos tu membresía
 
-Puedes comenzar a usar las instalaciones del gimnasio de inmediato.
+💪 INFORMACIÓN DEL GIMNASIO:
+   • Dirección: Av. Granaderos 3037, Calama, Antofagasta
+   • Teléfono: +56 9 7527 4804
+   • WhatsApp: https://wa.me/56975274804
+   • Horario: Lun-Vie 9:00-23:00, Sáb 9:00-22:00, Dom 9:00-13:00
 
-📍 INFORMACIÓN IMPORTANTE:
-   • Ubicación: Av. Granaderos 3037, Calama, Antofagasta
-   • Teléfono: +56 9 4953 1978
-   • Horario: Lunes-Viernes 9:00-23:00, Sábados 9:00-22:00, Domingos 9:00-13:00
-
-📝 PRÓXIMOS PASOS:
-   1. Presenta este correo en tu primera visita
-   2. Agenda tu evaluación corporal inicial
-   3. Conoce nuestras instalaciones y equipos
-   4. ¡Comienza tu transformación hoy mismo!
-
-💪 ¡Bienvenido a la familia Leblon Fitness!
-
-Estamos emocionados de ser parte de tu viaje hacia una vida más saludable.
+¡Gracias por elegir Leblon Fitness!
 
 Saludos,
 Equipo Leblon Fitness
@@ -311,7 +309,7 @@ Este es un correo automático de confirmación.''',
             
             return JsonResponse({
                 'success': True,
-                'message': f'¡Compra exitosa! Tu {plan} ha sido activado. Revisa tu correo para más detalles. ¡Bienvenido a Leblon Fitness!'
+                'message': f'¡Solicitud enviada! Te contactaremos pronto para confirmar tu {plan}. Revisa tu correo ({email}).'
             })
             
         except json.JSONDecodeError:
@@ -327,65 +325,45 @@ Este es un correo automático de confirmación.''',
             })
 
 
-def checkin_view(request):
-    """Vista de check-in que redirige al registro si no está logueado"""
-    
-    # Si YA está autenticado, mostrar check-in normal
+def login_view(request):
+    """Vista de inicio de sesión"""
+    # Si ya está autenticado, redirigir al home
     if request.user.is_authenticated:
-        if request.method == 'POST':
-            # Registrar asistencia
-            hoy = timezone.now().date()
-            if not Asistencia.objects.filter(miembro=request.user, fecha_entrada__date=hoy).exists():
-                Asistencia.objects.create(miembro=request.user)
-                messages.success(request, "¡Entrada registrada exitosamente!")
-            else:
-                messages.info(request, "Ya registraste entrada hoy.")
-            
-            return render(request, 'checkin.html', {
-                'mensaje_exito': True,
-                'nombre_miembro': request.user.nombre or request.user.email or request.user.telefono,
-                'hora_entrada': timezone.now(),
-            })
-        
-        return render(request, 'checkin.html')
+        return redirect('home')
     
-    # Si NO está autenticado
-    else:
-        if request.method == 'POST':
-            # Login tradicional
-            identificador = request.POST.get('identificador', '').strip()
-            password = request.POST.get('password', '')
+    if request.method == 'POST':
+        identificador = request.POST.get('identificador', '').strip()
+        password = request.POST.get('password', '')
 
-            user = authenticate(request, username=identificador, password=password)
+        if not identificador or not password:
+            messages.error(request, "Por favor ingresa tu email/teléfono y contraseña.")
+            return render(request, 'login.html')
 
-            if user is not None:
-                if not user.activo:
-                    messages.error(request, "Tu membresía está inactiva.")
-                else:
-                    login(request, user)
-                    
-                    # Registrar asistencia
-                    hoy = timezone.now().date()
-                    if not Asistencia.objects.filter(miembro=user, fecha_entrada__date=hoy).exists():
-                        Asistencia.objects.create(miembro=user)
-                        messages.success(request, "¡Entrada registrada exitosamente!")
-                    else:
-                        messages.info(request, "Ya registraste entrada hoy.")
+        # Intentar autenticar
+        user = authenticate(request, username=identificador, password=password)
 
-                    return render(request, 'checkin.html', {
-                        'mensaje_exito': True,
-                        'nombre_miembro': user.nombre or user.email or user.telefono,
-                        'hora_entrada': timezone.now(),
-                    })
+        if user is not None:
+            if not user.activo:
+                messages.error(request, "Tu cuenta está inactiva. Contacta al gimnasio.")
             else:
-                messages.error(request, "Credenciales incorrectas. Intenta nuevamente.")
-        
-        # Mostrar página de check-in (con o sin modal)
-        return render(request, 'checkin.html')
-
+                login(request, user)
+                messages.success(request, f"¡Bienvenido de vuelta, {user.nombre or user.email}!")
+                
+                # Redirigir a la página que intentaba acceder o al home
+                next_url = request.GET.get('next', 'home')
+                return redirect(next_url)
+        else:
+            messages.error(request, "Email/teléfono o contraseña incorrectos.")
+    
+    return render(request, 'login.html')
 
 
 def registro_view(request):
+    """Vista de registro de nuevos usuarios"""
+    # Si ya está autenticado, redirigir al home
+    if request.user.is_authenticated:
+        return redirect('home')
+    
     if request.method == 'POST':
         nombre = request.POST.get('nombre', '').strip()
         email = request.POST.get('email', '').strip()
@@ -398,12 +376,12 @@ def registro_view(request):
             messages.error(request, "Todos los campos son obligatorios.")
         elif password1 != password2:
             messages.error(request, "Las contraseñas no coinciden.")
-        elif len(password1) < 6:
-            messages.error(request, "La contraseña debe tener al menos 6 caracteres.")
+        elif len(password1) < 8:
+            messages.error(request, "La contraseña debe tener al menos 8 caracteres.")
         elif Miembro.objects.filter(email=email).exists():
-            messages.error(request, "Ya existe un miembro con ese email.")
+            messages.error(request, "Ya existe una cuenta con ese email.")
         elif Miembro.objects.filter(telefono=telefono).exists():
-            messages.error(request, "Ya existe un miembro con ese teléfono.")
+            messages.error(request, "Ya existe una cuenta con ese teléfono.")
         else:
             try:
                 # Crear el miembro
@@ -414,16 +392,59 @@ def registro_view(request):
                     nombre=nombre
                 )
                 
+                # Enviar correo de bienvenida
+                try:
+                    from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@gimnasioleblon.com')
+                    
+                    send_mail(
+                        subject='¡Bienvenido a Leblon Fitness!',
+                        message=f'''╔═══════════════════════════════════════════════════════╗
+║         🏋️ ¡BIENVENIDO A LEBLON FITNESS! 🏋️          ║
+╚═══════════════════════════════════════════════════════╝
+
+¡Hola {nombre}!
+
+🎉 Tu cuenta ha sido creada exitosamente.
+
+📧 Email: {email}
+📱 Teléfono: {telefono}
+
+🚀 PRÓXIMOS PASOS:
+   1. Inicia sesión en nuestra plataforma
+   2. Explora nuestros planes de membresía
+   3. Agenda tu primera clase
+   4. ¡Comienza tu transformación!
+
+💪 INFORMACIÓN DEL GIMNASIO:
+   • Dirección: Av. Granaderos 3037, Calama, Antofagasta
+   • Teléfono: +56 9 7527 4804
+   • WhatsApp: https://wa.me/56975274804
+   • Horario: Lun-Vie 9:00-23:00, Sáb 9:00-22:00, Dom 9:00-13:00
+
+¡Estamos emocionados de ser parte de tu viaje fitness!
+
+Saludos,
+Equipo Leblon Fitness
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━''',
+                        from_email=from_email,
+                        recipient_list=[email],
+                        fail_silently=True,
+                    )
+                except Exception as e:
+                    logger.error(f"Error al enviar correo de bienvenida: {str(e)}")
+                
                 # Hacer login automático
                 user = authenticate(request, username=email, password=password1)
                 if user is not None:
                     login(request, user)
-                    messages.success(request, f"¡Bienvenido {nombre}! Tu cuenta ha sido creada exitosamente.")
+                    messages.success(request, f"¡Bienvenido a Leblon Fitness, {nombre}! Tu cuenta ha sido creada exitosamente.")
                     
-                    # Redirigir al check-in o a la página principal
-                    return redirect('checkin')  # o 'home' si prefieres
+                    # Redirigir al home
+                    return redirect('home')
                 
             except Exception as e:
+                logger.error(f"Error al crear cuenta: {str(e)}")
                 messages.error(request, f"Error al crear la cuenta: {str(e)}")
                 return render(request, 'registro.html', {
                     'nombre': nombre,
@@ -439,3 +460,31 @@ def registro_view(request):
         })
 
     return render(request, 'registro.html')
+
+
+def logout_view(request):
+    """Vista para cerrar sesión"""
+    logout(request)
+    messages.success(request, "Has cerrado sesión correctamente.")
+    return redirect('home')
+
+
+@login_required
+def checkin_view(request):
+    """Vista de check-in para usuarios autenticados"""
+    if request.method == 'POST':
+        # Registrar asistencia
+        hoy = timezone.now().date()
+        if not Asistencia.objects.filter(miembro=request.user, fecha_entrada__date=hoy).exists():
+            Asistencia.objects.create(miembro=request.user)
+            messages.success(request, "¡Entrada registrada exitosamente!")
+        else:
+            messages.info(request, "Ya registraste entrada hoy.")
+        
+        return render(request, 'checkin.html', {
+            'mensaje_exito': True,
+            'nombre_miembro': request.user.nombre or request.user.email or request.user.telefono,
+            'hora_entrada': timezone.now(),
+        })
+    
+    return render(request, 'checkin.html')
