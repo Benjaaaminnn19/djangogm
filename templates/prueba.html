@@ -185,7 +185,7 @@
     </section>
 
 <!-- Sección Retos -->
-<section id="retos" class="py-5 bg-dark text-white">
+<section id="retos" class="py-5 bg-light">
     <div class="container">
         <h2 class="text-center mb-4 fw-bold">RETOS LEBLON FITNESS</h2>
         <p class="text-center mb-5 text-muted">
@@ -270,7 +270,7 @@
             <p class="mb-3 fw-semibold">
                 Los retos se actualizan cada mes y los cupos son limitados.
             </p>
-            <a href="#contacto" class="btn btn-outline-light btn-lg px-5">
+            <a href="#contacto" class="btn btn-outline-secondary btn-lg px-5">
                 Quiero más información
             </a>
         </div>
@@ -561,7 +561,7 @@
             <h2 class="text-center section-title">POR QUÉ ELEGIRNOS</h2>
             <div class="row g-4">
                 <div class="col-md-4">
-                    <div class="card h-100 text-center p-4 hover-effect">
+                    <div class="card h-100 text-center p-4 hover-effect animate-on-scroll">
                         <div class="card-body">
                             <i class="fas fa-dumbbell feature-icon"></i>
                             <h4 class="card-title">EQUIPO PREMIUM</h4>
@@ -570,7 +570,7 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card h-100 text-center p-4 hover-effect">
+                    <div class="card h-100 text-center p-4 hover-effect animate-on-scroll">
                         <div class="card-body">
                             <i class="fas fa-users feature-icon"></i>
                             <h4 class="card-title">ENTRENADORES EXPERTOS</h4>
@@ -579,7 +579,7 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card h-100 text-center p-4 hover-effect">
+                    <div class="card h-100 text-center p-4 hover-effect animate-on-scroll">
                         <div class="card-body">
                             <i class="fas fa-calendar-alt feature-icon"></i>
                             <h4 class="card-title">HORARIO EXTENDIDO</h4>
@@ -942,11 +942,11 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
   
-        <div class="modal-header bg-dark text-white">
+        <div class="modal-header bg-light text-dark">
           <h5 class="modal-title">
             <i class="fas fa-trophy me-2"></i>Registrarse en el Reto
           </h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
   
         <form method="POST" action="{% url 'participar' %}">
@@ -1181,20 +1181,40 @@
         }, 800); // Pequeña espera de 0.8 seg para que el usuario vea que algo pasa
     }
 </script>
-</body>
-</html>
-<!-- Otros scripts... -->
-    
+
+<script>
+    // Mantener animaciones al hacer scroll (Beneficios, etc.)
+    document.addEventListener('DOMContentLoaded', () => {
+        const els = document.querySelectorAll('.animate-on-scroll');
+        if (!els.length) return;
+
+        if (!('IntersectionObserver' in window)) {
+            els.forEach(el => el.classList.add('animated'));
+            return;
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animated');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+
+        els.forEach(el => observer.observe(el));
+    });
+</script>
+
 <script>
     function copiarCodigo(codigo) {
         navigator.clipboard.writeText(codigo).then(() => {
-            // Cambiar el botón temporalmente
             const btn = event.target.closest('button');
             const textoOriginal = btn.innerHTML;
             btn.innerHTML = '<i class="fas fa-check me-2"></i>¡Copiado!';
             btn.classList.remove('btn-primary');
             btn.classList.add('btn-success');
-            
+
             setTimeout(() => {
                 btn.innerHTML = textoOriginal;
                 btn.classList.remove('btn-success');
@@ -1204,13 +1224,5 @@
     }
 </script>
 
-
-
-
-
-
-
-</body>
-</html>
 </body>
 </html>

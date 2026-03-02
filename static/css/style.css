@@ -12,7 +12,7 @@
   }
 
   body {
-    background: #e8e9ea !important;
+    background: #ffffff !important;
   }
   .spartan-hero-section {
   background: url("../img/img16.jpg");
@@ -54,17 +54,8 @@
     padding-right: 15px;
   }
 
-  .bg-light {
-    background-color: #e8e9ea !important;
-  }
-
-  section {
-    background-color: #e8e9ea !important;
-  }
-
-  .py-5 {
-    background-color: #e8e9ea !important;
-  }
+  /* Dejar que Bootstrap maneje los fondos por defecto.
+     Si quieres fondo blanco general, basta con el body en #fff. */
 
   /* Arreglar el contraste del texto en secciones con fondo claro */
   #inicio h2,
@@ -185,7 +176,8 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    /* Quitar oscurecido negro: usar un velo claro muy sutil */
+    background: rgba(255, 255, 255, 0.12);
     z-index: 1;
   }
 
@@ -435,7 +427,8 @@
     top: 0;
     width: 100%;
     z-index: 1000;
-    background: linear-gradient(135deg, rgba(255, 152, 0, 0.9), rgba(255, 193, 7, 0.9));
+    /* Menos brilloso: paleta cálida más suave (marrón) */
+    background: linear-gradient(135deg, rgba(139, 69, 19, 0.92), rgba(160, 82, 45, 0.92));
     backdrop-filter: blur(10px);
     box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -866,39 +859,4 @@
       font-size: 1rem;
     }
   }
-
-/* --- WhatsApp Flotante CSS --- */
-.whatsapp-float {
-  /* 1. Hace que el elemento se quede fijo en la pantalla */
-  position: fixed; 
-  
-  /* 2. Define su ubicación (ej. esquina inferior derecha) */
-  bottom: 20px;
-  right: 20px;
-  
-  /* 3. Asegura que esté por encima de otros elementos */
-  z-index: 1000; 
-  
-  /* 4. Estilos visuales */
-  width: 60px;
-  height: 60px;
-  background-color: #25D366; /* Color oficial de WhatsApp */
-  color: white;
-  border-radius: 50%; /* Lo hace circular */
-  text-align: center;
-  box-shadow: 2px 2px 3px #999;
-  
-  /* 5. Centra el icono */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 30px; /* Tamaño del icono */
-  transition: all 0.3s ease;
-}
-
-.whatsapp-float:hover {
-  background-color: #128C7E;
-  transform: scale(1.05);
-}
-
 
