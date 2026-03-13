@@ -27,3 +27,9 @@ logs/
 # OS
 .DS_Store
 Thumbs.db.env
+
+
+venv/
+db.sqlite3
+__pycache__/
+media/  
