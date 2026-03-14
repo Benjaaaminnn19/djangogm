@@ -242,7 +242,7 @@ def pago_multiplo(request):
 
     commerce_order = f"ORD-MULTI-{int(time.time())}"
 
-    flow = FlowService(environment="sandbox")
+    flow = FlowService()
 
     result = flow.create_payment(
         commerce_order=commerce_order,
