@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from django.urls import reverse
 from django.conf import settings
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required  # ← CAMBIO 1: Importación añadida
 import uuid
 import json
 import logging
@@ -11,7 +12,7 @@ import time
 from .models import Orden, Producto
 from .flow_service import FlowService
 
-
+logger = logging.getLogger(__name__)
 
 
 @csrf_exempt
@@ -21,7 +22,6 @@ def return_view(request):
     return render(request, 'return.html', {
         'token': token,
     })
-
 
 
 # =====================================================
@@ -37,28 +37,52 @@ def formatear_precio(precio):
 
 
 # =====================================================
-# INICIAR PAGO
+# OBTENER EMAIL DEL USUARIO  ← CAMBIO 2
 # =====================================================
 
+def obtener_email_usuario(request):
+    """
+    Devuelve el email del usuario autenticado.
+    Lanza ValueError si no está logueado o no tiene email registrado,
+    para que las vistas de pago puedan manejarlo explícitamente.
+    """
+    if not request.user.is_authenticated:
+        raise ValueError("El usuario no ha iniciado sesión.")
 
+    email = getattr(request.user, 'email', None)
+    if not email or not email.strip():
+        raise ValueError(
+            f"El usuario '{request.user}' no tiene un correo electrónico registrado. "
+            "Por favor, añade un correo desde tu perfil antes de realizar un pago."
+        )
+
+    return email.strip()
+
+
+# =====================================================
+# INICIAR PAGO  ← CAMBIO 3: @login_required añadido
+# =====================================================
+
+@login_required(login_url='/login/')
 def iniciar_pago(request, producto_id):
-    producto = get_object_or_404(Producto, id=producto_id)
-    
-    # Lógica de precio: quitar puntos si es string
     try:
-        if isinstance(producto.precio, str):
-            amount = int(producto.precio.replace('.', ''))
-        else:
-            amount = int(producto.precio)
+        email = obtener_email_usuario(request)
+    except ValueError as e:
+        return render(request, 'tienda.html', {
+            'productos': Producto.objects.filter(activo=True),
+            'error_pago': str(e),
+        })
+
+    producto = get_object_or_404(Producto, id=producto_id)
+
+    try:
+        amount = int(float(producto.precio))
     except Exception as e:
         logger.error(f"Error procesando precio: {e}")
         return HttpResponse("Precio del producto inválido", status=400)
 
     commerce_order = f"ORD-{producto_id}-{int(time.time())}"
-    email = obtener_email_usuario(request)
-
-    # ✅ CORRECCIÓN: Dejar que FlowService elija el ambiente solo
-    flow = FlowService() 
+    flow = FlowService()
 
     result = flow.create_payment(
         commerce_order=commerce_order,
@@ -70,12 +94,9 @@ def iniciar_pago(request, producto_id):
     )
 
     if result and 'url' in result and 'token' in result:
-        # IMPORTANTE: Guardar el token en tu modelo Orden aquí si es necesario
         return redirect(f"{result['url']}?token={result['token']}")
 
-    return HttpResponse("Error al conectar con Flow. Revisa los logs de Railway.", status=500)
-
-  
+    return HttpResponse("Error al conectar con Flow. Revisa los logs.", status=500)
 
 # =====================================================
 # CONFIRMACIÓN FLOW (WEBHOOK)
@@ -96,7 +117,6 @@ def confirmar_pago(request):
         flow_service = FlowService(sandbox=usar_sandbox)
 
         estado = flow_service.obtener_estado_pago(token)
-
 
         if "status" not in estado:
             orden.estado = "error_verificacion"
@@ -196,11 +216,25 @@ def detalle_producto(request, producto_id):
     )
 
 
+# =====================================================
+# PAGO MÚLTIPLE (CARRITO)  ← CAMBIO 3: @login_required añadido
+# =====================================================
+
+@login_required(login_url='/login/')
 def pago_multiplo(request):
+    # Obtener email dinámicamente; redirigir con mensaje si falta
+    try:
+        email = obtener_email_usuario(request)
+    except ValueError as e:
+        return render(request, 'tienda.html', {
+            'productos': Producto.objects.filter(activo=True),
+            'error_pago': str(e),
+        })
+
     try:
         amount = int(request.GET.get('amount', 0))
         subject = request.GET.get('subject', 'Compra en Leblon Gym')
-    except:
+    except Exception:
         return HttpResponse("Error en los parámetros")
 
     if amount < 1000:
@@ -208,15 +242,13 @@ def pago_multiplo(request):
 
     commerce_order = f"ORD-MULTI-{int(time.time())}"
 
-    email = obtener_email_usuario(request)  # ✅ FIX CLAVE
-
     flow = FlowService(environment="sandbox")
 
     result = flow.create_payment(
         commerce_order=commerce_order,
         subject=subject,
         amount=amount,
-        email=email,  # ✅ nunca vacío
+        email=email,  # ← email real del usuario logueado
         url_confirmation="https://gimnasiolebloncalama.cl/confirm/",
         url_return="https://gimnasiolebloncalama.cl/tienda/return/",
     )
@@ -225,9 +257,3 @@ def pago_multiplo(request):
         return redirect(f"{result['url']}?token={result['token']}")
 
     return HttpResponse("Error al conectar con Flow", status=500)
-
-
-def obtener_email_usuario(request):
-    if request.user.is_authenticated and request.user.email:
-        return request.user.email.strip()
-    return "benjaminjavier46@gmail.com"

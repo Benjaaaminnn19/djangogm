@@ -123,9 +123,7 @@
                                 <i class="fas fa-user me-1"></i> {{ user.nombre|default:user.email|truncatechars:15 }}
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{% url 'checkin' %}">
-                                    <i class="fas fa-door-open me-2"></i> Check-In
-                                </a></li>
+                                
                                 <li><a class="dropdown-item" href="#planes">
                                     <i class="fas fa-calendar me-2"></i> Mi Plan
                                 </a></li>
@@ -774,10 +772,10 @@
 
   
 
-    <!-- WhatsApp -->
-    <a href="https://wa.me/56975274804" class="whatsapp-float" target="_blank">
-        <i class="fab fa-whatsapp"></i>
-    </a>    
+  <a href="https://wa.me/56975274804" class="btn-flotante-wsp" target="_blank">
+    <i class="fab fa-whatsapp"></i>
+    
+    </a>
     <!-- Modal para Agendar Clases -->
     <div class="modal fade" id="modalAgendarClase" tabindex="-1" aria-labelledby="modalAgendarClaseLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -1223,6 +1221,7 @@
         });
     }
 </script>
+
 
 </body>
 </html>

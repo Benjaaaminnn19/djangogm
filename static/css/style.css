@@ -860,3 +860,33 @@ background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%) !important;
   }
 }
 
+
+/* 1. El botón verde (el círculo) */
+.btn-flotante-wsp {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  width: 60px;      /* Tamaño del círculo */
+  height: 60px;     /* Tamaño del círculo */
+  background-color: #25d366; /* Verde oficial */
+  border-radius: 50%; /* Esto hace el círculo perfecto */
+  display: flex;
+  justify-content: center; /* Centra el ícono horizontalmente */
+  align-items: center;     /* Centra el ícono verticalmente */
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+/* Efecto al pasar el mouse */
+.btn-flotante-wsp:hover {
+  background-color: #128c7e;
+  transform: scale(1.1);
+}
+
+/* 2. EL ÍCONO (Aquí lo agrandas) */
+.btn-flotante-wsp i {
+  font-size: 35px;  /* <--- Sube o baja este número para cambiar el tamaño del logo */
+  color: #FFF;      /* Color blanco para que resalte */
+}

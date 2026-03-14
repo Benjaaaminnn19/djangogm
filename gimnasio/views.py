@@ -24,7 +24,7 @@ def confirm_view(request):
 
     # === OPCIÓN 2: Consultar directamente el estado (más simple y suficiente en muchos casos) ===
     # Llamas a payment/getStatus con tu API Key y el token
-    status_url = "https://sandbox.flow.cl/api/payment/getStatus"  # Cambia a prod cuando pases
+    status_url = "https://www.flow.cl/api"  # Cambia a prod cuando pases
     payload = {
         "apiKey": "346F180A-05F3-4C5A-8846-20LEBCB5EF2B",
         "token": token

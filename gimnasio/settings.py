@@ -211,7 +211,7 @@ LOGGING = {
         },
         'tienda': {
             'handlers': ['console'],
-            'level': 'INFO',
+            'level': 'DEBUG',
             'propagate': False,
         },
     },
