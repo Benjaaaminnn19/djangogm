@@ -197,6 +197,16 @@ section.py-5:not(.spartan-hero-section) .lead {
   max-height: 70vh;
 }
 
+/* Fix iOS Safari: 100svh no cambia cuando aparece/desaparece la barra de dirección */
+@media (max-width: 768px) {
+  .spartan-hero-section {
+    height: 100svh !important;
+    max-height: 100svh !important;
+    min-height: 100svh !important;
+    padding-top: 70px !important;
+  }
+}
+
 
 .spartan-hero-section .container {
   position: relative;
