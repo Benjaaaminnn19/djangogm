@@ -167,9 +167,12 @@ STORAGES = {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
 }
+
+# Sirve archivos desde STATICFILES_DIRS sin necesitar collectstatic
+WHITENOISE_USE_FINDERS = True
 
 MEDIA_URL = '/media/'
 
