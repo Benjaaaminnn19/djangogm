@@ -35,8 +35,8 @@
                 text-shadow: 2px 2px 6px rgba(0,0,0,0.9), 0 0 15px rgba(0,0,0,0.5);
                 font-weight: 300;
             ">Transforma tu cuerpo, transforma tu vida</p>
-            <div class="d-flex justify-content-center gap-4 flex-wrap">
-                <a href="#planes" class="btn btn-lg px-5 py-3" style="
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <a href="#planes" class="btn btn-lg px-4 py-3" style="
                     background: linear-gradient(45deg, #8B4513, #A0522D);
                     border: 2px solid #D2691E;
                     color: white;
@@ -44,11 +44,23 @@
                     font-weight: 600;
                     box-shadow: 0 4px 15px rgba(139,69,19,0.4);
                     transition: all 0.3s ease;
-                " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(139,69,19,0.6)'" 
+                " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(139,69,19,0.6)'"
                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(139,69,19,0.4)'">
                     <i class="fas fa-dumbbell me-2"></i>Ver Planes
                 </a>
-                <a href="{% url 'tienda' %}" class="btn btn-lg px-5 py-3" style="
+                <a href="{% url 'listar_clases' %}" class="btn btn-lg px-4 py-3" style="
+                    background: linear-gradient(45deg, #1B4332, #2D6A4F);
+                    border: 2px solid #40916C;
+                    color: white;
+                    border-radius: 8px;
+                    font-weight: 600;
+                    box-shadow: 0 4px 15px rgba(27,67,50,0.4);
+                    transition: all 0.3s ease;
+                " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(27,67,50,0.6)'"
+                   onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(27,67,50,0.4)'">
+                    <i class="fas fa-calendar-check me-2"></i>Agendar
+                </a>
+                <a href="{% url 'tienda' %}" class="btn btn-lg px-4 py-3" style="
                     background: linear-gradient(45deg, #2F4F4F, #3A5F5F);
                     border: 2px solid #4682B4;
                     color: white;
@@ -56,9 +68,9 @@
                     font-weight: 600;
                     box-shadow: 0 4px 15px rgba(47,79,79,0.4);
                     transition: all 0.3s ease;
-                " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(47,79,79,0.6)'" 
+                " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(47,79,79,0.6)'"
                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(47,79,79,0.4)'">
-                   <i class="fa-solid fa-cart-shopping"></i> Tienda
+                   <i class="fa-solid fa-cart-shopping me-2"></i>Tienda
                 </a>
             </div>
         </div>
