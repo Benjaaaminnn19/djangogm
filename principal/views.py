@@ -5,6 +5,8 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+from django.db import transaction
+from django.db.utils import NotSupportedError
 import json
 import logging
 from .models import Lead
@@ -25,8 +27,10 @@ def home(request):
 def listar_clases(request):
     """Vista para listar todas las clases disponibles"""
     from django.utils import timezone
-    # Obtener clases futuras o del día actual
-    clases = Clase.objects.filter(fecha__gte=timezone.now()).order_by('fecha')
+    # Mostrar clases de hoy en adelante (comparando por fecha, no por hora exacta)
+    # Esto evita que una clase de hoy a las 9am desaparezca si ya son las 9:05am
+    hoy = timezone.now().date()
+    clases = Clase.objects.filter(fecha__date__gte=hoy).order_by('fecha')
     
     # Calcular cupos disponibles para cada clase
     clases_con_cupos = []
@@ -98,61 +102,67 @@ def agendar_clase(request, clase_id):
                     'error': 'Por favor completa todos los campos'
                 })
 
-            # Contar reservas aprobadas o en espera
-            reservas_existentes = Reserva.objects.filter(clase=clase).count()
-            cupos_disponibles = clase.cupos - reservas_existentes
-
-            if reservas_existentes >= clase.cupos:
-                # No hay cupos disponibles - solo mostrar página sin enviar correo
-                return render(request, 'sin_cupos.html', {
-                    'clase': clase,
-                    'cupos_disponibles': 0
-                })
-
-            # Crear la reserva (por aprobar)
+            # Crear la reserva dentro de una transacción atómica para evitar
+            # que dos personas tomen el último cupo al mismo tiempo (race condition).
             try:
-                reserva = Reserva.objects.create(clase=clase, nombre=nombre, correo=correo)
+                with transaction.atomic():
+                    try:
+                        # select_for_update bloquea las filas en PostgreSQL (producción).
+                        reservas_existentes = (
+                            Reserva.objects.select_for_update()
+                            .filter(clase=clase)
+                            .count()
+                        )
+                    except NotSupportedError:
+                        # SQLite (desarrollo local) no soporta SELECT FOR UPDATE.
+                        reservas_existentes = Reserva.objects.filter(clase=clase).count()
+
+                    cupos_disponibles = clase.cupos - reservas_existentes
+
+                    if reservas_existentes >= clase.cupos:
+                        return render(request, 'sin_cupos.html', {
+                            'clase': clase,
+                            'cupos_disponibles': 0
+                        })
+
+                    reserva = Reserva.objects.create(clase=clase, nombre=nombre, correo=correo)
             except Exception as e:
                 logger.error(f"Error al crear reserva: {str(e)}", exc_info=True)
                 return render(request, 'agendar.html', {
                     'clase': clase,
-                    'cupos_disponibles': cupos_disponibles,
+                    'cupos_disponibles': clase.cupos - Reserva.objects.filter(clase=clase).count(),
                     'error': f'Hubo un error al crear la reserva: {str(e)}'
                 })
             
-            # Enviar correo confirmando que la reserva está pendiente
+            # Enviar correo avisando que la reserva quedó pendiente de aprobación
             correo_enviado = False
             try:
-                # Usar el email configurado o uno por defecto
-                from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@gimnasioleblon.com')
-                
+                from django.template.loader import render_to_string
+                from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@gimnasiolebloncalama.cl')
+                ctx = {
+                    'nombre': nombre,
+                    'clase_nombre': clase.nombre,
+                    'clase_fecha': clase.fecha.strftime('%d/%m/%Y a las %H:%M'),
+                }
+                html_body = render_to_string('emails/reserva_recibida.html', ctx)
+                plain_body = (
+                    f"Hola {nombre},\n\n"
+                    f"Tu reserva para {clase.nombre} el {ctx['clase_fecha']} "
+                    f"fue recibida y está pendiente de confirmación.\n\n"
+                    f"Recibirás otro correo cuando sea aprobada.\n\n"
+                    f"Equipo Leblon Gym — Calama"
+                )
                 send_mail(
-                    subject=f'Reserva pendiente - {clase.nombre}',
-                    message=f'''Hola {nombre},
-
-¡Gracias por agendar tu clase!
-
-Tu reserva para la clase "{clase.nombre}" programada para el {clase.fecha.strftime('%d/%m/%Y a las %H:%M')} ha sido registrada y está pendiente de aprobación.
-
-Detalles de tu reserva:
-- Clase: {clase.nombre}
-- Fecha y hora: {clase.fecha.strftime('%d/%m/%Y a las %H:%M')}
-- Cupos disponibles: {cupos_disponibles - 1} de {clase.cupos}
-
-Recibirás un correo de confirmación una vez que tu reserva sea aprobada por nuestro equipo.
-
-¡Nos vemos pronto en Leblon Gym! 💪
-
-Saludos,
-Equipo Leblon Gym''',
+                    subject=f'Reserva recibida — {clase.nombre}',
+                    message=plain_body,
                     from_email=from_email,
                     recipient_list=[correo],
-                    fail_silently=True,  # No falla si hay error de correo
+                    html_message=html_body,
+                    fail_silently=True,
                 )
                 correo_enviado = True
-                logger.info(f"Correo enviado exitosamente a {correo} para reserva {reserva.id}")
+                logger.info(f"Correo de recepcion enviado a {correo} para reserva {reserva.id}")
             except Exception as e:
-                # Si falla el envío de correo, registrar el error pero continuar
                 logger.error(f"Error al enviar correo a {correo}: {str(e)}", exc_info=True)
                 correo_enviado = False
 

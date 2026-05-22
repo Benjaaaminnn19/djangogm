@@ -248,7 +248,7 @@ def pago_multiplo(request):
         commerce_order=commerce_order,
         subject=subject,
         amount=amount,
-        email=email,  # ← email real del usuario logueado
+        email=email,  
         url_confirmation="https://gimnasiolebloncalama.cl/confirm/",
         url_return="https://gimnasiolebloncalama.cl/tienda/return/",
     )

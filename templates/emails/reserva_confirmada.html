@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reserva confirmada</title>
+</head>
+<body style="margin:0; padding:0; background-color:#f4f4f4; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;">
+
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f4; padding: 32px 16px;">
+    <tr>
+      <td align="center">
+
+        <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.08); max-width:600px; width:100%;">
+
+          <!-- Header confirmado -->
+          <tr>
+            <td style="background: linear-gradient(135deg, #0a5c2e 0%, #0d7a3e 50%, #10a050 100%); padding: 40px 32px; text-align:center;">
+              <div style="width:64px; height:64px; background:rgba(255,255,255,0.15); border-radius:50%; margin:0 auto 16px auto; display:flex; align-items:center; justify-content:center; font-size:30px; line-height:64px;">✓</div>
+              <p style="margin:0 0 8px 0; font-size:13px; color:#a8f0c8; font-weight:700; letter-spacing:3px; text-transform:uppercase;">Gimnasio Leblon · Calama</p>
+              <h1 style="margin:0; font-size:28px; font-weight:800; color:#ffffff; line-height:1.2;">¡Reserva Confirmada!</h1>
+              <p style="margin:12px 0 0 0; font-size:15px; color:#c8f0d8;">Tu clase está asegurada</p>
+            </td>
+          </tr>
+
+          <!-- Cuerpo -->
+          <tr>
+            <td style="padding: 36px 32px;">
+
+              <p style="margin:0 0 20px 0; font-size:16px; color:#333333; line-height:1.6;">
+                Hola <strong>{{ nombre }}</strong>,
+              </p>
+              <p style="margin:0 0 28px 0; font-size:15px; color:#555555; line-height:1.7;">
+                ¡Excelente! Tu reserva ha sido <strong style="color:#0a5c2e;">aprobada y confirmada</strong>. Te esperamos en el gimnasio.
+              </p>
+
+              <!-- Tarjeta de detalles -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4fbf6; border-radius:10px; border-left:4px solid #10a050; margin-bottom:28px;">
+                <tr>
+                  <td style="padding: 24px 28px;">
+                    <p style="margin:0 0 16px 0; font-size:11px; font-weight:700; color:#0a5c2e; letter-spacing:2px; text-transform:uppercase;">Tu clase confirmada</p>
+
+                    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:12px;">
+                      <tr>
+                        <td style="width:20px; vertical-align:top; padding-top:2px;">
+                          <div style="width:8px; height:8px; background:#10a050; border-radius:50%; margin-top:5px;"></div>
+                        </td>
+                        <td style="padding-left:10px;">
+                          <span style="font-size:12px; color:#888; text-transform:uppercase; letter-spacing:1px;">Clase</span><br>
+                          <strong style="font-size:16px; color:#1a1a2e;">{{ clase_nombre }}</strong>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:12px;">
+                      <tr>
+                        <td style="width:20px; vertical-align:top; padding-top:2px;">
+                          <div style="width:8px; height:8px; background:#10a050; border-radius:50%; margin-top:5px;"></div>
+                        </td>
+                        <td style="padding-left:10px;">
+                          <span style="font-size:12px; color:#888; text-transform:uppercase; letter-spacing:1px;">Fecha y hora</span><br>
+                          <strong style="font-size:16px; color:#1a1a2e;">{{ clase_fecha }}</strong>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="width:20px; vertical-align:top; padding-top:2px;">
+                          <div style="width:8px; height:8px; background:#10a050; border-radius:50%; margin-top:5px;"></div>
+                        </td>
+                        <td style="padding-left:10px;">
+                          <span style="font-size:12px; color:#888; text-transform:uppercase; letter-spacing:1px;">Estado</span><br>
+                          <span style="display:inline-block; background:#e6f7ed; color:#0a5c2e; font-size:13px; font-weight:700; padding:4px 12px; border-radius:20px; border:1px solid #a8e4bc; margin-top:4px;">✅ Confirmada</span>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Recomendaciones -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="background:#fff8f0; border-radius:10px; margin-bottom:32px;">
+                <tr>
+                  <td style="padding: 20px 24px;">
+                    <p style="margin:0 0 12px 0; font-size:11px; font-weight:700; color:#b35a00; letter-spacing:2px; text-transform:uppercase;">Recomendaciones</p>
+                    <p style="margin:0 0 6px 0; font-size:14px; color:#444;">🕐 Llega <strong>10 minutos antes</strong> para el registro.</p>
+                    <p style="margin:0 0 6px 0; font-size:14px; color:#444;">👟 Trae ropa cómoda y zapatillas deportivas.</p>
+                    <p style="margin:0; font-size:14px; color:#444;">💧 No olvides tu botella de agua.</p>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin:0; font-size:14px; color:#777; line-height:1.6;">
+                ¿Necesitas cancelar o tienes alguna consulta? Contáctanos por WhatsApp:
+                <a href="https://wa.me/56975274804" style="color:#0a5c2e; font-weight:600; text-decoration:none;">+56 9 7527 4804</a>
+              </p>
+
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background:#1a1a2e; padding: 24px 32px; text-align:center;">
+              <p style="margin:0 0 6px 0; font-size:13px; color:#a0b4c8;">Gimnasio Leblon · Av. Granaderos 3037, Calama</p>
+              <p style="margin:0; font-size:11px; color:#5a6a7a;">Lun–Vie 9:00–23:00 · Sáb 9:00–22:00 · Dom 9:00–13:00</p>
+              <p style="margin:12px 0 0 0; font-size:11px; color:#3a4a5a;">Este es un correo automático, por favor no responder.</p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>

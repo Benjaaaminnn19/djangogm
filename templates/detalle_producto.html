@@ -555,16 +555,24 @@
                     <div class="product-info">
                         <h1 class="product-title">{{ producto.nombre }}</h1>
                         <p class="product-description">{{ producto.descripcion|linebreaksbr }}</p>
+
+                        {% if producto.beneficios %}
+                        <div style="background:#f8faff; border-left:4px solid #0d6efd; border-radius:8px; padding:16px 20px; margin:18px 0;">
+                            <p style="margin:0 0 10px 0; font-size:12px; font-weight:700; color:#0d6efd; letter-spacing:2px; text-transform:uppercase;">Beneficios</p>
+                            <p style="margin:0; font-size:14px; color:#444; line-height:1.8; white-space:pre-line;">{{ producto.beneficios }}</p>
+                        </div>
+                        {% endif %}
+
                         <p class="product-sku">SKU: {{ producto.id }}{{ producto.nombre|length }}</p>
-                        
+
                         <div class="brand-logo">
                             <i class="fas fa-dumbbell"></i>
                         </div>
-                        
+
                         <div class="availability">
                             <i class="fas fa-check-circle me-2"></i>Disponible
                         </div>
-                        
+
                         <div class="producto-precio">{{ producto.precio|clp }}</div>
                         
                       

@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,37 +16,45 @@
             overflow: hidden;
             height: 100%;
         }
+
         .clase-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2) !important;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2) !important;
         }
+
         .clase-header {
             padding: 1.5rem;
             color: white;
             font-weight: bold;
         }
+
         .clase-header.primary {
             background: linear-gradient(135deg, #007bff, #0056b3);
         }
+
         .clase-header.warning {
             background: linear-gradient(135deg, #ffc107, #ff9800);
         }
+
         .clase-header.success {
             background: linear-gradient(135deg, #28a745, #20c997);
         }
+
         .clase-header.info {
             background: linear-gradient(135deg, #17a2b8, #138496);
         }
+
         .badge-cupos {
             font-size: 1rem;
             padding: 0.5rem 1rem;
         }
     </style>
 </head>
+
 <body>
     <!-- Header -->
     <header class="spartan-hero-section" style="
-        background: url('{% static 'img/img3.png' %}');
+        background: url('{% static 'img/imgdesenfocada.webp' %}');
         background-size: cover;
         background-position: center;
         height: 40vh;
@@ -72,67 +81,67 @@
     <section class="py-5">
         <div class="container">
             {% if clases_con_cupos %}
-                <div class="row">
-                    {% for item in clases_con_cupos %}
-                        <div class="col-lg-4 col-md-6 mb-4">
-                            <div class="card clase-card shadow-lg border-0">
-                                <div class="clase-header 
+            <div class="row">
+                {% for item in clases_con_cupos %}
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card clase-card shadow-lg border-0">
+                        <div class="clase-header 
                                     {% if 'Dirigida' in item.clase.nombre or 'dirigida' in item.clase.nombre %}primary
                                     {% elif 'Spinning' in item.clase.nombre or 'spinning' in item.clase.nombre %}warning
                                     {% elif 'Evaluación' in item.clase.nombre or 'evaluación' in item.clase.nombre %}success
                                     {% elif 'Rutina' in item.clase.nombre or 'rutina' in item.clase.nombre %}info
                                     {% else %}primary{% endif %}">
-                                    <h4 class="mb-0">
-                                        <i class="fas fa-dumbbell me-2"></i>{{ item.clase.nombre }}
-                                    </h4>
-                                </div>
-                                <div class="card-body">
-                                    <div class="mb-3">
-                                        <p class="mb-2">
-                                            <strong><i class="fas fa-calendar-alt me-2 text-primary"></i>Fecha:</strong>
-                                            {{ item.clase.fecha|date:"d/m/Y" }}
-                                        </p>
-                                        <p class="mb-2">
-                                            <strong><i class="fas fa-clock me-2 text-primary"></i>Hora:</strong>
-                                            {{ item.clase.fecha|time:"H:i" }}
-                                        </p>
-                                        <p class="mb-3">
-                                            <strong><i class="fas fa-users me-2 text-primary"></i>Cupos:</strong>
-                                            {% if item.tiene_cupos %}
-                                                <span class="badge bg-success badge-cupos">
-                                                    {{ item.cupos_disponibles }} de {{ item.clase.cupos }} disponibles
-                                                </span>
-                                            {% else %}
-                                                <span class="badge bg-danger badge-cupos">
-                                                    Sin cupos disponibles
-                                                </span>
-                                            {% endif %}
-                                        </p>
-                                    </div>
-                                    
-                                    {% if item.tiene_cupos %}
-                                        <a href="{% url 'agendar_clase' item.clase.id %}" class="btn btn-primary btn-lg w-100">
-                                            <i class="fas fa-calendar-plus me-2"></i>Agendar Clase
-                                        </a>
-                                    {% else %}
-                                        <button class="btn btn-secondary btn-lg w-100" disabled>
-                                            <i class="fas fa-times-circle me-2"></i>Sin Cupos
-                                        </button>
-                                    {% endif %}
-                                </div>
-                            </div>
+                            <h4 class="mb-0">
+                                <i class="fas fa-dumbbell me-2"></i>{{ item.clase.nombre }}
+                            </h4>
                         </div>
-                    {% endfor %}
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <p class="mb-2">
+                                    <strong><i class="fas fa-calendar-alt me-2 text-primary"></i>Fecha:</strong>
+                                    {{ item.clase.fecha|date:"d/m/Y" }}
+                                </p>
+                                <p class="mb-2">
+                                    <strong><i class="fas fa-clock me-2 text-primary"></i>Hora:</strong>
+                                    {{ item.clase.fecha|time:"H:i" }}
+                                </p>
+                                <p class="mb-3">
+                                    <strong><i class="fas fa-users me-2 text-primary"></i>Cupos:</strong>
+                                    {% if item.tiene_cupos %}
+                                    <span class="badge bg-success badge-cupos">
+                                        {{ item.cupos_disponibles }} de {{ item.clase.cupos }} disponibles
+                                    </span>
+                                    {% else %}
+                                    <span class="badge bg-danger badge-cupos">
+                                        Sin cupos disponibles
+                                    </span>
+                                    {% endif %}
+                                </p>
+                            </div>
+
+                            {% if item.tiene_cupos %}
+                            <a href="{% url 'agendar_clase' item.clase.id %}" class="btn btn-primary btn-lg w-100">
+                                <i class="fas fa-calendar-plus me-2"></i>Agendar Clase
+                            </a>
+                            {% else %}
+                            <button class="btn btn-secondary btn-lg w-100" disabled>
+                                <i class="fas fa-times-circle me-2"></i>Sin Cupos
+                            </button>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
+                {% endfor %}
+            </div>
             {% else %}
-                <div class="text-center py-5">
-                    <i class="fas fa-calendar-times fa-5x text-muted mb-4"></i>
-                    <h3 class="text-muted">No hay clases disponibles en este momento</h3>
-                    <p class="text-muted">Por favor, vuelve más tarde o contacta con nosotros para más información.</p>
-                    <a href="/" class="btn btn-primary btn-lg mt-3">
-                        <i class="fas fa-arrow-left me-2"></i>Volver al Inicio
-                    </a>
-                </div>
+            <div class="text-center py-5">
+                <i class="fas fa-calendar-times fa-5x text-muted mb-4"></i>
+                <h3 class="text-muted">No hay clases disponibles en este momento</h3>
+                <p class="text-muted">Por favor, vuelve más tarde o contacta con nosotros para más información.</p>
+                <a href="/" class="btn btn-primary btn-lg mt-3">
+                    <i class="fas fa-arrow-left me-2"></i>Volver al Inicio
+                </a>
+            </div>
             {% endif %}
         </div>
     </section>
@@ -146,5 +155,5 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html>
 
+</html>

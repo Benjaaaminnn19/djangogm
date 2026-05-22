@@ -11,6 +11,7 @@ class Producto(models.Model):
     
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField()
+    beneficios = models.TextField(blank=True, default='', verbose_name='Beneficios / Para qué sirve')
     precio = models.IntegerField()
 
     categoria = models.CharField(max_length=20, choices=CATEGORIAS)

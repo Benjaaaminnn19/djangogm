@@ -1,8 +1,6 @@
 from django.contrib import admin
 from .models import Lead
 from .models import Clase, Reserva, SolicitudPlan
-from django.core.mail import send_mail
-from django.conf import settings
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import Miembro, Asistencia
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
@@ -51,59 +49,8 @@ class ReservaAdmin(admin.ModelAdmin):
     readonly_fields = ('fecha_reserva',)
     date_hierarchy = 'fecha_reserva'
     list_editable = ('aprobado',)  # Permite aprobar directamente desde la lista
-
-    def save_model(self, request, obj, form, change):
-        # Verificar si cambió el estado de aprobado
-        if change:
-            try:
-                old_obj = Reserva.objects.get(pk=obj.pk)
-                # Solo enviar correo si se aprueba y antes no estaba aprobado
-                if obj.aprobado and not old_obj.aprobado:
-                    try:
-                        from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@gimnasioleblon.com')
-                        send_mail(
-                            subject=f'🎉 ¡Invitación Confirmada! - Clase: {obj.clase.nombre}',
-                            message=f'''╔═══════════════════════════════════════════════════════╗
-║         🏋️ GIMNASIO LEBLON - INVITACIÓN CONFIRMADA 🏋️        ║
-╚═══════════════════════════════════════════════════════╝
-
-Hola {obj.nombre},
-
-¡Tenemos el placer de confirmarte tu invitación a nuestra clase!
-
-📋 DETALLES DE TU INVITACIÓN:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   🎯 Clase: {obj.clase.nombre}
-   📅 Fecha: {obj.clase.fecha.strftime('%d de %B de %Y')}
-   ⏰ Hora: {obj.clase.fecha.strftime('%H:%M')} hrs
-   ✅ Estado: CONFIRMADA
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-💡 IMPORTANTE:
-   • Presenta esta invitación cuando llegues al gimnasio
-   • Llega 10 minutos antes para el registro
-   • Trae ropa cómoda y una botella de agua
-
-¡Estamos emocionados de verte en Leblon Gym! 💪
-
-Saludos,
-Equipo Leblon Gym
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Este es un correo automático, por favor no responder.''',
-                            from_email=from_email,
-                            recipient_list=[obj.correo],
-                            fail_silently=True,
-                        )
-                    except Exception as e:
-                        # Si falla el correo, solo registrar el error pero continuar
-                        pass
-            except Reserva.DoesNotExist:
-                # Si es una nueva reserva, no hacer nada
-                pass
-        # Guardar el modelo (tanto para cambios como para nuevos)
-        super().save_model(request, obj, form, change)
+    # Los correos de confirmación/cancelación se envían via signals (principal/signals.py),
+    # lo que garantiza que funcionen sin importar desde dónde se cambie el estado.
 
 class MiembroCreationForm(UserCreationForm):
     class Meta:
