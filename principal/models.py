@@ -24,7 +24,7 @@ class Lead(models.Model):
 class Clase(models.Model):
     nombre = models.CharField(max_length=100)
     cupos = models.PositiveIntegerField(default=10)
-    fecha = models.DateTimeField()
+    fecha = models.DateTimeField(db_index=True)
 
     def __str__(self):
         return f"{self.nombre} - {self.fecha.strftime('%d/%m/%Y %H:%M')}"
@@ -32,7 +32,7 @@ class Clase(models.Model):
 class Reserva(models.Model):
     clase = models.ForeignKey(Clase, on_delete=models.CASCADE)
     nombre = models.CharField(max_length=100)
-    correo = models.EmailField()
+    correo = models.EmailField(db_index=True)
     aprobado = models.BooleanField(default=False)  # visto bueno del admin
     fecha_reserva = models.DateTimeField(auto_now_add=True)
 
@@ -41,9 +41,9 @@ class Reserva(models.Model):
 
 class SolicitudPlan(models.Model):
     PLAN_CHOICES = [
-        ('Plan Azul', 'Plan Azul'),
-        ('Plan Amarillo', 'Plan Amarillo'),
-        ('Plan Verde', 'Plan Verde'),
+        ('Plan Trimestral', 'Plan Trimestral'),
+        ('Plan Semestral', 'Plan Semestral'),
+        ('Plan Anual', 'Plan Anual'),
     ]
     
     ESTADO_CHOICES = [
@@ -56,19 +56,34 @@ class SolicitudPlan(models.Model):
     plan = models.CharField(max_length=20, choices=PLAN_CHOICES, verbose_name="Plan")
     nombre = models.CharField(max_length=100, verbose_name="Nombre Completo")
     telefono = models.CharField(max_length=20, verbose_name="Teléfono")
-    email = models.EmailField(verbose_name="Correo Electrónico")
+    email = models.EmailField(db_index=True, verbose_name="Correo Electrónico")
     mensaje = models.TextField(blank=True, null=True, verbose_name="Mensaje o Comentarios")
     fecha_compra = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de Compra")
-    estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='pagado', verbose_name="Estado")
-    activado = models.BooleanField(default=True, verbose_name="Activado")
-    
+    estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='pendiente', verbose_name="Estado")
+    activado = models.BooleanField(default=False, verbose_name="Activado")
+    fecha_inicio_membresia = models.DateField(null=True, blank=True, verbose_name="Inicio de membresía")
+    fecha_fin_membresia = models.DateField(null=True, blank=True, verbose_name="Vencimiento de membresía")
+
     class Meta:
         verbose_name = "Compra de Plan"
         verbose_name_plural = "Compras de Planes"
         ordering = ['-fecha_compra']
-    
+
     def __str__(self):
         return f"{self.nombre} - {self.plan} - {self.fecha_compra.strftime('%d/%m/%Y')}"
+
+    @property
+    def esta_vigente(self):
+        if not self.fecha_fin_membresia:
+            return False
+        return timezone.now().date() <= self.fecha_fin_membresia
+
+    @property
+    def dias_restantes(self):
+        if not self.fecha_fin_membresia:
+            return None
+        delta = self.fecha_fin_membresia - timezone.now().date()
+        return max(delta.days, 0)
 
 
 class CustomUserManager(BaseUserManager):
@@ -87,6 +102,21 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault('is_superuser', True)
         return self.create_user(email, telefono, password, **extra_fields)
 
+class PlanMembresia(models.Model):
+    nombre = models.CharField(max_length=50, unique=True, verbose_name="Nombre del Plan")
+    precio = models.PositiveIntegerField(verbose_name="Precio (CLP)")
+    descripcion = models.TextField(blank=True, verbose_name="Descripción")
+    activo = models.BooleanField(default=True, verbose_name="Activo")
+
+    class Meta:
+        verbose_name = "Plan de Membresía"
+        verbose_name_plural = "Planes de Membresía"
+        ordering = ['precio']
+
+    def __str__(self):
+        return f"{self.nombre} — ${self.precio:,}".replace(',', '.')
+
+
 class Miembro(AbstractUser):
     username = None  # No usamos username
     email = models.EmailField(unique=True, blank=True, null=True)
@@ -94,6 +124,7 @@ class Miembro(AbstractUser):
     nombre = models.CharField(max_length=100)
     fecha_inicio = models.DateField(default=timezone.now)
     activo = models.BooleanField(default=True)
+    email_verificado = models.BooleanField(default=False, verbose_name="Email verificado")
 
     objects = CustomUserManager()
 

@@ -36,7 +36,7 @@ class Orden(models.Model):
     ]
     
     orden_id = models.CharField(max_length=100, unique=True)
-    email = models.EmailField()
+    email = models.EmailField(db_index=True)
     total = models.IntegerField()
     estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='pendiente')
     flow_token = models.CharField(max_length=255, blank=True, null=True)

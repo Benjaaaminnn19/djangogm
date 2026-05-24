@@ -1,159 +1,92 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="es">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clases Disponibles - Gimnasio Leblon</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <style>
-        .clase-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border-radius: 15px;
-            overflow: hidden;
-            height: 100%;
-        }
+{% block title %}Clases Disponibles — Gimnasio Leblon{% endblock %}
 
-        .clase-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2) !important;
-        }
+{% block extra_css %}
+<style>
+    .clase-card { transition: transform 0.3s ease, box-shadow 0.3s ease; border-radius: 15px; overflow: hidden; height: 100%; }
+    .clase-card:hover { transform: translateY(-10px); box-shadow: 0 15px 35px rgba(0,0,0,0.2) !important; }
+    .clase-header { padding: 1.5rem; color: white; font-weight: bold; }
+    .clase-header.primary  { background: linear-gradient(135deg, #007bff, #0056b3); }
+    .clase-header.warning  { background: linear-gradient(135deg, #ffc107, #ff9800); }
+    .clase-header.success  { background: linear-gradient(135deg, #28a745, #20c997); }
+    .clase-header.info     { background: linear-gradient(135deg, #17a2b8, #138496); }
+    .clase-header.brown    { background: linear-gradient(135deg, #8B4513, #A0522D); }
+    .page-hero {
+        background: url('{% static 'img/imgdesenfocada.webp' %}') center/cover no-repeat;
+        height: 35vh; display: flex; align-items: center;
+        position: relative; overflow: hidden;
+    }
+    .page-hero::before { content:''; position:absolute; inset:0; background:rgba(0,0,0,0.5); }
+    .page-hero .inner { position:relative; z-index:2; }
+</style>
+{% endblock %}
 
-        .clase-header {
-            padding: 1.5rem;
-            color: white;
-            font-weight: bold;
-        }
+{% block content %}
+<div class="page-hero">
+    <div class="container text-center inner">
+        <h1 class="display-4 fw-bold text-white" style="font-family:'Arial Black',sans-serif; text-shadow:3px 3px 8px rgba(0,0,0,0.9);">CLASES DISPONIBLES</h1>
+        <p class="lead text-white" style="text-shadow:2px 2px 6px rgba(0,0,0,0.9);">Selecciona la clase que deseas agendar</p>
+    </div>
+</div>
 
-        .clase-header.primary {
-            background: linear-gradient(135deg, #007bff, #0056b3);
-        }
-
-        .clase-header.warning {
-            background: linear-gradient(135deg, #ffc107, #ff9800);
-        }
-
-        .clase-header.success {
-            background: linear-gradient(135deg, #28a745, #20c997);
-        }
-
-        .clase-header.info {
-            background: linear-gradient(135deg, #17a2b8, #138496);
-        }
-
-        .badge-cupos {
-            font-size: 1rem;
-            padding: 0.5rem 1rem;
-        }
-    </style>
-</head>
-
-<body>
-    <!-- Header -->
-    <header class="spartan-hero-section" style="
-        background: url('{% static 'img/imgdesenfocada.webp' %}');
-        background-size: cover;
-        background-position: center;
-        height: 40vh;
-        display: flex;
-        align-items: center;
-        position: relative;
-        overflow: hidden;
-        margin: 0;
-        padding: 0;
-        width: 100%;
-    ">
-        <div class="container text-center" style="position: relative; z-index: 2;">
-            <h1 class="display-4 fw-bold mb-4 text-white" style="
-                font-family: 'Arial Black', sans-serif;
-                text-shadow: 3px 3px 8px rgba(0,0,0,0.9);
-            ">CLASES DISPONIBLES</h1>
-            <p class="lead text-white" style="text-shadow: 2px 2px 6px rgba(0,0,0,0.9);">
-                Selecciona la clase que deseas agendar
-            </p>
-        </div>
-    </header>
-
-    <!-- Sección de Clases -->
-    <section class="py-5">
-        <div class="container">
-            {% if clases_con_cupos %}
-            <div class="row">
-                {% for item in clases_con_cupos %}
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card clase-card shadow-lg border-0">
-                        <div class="clase-header 
-                                    {% if 'Dirigida' in item.clase.nombre or 'dirigida' in item.clase.nombre %}primary
-                                    {% elif 'Spinning' in item.clase.nombre or 'spinning' in item.clase.nombre %}warning
-                                    {% elif 'Evaluación' in item.clase.nombre or 'evaluación' in item.clase.nombre %}success
-                                    {% elif 'Rutina' in item.clase.nombre or 'rutina' in item.clase.nombre %}info
-                                    {% else %}primary{% endif %}">
-                            <h4 class="mb-0">
-                                <i class="fas fa-dumbbell me-2"></i>{{ item.clase.nombre }}
-                            </h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <p class="mb-2">
-                                    <strong><i class="fas fa-calendar-alt me-2 text-primary"></i>Fecha:</strong>
-                                    {{ item.clase.fecha|date:"d/m/Y" }}
-                                </p>
-                                <p class="mb-2">
-                                    <strong><i class="fas fa-clock me-2 text-primary"></i>Hora:</strong>
-                                    {{ item.clase.fecha|time:"H:i" }}
-                                </p>
-                                <p class="mb-3">
-                                    <strong><i class="fas fa-users me-2 text-primary"></i>Cupos:</strong>
-                                    {% if item.tiene_cupos %}
-                                    <span class="badge bg-success badge-cupos">
-                                        {{ item.cupos_disponibles }} de {{ item.clase.cupos }} disponibles
-                                    </span>
-                                    {% else %}
-                                    <span class="badge bg-danger badge-cupos">
-                                        Sin cupos disponibles
-                                    </span>
-                                    {% endif %}
-                                </p>
-                            </div>
-
+<section class="py-5" style="background:#f8f9fa; min-height:60vh;">
+    <div class="container">
+        {% if clases_con_cupos %}
+        <div class="row">
+            {% for item in clases_con_cupos %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card clase-card shadow-lg border-0">
+                    <div class="clase-header
+                        {% if 'Spinning' in item.clase.nombre or 'spinning' in item.clase.nombre %}warning
+                        {% elif 'Evaluación' in item.clase.nombre or 'evaluación' in item.clase.nombre %}success
+                        {% elif 'Rutina' in item.clase.nombre or 'rutina' in item.clase.nombre %}info
+                        {% elif 'Yoga' in item.clase.nombre or 'yoga' in item.clase.nombre %}brown
+                        {% else %}primary{% endif %}">
+                        <h4 class="mb-0"><i class="fas fa-dumbbell me-2"></i>{{ item.clase.nombre }}</h4>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-2"><strong><i class="fas fa-calendar-alt me-2 text-primary"></i>Fecha:</strong> {{ item.clase.fecha|date:"d/m/Y" }}</p>
+                        <p class="mb-2"><strong><i class="fas fa-clock me-2 text-primary"></i>Hora:</strong> {{ item.clase.fecha|time:"H:i" }}</p>
+                        <p class="mb-3">
+                            <strong><i class="fas fa-users me-2 text-primary"></i>Cupos:</strong>
                             {% if item.tiene_cupos %}
-                            <a href="{% url 'agendar_clase' item.clase.id %}" class="btn btn-primary btn-lg w-100">
-                                <i class="fas fa-calendar-plus me-2"></i>Agendar Clase
-                            </a>
+                            <span class="badge bg-success fs-6">{{ item.cupos_disponibles }} de {{ item.clase.cupos }} disponibles</span>
                             {% else %}
-                            <button class="btn btn-secondary btn-lg w-100" disabled>
-                                <i class="fas fa-times-circle me-2"></i>Sin Cupos
-                            </button>
+                            <span class="badge bg-danger fs-6">Sin cupos</span>
                             {% endif %}
-                        </div>
+                        </p>
+                        {% if item.tiene_cupos %}
+                        <a href="{% url 'agendar_clase' item.clase.id %}" class="btn btn-primary btn-lg w-100">
+                            <i class="fas fa-calendar-plus me-2"></i>Agendar Clase
+                        </a>
+                        {% else %}
+                        <button class="btn btn-secondary btn-lg w-100" disabled>
+                            <i class="fas fa-times-circle me-2"></i>Sin Cupos
+                        </button>
+                        {% endif %}
                     </div>
                 </div>
-                {% endfor %}
             </div>
-            {% else %}
-            <div class="text-center py-5">
-                <i class="fas fa-calendar-times fa-5x text-muted mb-4"></i>
-                <h3 class="text-muted">No hay clases disponibles en este momento</h3>
-                <p class="text-muted">Por favor, vuelve más tarde o contacta con nosotros para más información.</p>
-                <a href="/" class="btn btn-primary btn-lg mt-3">
-                    <i class="fas fa-arrow-left me-2"></i>Volver al Inicio
-                </a>
-            </div>
-            {% endif %}
+            {% endfor %}
         </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-4 mt-5">
-        <div class="container text-center">
-            <p class="mb-0">&copy; 2024 Gimnasio Leblon. Todos los derechos reservados.</p>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-calendar-times fa-5x text-muted mb-4"></i>
+            <h3 class="text-muted">No hay clases disponibles en este momento</h3>
+            <p class="text-muted">Vuelve pronto o contáctanos para más información.</p>
+            <a href="{% url 'home' %}" class="btn btn-primary btn-lg mt-3">
+                <i class="fas fa-arrow-left me-2"></i>Volver al Inicio
+            </a>
         </div>
-    </footer>
+        {% endif %}
+    </div>
+</section>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-
-</html>
+<footer class="bg-dark text-white py-4">
+    <div class="container text-center">
+        <p class="mb-0">&copy; 2025 Gimnasio Leblon. Todos los derechos reservados.</p>
+    </div>
+</footer>
+{% endblock %}

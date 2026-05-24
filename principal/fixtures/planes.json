@@ -1,0 +1,32 @@
+[
+  {
+    "model": "principal.planmembresia",
+    "pk": 1,
+    "fields": {
+      "nombre": "Plan Trimestral",
+      "precio": 91000,
+      "descripcion": "Acceso completo al gimnasio durante 3 meses.",
+      "activo": true
+    }
+  },
+  {
+    "model": "principal.planmembresia",
+    "pk": 2,
+    "fields": {
+      "nombre": "Plan Semestral",
+      "precio": 171000,
+      "descripcion": "Acceso completo al gimnasio durante 6 meses.",
+      "activo": true
+    }
+  },
+  {
+    "model": "principal.planmembresia",
+    "pk": 3,
+    "fields": {
+      "nombre": "Plan Anual",
+      "precio": 298000,
+      "descripcion": "Acceso completo al gimnasio durante 12 meses.",
+      "activo": true
+    }
+  }
+]

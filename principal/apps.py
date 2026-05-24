@@ -7,3 +7,5 @@ class PrincipalConfig(AppConfig):
 
     def ready(self):
         import principal.signals  # noqa: F401 — registra los signals al arrancar
+        from principal.roles import patch_miembro_roles
+        patch_miembro_roles()

@@ -1,27 +1,64 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Resultado del Pago</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <div class="container my-5 text-center">
+{% extends 'base.html' %}
+{% load static humanize %}
+
+{% block title %}Resultado del Pago — Gimnasio Leblon{% endblock %}
+
+{% block extra_css %}
+<style>
+    body { background:#f8f9fa; }
+    .result-card { max-width:640px; margin:60px auto; border:none; border-radius:20px; box-shadow:0 8px 30px rgba(0,0,0,0.1); overflow:hidden; }
+    .result-icon { width:90px; height:90px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card result-card">
         {% if exitoso %}
-            <div class="alert alert-success">
-                <h1>✓ ¡Pago Exitoso!</h1>
-                <p>Tu orden <strong>{{ orden.orden_id }}</strong> ha sido procesada correctamente.</p>
-                <p>Total pagado: ${{ orden.total|intcomma }}</p>
+        <div class="card-body p-5 text-center">
+            <div class="result-icon" style="background:linear-gradient(135deg,#28a745,#20c997);">
+                <i class="fas fa-check fa-2x text-white"></i>
             </div>
+            <h2 class="text-success fw-bold mb-3">¡Pago Exitoso!</h2>
+            <p class="lead mb-2">Tu orden <strong>#{{ orden.orden_id }}</strong> fue procesada correctamente.</p>
+            <p class="fs-5 mb-4">Total pagado: <strong>${{ orden.total|intcomma }}</strong></p>
+            <p class="text-muted mb-4">Recibirás un correo con los detalles de tu compra en breve.</p>
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <a href="{% url 'tienda' %}" class="btn btn-success btn-lg"><i class="fas fa-shopping-bag me-2"></i>Seguir comprando</a>
+                <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-lg"><i class="fas fa-home me-2"></i>Inicio</a>
+            </div>
+        </div>
+        {% elif fallido %}
+        <div class="card-body p-5 text-center">
+            <div class="result-icon" style="background:linear-gradient(135deg,#dc3545,#c82333);">
+                <i class="fas fa-times fa-2x text-white"></i>
+            </div>
+            <h2 class="text-danger fw-bold mb-3">Pago No Completado</h2>
+            <p class="lead mb-4">Hubo un problema al procesar tu pago. No se realizó ningún cobro.</p>
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <a href="{% url 'tienda' %}" class="btn btn-primary btn-lg"><i class="fas fa-redo me-2"></i>Intentar nuevamente</a>
+                <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-lg"><i class="fas fa-home me-2"></i>Inicio</a>
+            </div>
+        </div>
+        {% elif pendiente %}
+        <div class="card-body p-5 text-center">
+            <div class="result-icon" style="background:linear-gradient(135deg,#ffc107,#fd7e14);">
+                <i class="fas fa-clock fa-2x text-white"></i>
+            </div>
+            <h2 class="fw-bold mb-3" style="color:#856404;">Pago Pendiente</h2>
+            <p class="lead mb-4">Tu pago está siendo procesado. Te notificaremos por correo cuando se confirme.</p>
+            <a href="{% url 'home' %}" class="btn btn-warning btn-lg"><i class="fas fa-home me-2"></i>Volver al Inicio</a>
+        </div>
         {% else %}
-            <div class="alert alert-danger">
-                <h1>✗ Pago Fallido</h1>
-                <p>Hubo un problema al procesar tu pago.</p>
+        <div class="card-body p-5 text-center">
+            <div class="result-icon" style="background:#6c757d;">
+                <i class="fas fa-question fa-2x text-white"></i>
             </div>
+            <h2 class="text-muted fw-bold mb-3">Estado desconocido</h2>
+            <p class="lead mb-4">No pudimos determinar el estado de tu pago. Contáctanos si tienes dudas.</p>
+            <a href="{% url 'home' %}" class="btn btn-secondary btn-lg"><i class="fas fa-home me-2"></i>Volver al Inicio</a>
+        </div>
         {% endif %}
-        
-        <a href="{% url 'tienda' %}" class="btn btn-primary">Volver a la Tienda</a>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Términos de Uso — Gimnasio Leblon{% endblock %}
+
+{% block extra_css %}
+<style>
+    body { background: #f8f9fa; }
+    .legal-header { background: linear-gradient(135deg, #2C2C2C, #3a3a3a); color: white; padding: 50px 0; }
+    .legal-content { max-width: 780px; margin: 0 auto; background: white; border-radius: 16px; padding: 48px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+    h2 { font-family: 'Oswald', sans-serif; font-size: 1.2rem; color: #8B4513; margin: 32px 0 12px; }
+    p, li { color: #555; line-height: 1.8; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="legal-header text-center">
+    <div class="container">
+        <h1 style="font-family:'Oswald',sans-serif;font-weight:700;">Términos de Uso</h1>
+        <p class="opacity-75 mb-0">Última actualización: Mayo 2025</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="legal-content">
+        <p>Al acceder y usar la plataforma de <strong>Gimnasio Leblon</strong> (gimnasiolebloncalama.cl), aceptas los presentes Términos de Uso.</p>
+
+        <h2>1. Uso del servicio</h2>
+        <p>La plataforma está destinada a personas mayores de 18 años o menores con autorización de un tutor legal. El acceso es personal e intransferible.</p>
+
+        <h2>2. Registro y cuenta</h2>
+        <p>Al crear una cuenta te comprometes a proporcionar información veraz. Eres responsable de mantener la confidencialidad de tu contraseña.</p>
+
+        <h2>3. Reservas de clases</h2>
+        <ul>
+            <li>Las reservas quedan sujetas a confirmación por parte del gimnasio.</li>
+            <li>Los cupos son limitados; una vez agotados no se puede reservar.</li>
+            <li>El gimnasio se reserva el derecho de cancelar clases con aviso previo.</li>
+        </ul>
+
+        <h2>4. Compras y pagos</h2>
+        <ul>
+            <li>Los precios están expresados en pesos chilenos (CLP) e incluyen IVA cuando corresponda.</li>
+            <li>Los pagos son procesados por <strong>Flow</strong>. Revisa su política en <a href="https://www.flow.cl" target="_blank" rel="noopener">flow.cl</a>.</li>
+            <li>Los planes de membresía no son reembolsables salvo causa mayor.</li>
+        </ul>
+
+        <h2>5. Responsabilidad</h2>
+        <p>Gimnasio Leblon no se responsabiliza por lesiones derivadas del uso inadecuado de las instalaciones o del incumplimiento de las indicaciones de los entrenadores.</p>
+
+        <h2>6. Propiedad intelectual</h2>
+        <p>Todo el contenido de la plataforma (textos, imágenes, diseño) es propiedad de Gimnasio Leblon y no puede reproducirse sin autorización escrita.</p>
+
+        <h2>7. Modificaciones</h2>
+        <p>Podemos modificar estos términos en cualquier momento. El uso continuado de la plataforma implica aceptación de los términos actualizados.</p>
+
+        <h2>8. Ley aplicable</h2>
+        <p>Estos términos se rigen por las leyes de la República de Chile. Cualquier disputa se somete a los tribunales ordinarios de Calama.</p>
+
+        <div class="text-center mt-5">
+            <a href="{% url 'home' %}" class="btn" style="background:#2C2C2C;color:white;border-radius:10px;padding:12px 32px;">
+                <i class="fas fa-arrow-left me-2"></i>Volver al inicio
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

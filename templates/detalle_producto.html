@@ -1,671 +1,223 @@
+{% extends 'base.html' %}
 {% load static %}
 {% load custom_filters %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ producto.nombre }} - Gimnasio Leblon</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-   
-    <link rel="stylesheet" href="{% static 'css/producto.css' %}">
 
+{% block title %}{{ producto.nombre }} — Gimnasio Leblon{% endblock %}
 
-   
-</head>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/producto.css' %}">
 <style>
+    .product-image-container {
+        position: relative; width: 100%; aspect-ratio: 1;
+        overflow: hidden; border-radius: 10px;
+        background: #f8f8f8; margin-bottom: 20px;
+    }
+    .product-image {
+        width: 100%; height: 100%; object-fit: contain;
+        position: absolute; top: 0; left: 0;
+        opacity: 0; transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        transform: scale(0.95);
+    }
+    .product-image.active { opacity: 1; transform: scale(1); z-index: 1; }
+    .product-image-container:hover .product-image.active { transform: scale(1.05); }
+    .product-thumbnails { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:15px; }
+    .thumbnail {
+        width:80px; height:80px; object-fit:cover; border-radius:8px;
+        cursor:pointer; border:3px solid transparent;
+        transition:all 0.3s ease; opacity:0.6;
+    }
+    .thumbnail:hover { opacity:1; transform:translateY(-3px); box-shadow:0 4px 8px rgba(0,0,0,0.2); }
+    .thumbnail.active { border-color:#007bff; opacity:1; transform:scale(1.05); }
+    .nav-arrow {
+        position:absolute; top:50%; transform:translateY(-50%);
+        background:rgba(0,0,0,0.5); color:white; border:none;
+        width:40px; height:40px; border-radius:50%; cursor:pointer;
+        font-size:1.5rem; display:flex; align-items:center; justify-content:center;
+        transition:all 0.3s ease; z-index:2;
+    }
+    .nav-arrow:hover { background:rgba(0,0,0,0.8); transform:translateY(-50%) scale(1.1); }
+    .nav-arrow.left { left:10px; }
+    .nav-arrow.right { right:10px; }
+    .dots-indicator { display:flex; gap:8px; justify-content:center; margin-top:15px; }
+    .dot { width:10px; height:10px; border-radius:50%; background:#ddd; cursor:pointer; transition:all 0.3s ease; }
+    .dot.active { background:#007bff; transform:scale(1.2); }
+    .dot:hover { background:#999; }
+
+    /* Carrito flotante */
     .carrito-flotante {
-        position: fixed;
-        right: 20px;
-        bottom: 80px;
-        width: 350px;
-        max-height: 80vh;
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        display: none;
-        flex-direction: column;
-        z-index: 1000;
-        overflow: hidden;
-        font-family: Arial, sans-serif;
+        position:fixed; right:-400px; bottom:95px;
+        width:380px; height:550px;
+        background:#ffffff; border-radius:20px;
+        box-shadow:0 15px 50px rgba(0,0,0,0.2);
+        display:flex; flex-direction:column;
+        z-index:2000; overflow:hidden;
+        font-family:'Inter',sans-serif;
+        border:1px solid rgba(0,0,0,0.08);
+        transition:right 0.4s cubic-bezier(0.25,1,0.5,1);
     }
-
+    .carrito-flotante.active { right:20px; }
     .carrito-header {
-        background: #0066cc;
-        color: white;
-        padding: 15px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        padding:20px 24px; display:flex;
+        justify-content:space-between; align-items:center;
+        background:#ffffff; border-bottom:1px solid #eee;
     }
-
+    .carrito-header h4 { margin:0; font-size:18px; font-weight:700; }
     .btn-cerrar-carrito {
-        background: none;
-        border: none;
-        color: white;
-        font-size: 28px;
-        cursor: pointer;
+        background:#f5f5f5; border:none; color:#999;
+        font-size:24px; width:32px; height:32px;
+        border-radius:50%; cursor:pointer;
+        display:flex; align-items:center; justify-content:center; transition:0.2s;
     }
-
-    .carrito-items {
-        flex: 1;
-        overflow-y: auto;
-        padding: 10px;
-        max-height: 400px;
-    }
-
+    .btn-cerrar-carrito:hover { background:#eee; color:#333; }
+    .carrito-items { flex:1; overflow-y:auto; padding:10px 20px; }
     .item-carrito {
-        display: flex;
-        align-items: center;
-        padding: 10px 0;
-        border-bottom: 1px solid #eee;
+        display:flex; align-items:center;
+        padding:15px 0; border-bottom:1px solid #f8f8f8;
+        animation:fadeInItem 0.5s ease forwards;
     }
-
-    .item-carrito img {
-        width: 50px;
-        height: 50px;
-        object-fit: cover;
-        border-radius: 8px;
-        margin-right: 10px;
-    }
-
-    .item-info {
-        flex: 1;
-    }
-
-    .item-precio {
-        font-weight: bold;
-        color: #0066cc;
-    }
-
-    .btn-eliminar-item {
-        background: #ff4444;
-        color: white;
-        border: none;
-        width: 24px;
-        height: 24px;
-        border-radius: 50%;
-        cursor: pointer;
-        font-size: 16px;
-    }
-
+    @keyframes fadeInItem { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+    .item-carrito img { width:60px; height:60px; object-fit:contain; border-radius:12px; background:#f9f9f9; margin-right:15px; }
+    .item-info div { font-weight:600; font-size:14px; }
+    .item-info small { color:#888; }
+    .btn-eliminar-item { background:none; border:none; color:#ccc; font-size:20px; cursor:pointer; }
     .carrito-total {
-        padding: 15px;
-        background: #f8f8f8;
-        text-align: right;
-        font-size: 18px;
-        border-top: 1px solid #ddd;
+        padding:18px 24px; background:#fcfcfc;
+        display:flex; justify-content:space-between; align-items:center;
+        border-top:1px solid #eee;
     }
-
-    .carrito-acciones {
-        padding: 15px;
-        display: flex;
-        gap: 10px;
-    }
-
-    .btn-pagar {
-        flex: 1;
-        background: #00aa00;
-        color: white;
-        border: none;
-        padding: 12px;
-        font-weight: bold;
-        border-radius: 8px;
-        cursor: pointer;
-    }
-
-    .btn-limpiar {
-        background: #ccc;
-        color: #333;
-    }
-
-    .btn-carrito-flotante {
-        position: fixed;
-        right: 20px;
-        bottom: 20px;
-        width: 60px;
-        height: 60px;
-        background: #0066cc;
-        color: white;
-        border: none;
-        border-radius: 50%;
-        font-size: 24px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        z-index: 999;
-        cursor: pointer;
-    }
-
-    #badge-carrito {
-        position: absolute;
-        top: -8px;
-        right: -8px;
-        background: red;
-        color: white;
-        border-radius: 50%;
-        width: 24px;
-        height: 24px;
-        font-size: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-</style>
-<body>
-  
-   
-    
-    
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center gap-2" href="/">
-                <img src="{% static 'img/logo.jpg' %}" alt="Logo Leblon" style="width:42px; height:42px; border-radius:50%; object-fit:cover;">
-                <span class="fw-bold text-white">LEBLON FITNESS</span>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="/#inicio"><i class="fa-solid fa-house"></i></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white fw-bold" href="/tienda/"><i class="fa-solid fa-cart-shopping"></i></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Breadcrumb -->
-    <section class="breadcrumb-section">
-        <div class="container">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/">Inicio</a></li>
-                    <li class="breadcrumb-item"><a href="/tienda/">Tienda</a></li>
-                    <li class="breadcrumb-item active">{{ producto.categoria|title }}</li>
-                </ol>
-            </nav>
-        </div>
-    </section>
-
-    <!-- Product Detail -->
-    <section class="product-detail-section">
-        <div class="container">
-            <div class="row">
-                <!-- Product Images -->
-<div class="col-lg-6">
-    <style>
-        /* Contenedor de imagen principal */
-.product-image-container {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 1;
-    overflow: hidden;
-    border-radius: 10px;
-    background: #f8f8f8;
-    margin-bottom: 20px;
-}
-
-.product-image {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    position: absolute;
-    top: 0;
-    left: 0;
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-    transform: scale(0.95);
-}
-
-.product-image.active {
-    opacity: 1;
-    transform: scale(1);
-    z-index: 1;
-}
-
-/* Animación de entrada desde la derecha */
-.product-image.slide-in-right {
-    animation: slideInRight 0.5s ease-in-out;
-}
-
-/* Animación de entrada desde la izquierda */
-.product-image.slide-in-left {
-    animation: slideInLeft 0.5s ease-in-out;
-}
-
-@keyframes slideInRight {
-    from {
-        opacity: 0;
-        transform: translateX(50px) scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0) scale(1);
-    }
-}
-
-@keyframes slideInLeft {
-    from {
-        opacity: 0;
-        transform: translateX(-50px) scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0) scale(1);
-    }
-}
-
-/* Efecto de zoom al hover */
-.product-image-container:hover .product-image.active {
-    transform: scale(1.05);
-}
-
-/* Miniaturas */
-.product-thumbnails {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-bottom: 15px;
-}
-
-.thumbnail {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 8px;
-    cursor: pointer;
-    border: 3px solid transparent;
-    transition: all 0.3s ease;
-    opacity: 0.6;
-}
-
-.thumbnail:hover {
-    opacity: 1;
-    transform: translateY(-3px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}
-
-.thumbnail.active {
-    border-color: #007bff;
-    opacity: 1;
-    transform: scale(1.05);
-}
-
-/* Flechas de navegación */
-.nav-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    z-index: 2;
-}
-
-.nav-arrow:hover {
-    background: rgba(0, 0, 0, 0.8);
-    transform: translateY(-50%) scale(1.1);
-}
-
-.nav-arrow.left {
-    left: 10px;
-}
-
-.nav-arrow.right {
-    right: 10px;
-}
-
-/* Indicadores de puntos */
-.dots-indicator {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    margin-top: 15px;
-}
-
-.dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #ddd;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.dot.active {
-    background: #007bff;
-    transform: scale(1.2);
-}
-
-.dot:hover {
-    background: #999;
-}
-
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-    
-    .carrito-flotante {
-        position: fixed !important;
-        right: -400px; /* Empieza fuera de la pantalla */
-        bottom: 95px !important;
-        width: 380px !important;
-        height: 550px !important;
-        background: #ffffff !important;
-        border-radius: 20px !important;
-        box-shadow: 0 15px 50px rgba(0,0,0,0.2) !important;
-        display: flex; /* Cambiado de none a flex para la animación */
-        flex-direction: column;
-        z-index: 2000;
-        overflow: hidden;
-        color: #1a1a1a !important;
-        font-family: 'Inter', sans-serif !important;
-        border: 1px solid rgba(0,0,0,0.08) !important;
-        transition: right 0.4s cubic-bezier(0.25, 1, 0.5, 1); /* Animación suave */
-    }
-
-    /* Clase que activa el mostrado del carrito */
-    .carrito-flotante.active {
-        right: 20px !important;
-    }
-
-    /* HEADER */
-    .carrito-header {
-        padding: 20px 24px !important;
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        background: #ffffff !important;
-        border-bottom: 1px solid #eee !important;
-    }
-
-    .carrito-header h4 {
-        margin: 0 !important;
-        font-size: 18px !important;
-        font-weight: 700 !important;
-    }
-
-    .btn-cerrar-carrito {
-        background: #f5f5f5 !important;
-        border: none !important;
-        color: #999 !important;
-        font-size: 24px !important;
-        width: 32px;
-        height: 32px;
-        border-radius: 50% !important;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: 0.2s;
-    }
-
-    .btn-cerrar-carrito:hover { background: #eee !important; color: #333 !important; }
-
-    /* LISTA DE ITEMS */
-    .carrito-items {
-        flex: 1 !important;
-        overflow-y: auto !important;
-        padding: 10px 20px !important;
-    }
-
-    .item-carrito {
-        display: flex !important;
-        align-items: center !important;
-        padding: 15px 0 !important;
-        border-bottom: 1px solid #f8f8f8 !important;
-        animation: fadeInItem 0.5s ease forwards;
-    }
-
-    @keyframes fadeInItem {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    .item-carrito img {
-        width: 60px !important;
-        height: 60px !important;
-        object-fit: contain !important;
-        border-radius: 12px !important;
-        background: #f9f9f9 !important;
-        margin-right: 15px !important;
-    }
-
-    .item-info div { font-weight: 600 !important; font-size: 14px !important; }
-    .item-info small { color: #888 !important; }
-    .item-precio { font-weight: 700 !important; color: #2c3e50 !important; margin-right: 10px !important; }
-
-    .btn-eliminar-item {
-        background: none !important;
-        border: none !important;
-        color: #ccc !important;
-        font-size: 20px !important;
-        cursor: pointer;
-    }
-
-    /* TOTAL Y ACCIONES */
-    .carrito-total {
-        padding: 18px 24px !important;
-        background: #fcfcfc !important;
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        border-top: 1px solid #eee !important;
-    }
-
-    .carrito-total span#total-carrito-display {
-        font-size: 20px !important;
-        font-weight: 800 !important;
-        color: #27ae60 !important;
-    }
-
-    .carrito-acciones {
-        padding: 15px 24px 25px 24px !important;
-        display: flex !important;
-        gap: 12px !important;
-    }
-
+    .carrito-total span#total-carrito-display { font-size:20px; font-weight:800; color:#27ae60; }
+    .carrito-acciones { padding:15px 24px 25px; display:flex; gap:12px; }
     .btn-limpiar, .btn-pagar {
-        flex: 1 !important;
-        padding: 12px !important;
-        border: none !important;
-        border-radius: 12px !important;
-        font-weight: 700 !important;
-        cursor: pointer !important;
+        flex:1; padding:12px; border:none;
+        border-radius:12px; font-weight:700; cursor:pointer;
     }
-
-    .btn-limpiar { background: #f5f5f5 !important; color: #777 !important; }
-    .btn-pagar { background: #1a1a1a !important; color: #ffffff !important; }
-
-    /* BOTÓN FLOTANTE */
+    .btn-limpiar { background:#f5f5f5; color:#777; }
+    .btn-pagar { background:#1a1a1a; color:#ffffff; }
     .btn-carrito-flotante {
-        position: fixed !important;
-        right: 25px !important;
-        bottom: 25px !important;
-        width: 60px !important;
-        height: 60px !important;
-        background: #1a1a1a !important;
-        color: #ffffff !important;
-        border-radius: 50% !important;
-        border: none !important;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.3) !important;
-        z-index: 1999;
-        cursor: pointer;
-        transition: 0.3s;
+        position:fixed; right:25px; bottom:25px;
+        width:60px; height:60px;
+        background:#1a1a1a; color:#ffffff;
+        border-radius:50%; border:none;
+        box-shadow:0 8px 25px rgba(0,0,0,0.3);
+        z-index:1999; cursor:pointer; transition:0.3s;
+        display:flex; align-items:center; justify-content:center;
+        font-size:20px;
     }
-
-    .btn-carrito-flotante:hover { transform: scale(1.1); }
+    .btn-carrito-flotante:hover { transform:scale(1.1); }
+    #badge-carrito {
+        position:absolute; top:-8px; right:-8px;
+        background:red; color:white; border-radius:50%;
+        width:24px; height:24px; font-size:12px;
+        display:flex; align-items:center; justify-content:center;
+    }
 </style>
-    </style>
-    {% if producto.imagenes.all %}
-        <!-- Contenedor de imagen principal con navegación -->
-        <div class="product-image-container" id="imageContainer">
-            <!-- Flechas de navegación -->
-            <button class="nav-arrow left" onclick="previousImage()">‹</button>
-            <button class="nav-arrow right" onclick="nextImage()">›</button>
-            
-            <!-- Imágenes del producto -->
-            {% for imagen in producto.imagenes.all %}
-                <img src="{{ imagen.imagen.url }}" 
-                     alt="{{ producto.nombre }}" 
-                     class="product-image {% if forloop.first %}active{% endif %}" 
-                     id="img-{{ forloop.counter0 }}">
-            {% endfor %}
-        </div>
-        
-        <!-- Miniaturas de todas las imágenes -->
-        <div class="product-thumbnails">
-            {% for imagen in producto.imagenes.all %}
-                <img src="{{ imagen.imagen.url }}" 
-                     alt="{{ producto.nombre }}" 
-                     class="thumbnail {% if forloop.first %}active{% endif %}" 
-                     onclick="changeImage({{ forloop.counter0 }})">
-            {% endfor %}
-        </div>
+{% endblock %}
 
-        <!-- Indicadores de puntos -->
-        <div class="dots-indicator">
-            {% for imagen in producto.imagenes.all %}
-                <span class="dot {% if forloop.first %}active{% endif %}" onclick="changeImage({{ forloop.counter0 }})"></span>
-            {% endfor %}
-        </div>
-    {% else %}
-        <!-- Imagen por defecto si no hay imágenes -->
-        <img src="{% static 'img/no-image.png' %}" 
-             alt="Sin imagen" 
-             class="product-image">
-    {% endif %}
-</div>
-                
-                <!-- Product Info -->
-                <div class="col-lg-6">
-                    <div class="product-info">
-                        <h1 class="product-title">{{ producto.nombre }}</h1>
-                        <p class="product-description">{{ producto.descripcion|linebreaksbr }}</p>
-
-                        {% if producto.beneficios %}
-                        <div style="background:#f8faff; border-left:4px solid #0d6efd; border-radius:8px; padding:16px 20px; margin:18px 0;">
-                            <p style="margin:0 0 10px 0; font-size:12px; font-weight:700; color:#0d6efd; letter-spacing:2px; text-transform:uppercase;">Beneficios</p>
-                            <p style="margin:0; font-size:14px; color:#444; line-height:1.8; white-space:pre-line;">{{ producto.beneficios }}</p>
-                        </div>
-                        {% endif %}
-
-                        <p class="product-sku">SKU: {{ producto.id }}{{ producto.nombre|length }}</p>
-
-                        <div class="brand-logo">
-                            <i class="fas fa-dumbbell"></i>
-                        </div>
-
-                        <div class="availability">
-                            <i class="fas fa-check-circle me-2"></i>Disponible
-                        </div>
-
-                        <div class="producto-precio">{{ producto.precio|clp }}</div>
-                        
-                      
-                        <button class="btn-agregar-carrito" 
-    data-id="{{ producto.id }}"
-    data-nombre="{{ producto.nombre }}"
-    data-precio="{{ producto.precio }}"
-    data-imagen="{% if producto.imagenes.first %}{{ producto.imagenes.first.imagen.url }}{% else %}{% static 'img/no-image.png' %}{% endif %}"
-    style="width: 100%; padding: 14px 0; background: #1a1a1a; color: white; border: none; border-radius: 12px; font-weight: 600; margin-top: 10px; cursor: pointer;">
-    <i class="fas fa-cart-plus me-2"></i> Añadir al carrito
-</button>
-                     
-                        
-                        <form action="{% url 'iniciar_pago' producto.id %}" method="get" style="margin-top:20px;">
-                            <button type="submit"
-                                style="
-                                    width: 100%;
-                                    padding: 14px 0;
-                                    background-color: #0d6efd;
-                                    color: #ffffff;
-                                    font-size: 15px;
-                                    font-weight: 600;
-                                    border: none;
-                                    border-radius: 12px;
-                                    cursor: pointer;
-                                    transition: background-color 0.2s ease, transform 0.15s ease;
-                                "
-                                onmouseover="this.style.backgroundColor='#0b5ed7'"
-                                onmouseout="this.style.backgroundColor='#0d6efd'"
-                                onmousedown="this.style.transform='scale(0.98)'"
-                                onmouseup="this.style.transform='scale(1)'"
-                            >
-                                Pagar con Flow
-                            </button>
-                        </form>
-                        
-                        
-
-                        
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-          <!-- CARRITO FLOTANTE -->
-          <div class="carrito-flotante" id="carrito-flotante">
-            <div class="carrito-header">
-                <h4>Tu Carrito (<span id="contador-carrito">0</span>)</h4>
-                <button class="btn-cerrar-carrito" id="cerrar-carrito">&times;</button>
-            </div>
-        
-            <div class="carrito-items" id="carrito-items">
-                </div>
-        
-            <div class="carrito-total">
-                <strong>Total</strong>
-                <span id="total-carrito-display">$ <span id="total-carrito">0</span> CLP</span>
-            </div>
-        
-            <div class="carrito-acciones">
-                <button class="btn-limpiar" id="limpiar-carrito">Vaciar</button>
-                <button class="btn-pagar" id="proceder-pago">Pagar ahora</button>
-            </div>
-        </div>
-
-<!-- Botón flotante para abrir el carrito -->
-<button class="btn-carrito-flotante" id="abrir-carrito">
-    <i class="fa-solid fa-cart-shopping"></i> <span id="badge-carrito">0</span>
-</button>
-
-    <!-- Related Products -->
-{% if productos_relacionados %}
-<section class="related-products">
+{% block content %}
+<!-- Breadcrumb -->
+<section style="background:#f0f0f0; padding:12px 0; margin-top:70px;">
     <div class="container">
-        <h3>Productos Relacionados</h3>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Inicio</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'tienda' %}">Tienda</a></li>
+                <li class="breadcrumb-item active">{{ producto.categoria|title }}</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
+<!-- Detalle del producto -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <!-- Galería de imágenes -->
+            <div class="col-lg-6 mb-4">
+                {% if producto.imagenes.all %}
+                <div class="product-image-container" id="imageContainer">
+                    <button class="nav-arrow left" onclick="previousImage()">‹</button>
+                    <button class="nav-arrow right" onclick="nextImage()">›</button>
+                    {% for imagen in producto.imagenes.all %}
+                    <img src="{{ imagen.imagen.url }}"
+                         alt="{{ producto.nombre }}"
+                         class="product-image {% if forloop.first %}active{% endif %}"
+                         id="img-{{ forloop.counter0 }}">
+                    {% endfor %}
+                </div>
+                <div class="product-thumbnails">
+                    {% for imagen in producto.imagenes.all %}
+                    <img src="{{ imagen.imagen.url }}"
+                         alt="{{ producto.nombre }}"
+                         class="thumbnail {% if forloop.first %}active{% endif %}"
+                         onclick="changeImage({{ forloop.counter0 }})">
+                    {% endfor %}
+                </div>
+                <div class="dots-indicator">
+                    {% for imagen in producto.imagenes.all %}
+                    <span class="dot {% if forloop.first %}active{% endif %}" onclick="changeImage({{ forloop.counter0 }})"></span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <img src="{% static 'img/no-image.png' %}" alt="Sin imagen" class="img-fluid rounded">
+                {% endif %}
+            </div>
+
+            <!-- Info del producto -->
+            <div class="col-lg-6">
+                <div class="product-info">
+                    <h1 class="product-title fs-2 fw-bold mb-3">{{ producto.nombre }}</h1>
+                    <p class="product-description text-muted mb-3">{{ producto.descripcion|linebreaksbr }}</p>
+
+                    {% if producto.beneficios %}
+                    <div style="background:#f8faff; border-left:4px solid #0d6efd; border-radius:8px; padding:16px 20px; margin:18px 0;">
+                        <p style="margin:0 0 10px 0; font-size:12px; font-weight:700; color:#0d6efd; letter-spacing:2px; text-transform:uppercase;">Beneficios</p>
+                        <p style="margin:0; font-size:14px; color:#444; line-height:1.8; white-space:pre-line;">{{ producto.beneficios }}</p>
+                    </div>
+                    {% endif %}
+
+                    <p class="text-muted small mb-3">SKU: {{ producto.id }}{{ producto.nombre|length }}</p>
+
+                    <div class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Disponible</div>
+
+                    <div class="producto-precio fs-3 fw-bold mb-4">{{ producto.precio|clp }}</div>
+
+                    <button class="btn btn-dark btn-lg w-100 mb-3 btn-agregar-carrito"
+                        data-id="{{ producto.id }}"
+                        data-nombre="{{ producto.nombre }}"
+                        data-precio="{{ producto.precio }}"
+                        data-imagen="{% if producto.imagenes.first %}{{ producto.imagenes.first.imagen.url }}{% else %}{% static 'img/no-image.png' %}{% endif %}">
+                        <i class="fas fa-cart-plus me-2"></i>Añadir al carrito
+                    </button>
+
+                    <form action="{% url 'iniciar_pago' producto.id %}" method="get">
+                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                            <i class="fas fa-bolt me-2"></i>Pagar con Flow
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Productos relacionados -->
+{% if productos_relacionados %}
+<section class="py-4" style="background:#f8f9fa;">
+    <div class="container">
+        <h3 class="mb-4">Productos Relacionados</h3>
         <div class="row">
             {% for producto_rel in productos_relacionados %}
-            <div class="col-lg-4 col-md-6">
-                <div class="related-product-card">
-                    <!-- CAMBIO: Usar producto_rel.imagenes.first.imagen.url -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card border-0 shadow-sm h-100">
                     {% if producto_rel.imagenes.first %}
-                        <img src="{{ producto_rel.imagenes.first.imagen.url }}" alt="{{ producto_rel.nombre }}" class="related-product-image">
+                    <img src="{{ producto_rel.imagenes.first.imagen.url }}" alt="{{ producto_rel.nombre }}" class="card-img-top" style="height:200px; object-fit:cover;">
                     {% else %}
-                        <img src="{% static 'img/no-image.png' %}" alt="Sin imagen" class="related-product-image">
+                    <img src="{% static 'img/no-image.png' %}" alt="Sin imagen" class="card-img-top" style="height:200px; object-fit:cover;">
                     {% endif %}
-                    
-                    <div class="related-product-info">
+                    <div class="card-body text-center">
                         <h5>{{ producto_rel.nombre }}</h5>
-                        <!-- CAMBIO 2: Usar producto_rel.precio_formateado en lugar de producto.precio_formateado -->
-                        <div class="product-price">{{ producto_rel.precio_formateado }}</div>   
-                        <a href="{% url 'detalle_producto' producto_rel.id %}" class="btn btn-outline-primary btn-sm">
-                            Ver Detalle
-                        </a>
+                        <div class="fw-bold mb-2">{{ producto_rel.precio_formateado }}</div>
+                        <a href="{% url 'detalle_producto' producto_rel.id %}" class="btn btn-outline-primary btn-sm">Ver Detalle</a>
                     </div>
                 </div>
             </div>
@@ -674,123 +226,115 @@
     </div>
 </section>
 {% endif %}
-    <script src="{% static 'js/Tienda.js' %}"></script>
-    <script src="{% static 'js/producto.js' %}"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Carrito flotante -->
+<div class="carrito-flotante" id="carrito-flotante">
+    <div class="carrito-header">
+        <h4>Tu Carrito (<span id="contador-carrito">0</span>)</h4>
+        <button class="btn-cerrar-carrito" id="cerrar-carrito">&times;</button>
+    </div>
+    <div class="carrito-items" id="carrito-items"></div>
+    <div class="carrito-total">
+        <strong>Total</strong>
+        <span id="total-carrito-display">$ <span id="total-carrito">0</span> CLP</span>
+    </div>
+    <div class="carrito-acciones">
+        <button class="btn-limpiar" id="limpiar-carrito">Vaciar</button>
+        <button class="btn-pagar" id="proceder-pago">Pagar ahora</button>
+    </div>
+</div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // 1. Cargar datos del localStorage inmediatamente
-            let carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
-            
-            const carritoFlotante = document.getElementById('carrito-flotante');
-            const carritoItems = document.getElementById('carrito-items');
-            const totalCarrito = document.getElementById('total-carrito');
-            const badgeCarrito = document.getElementById('badge-carrito');
-            const contadorCarrito = document.getElementById('contador-carrito');
-        
-            const formatoCLP = (num) => new Intl.NumberFormat('es-CL').format(num);
-        
-            const procesarPrecio = (valor) => {
-                if (!valor) return 0;
-                let num = parseInt(valor.toString().replace(/\D/g, '')) || 0;
-                if (num > 0 && num < 1000) num = num * 1000;
-                return num;
-            };
-        
-            // Función para actualizar TODO (Lista, Totales y Badges)
-            function actualizarTodo() {
-                if (carritoItems) carritoItems.innerHTML = '';
-                let totalGeneral = 0;
-                let cantidadTotal = 0;
-        
-                carrito.forEach((item, index) => {
-                    const precioReal = procesarPrecio(item.precio);
-                    const subtotal = precioReal * item.cantidad;
-                    totalGeneral += subtotal;
-                    cantidadTotal += item.cantidad;
-        
-                    if (carritoItems) {
-                        const div = document.createElement('div');
-                        div.className = 'item-carrito';
-                        div.innerHTML = `
-                            <img src="${item.imagen}" alt="${item.nombre}" style="width:50px; height:50px; object-fit:cover; border-radius:8px; margin-right:10px;">
-                            <div class="item-info" style="flex:1;">
-                                <div style="font-weight:600; font-size:14px;">${item.nombre}</div>
-                                <small>${item.cantidad} x $${formatoCLP(precioReal)}</small>
-                            </div>
-                            <div style="font-weight:700; margin-left:auto;">$${formatoCLP(subtotal)}</div>
-                            <button class="btn-eliminar-item" data-index="${index}" style="background:none; border:none; color:#ccc; cursor:pointer; margin-left:10px; font-size:20px;">×</button>
-                        `;
-                        carritoItems.appendChild(div);
-                    }
-                });
-        
-                // Actualizar contadores globales (Esto es lo que hace que se vea al cambiar de página)
-                if (totalCarrito) totalCarrito.textContent = formatoCLP(totalGeneral);
-                if (badgeCarrito) badgeCarrito.textContent = cantidadTotal;
-                if (contadorCarrito) contadorCarrito.textContent = cantidadTotal;
-        
-                // Guardar siempre en localStorage
-                localStorage.setItem('carrito', JSON.stringify(carrito));
-            }
-        
-            // Eventos de apertura/cierre
-            const btnAbrir = document.getElementById('abrir-carrito');
-            const btnCerrar = document.getElementById('cerrar-carrito');
-            
-            if (btnAbrir) btnAbrir.onclick = () => carritoFlotante.classList.add('active');
-            if (btnCerrar) btnCerrar.onclick = () => carritoFlotante.classList.remove('active');
-        
-            // Botón Agregar (Detalle del producto)
-            document.querySelectorAll('.btn-agregar-carrito').forEach(btn => {
-                btn.onclick = (e) => {
-                    e.preventDefault();
-                    const producto = {
-                        id: btn.dataset.id,
-                        nombre: btn.dataset.nombre,
-                        precio: btn.dataset.precio,
-                        imagen: btn.dataset.imagen,
-                        cantidad: 1
-                    };
-        
-                    const index = carrito.findIndex(i => i.id === producto.id);
-                    if (index !== -1) {
-                        carrito[index].cantidad += 1;
-                    } else {
-                        carrito.push(producto);
-                    }
-        
-                    actualizarTodo();
-                    carritoFlotante.classList.add('active');
-                };
-            });
-        
-            // Eliminar productos
+<button class="btn-carrito-flotante" id="abrir-carrito" style="position:fixed;">
+    <i class="fa-solid fa-cart-shopping"></i>
+    <span id="badge-carrito" style="position:absolute; top:-8px; right:-8px; background:red; color:white; border-radius:50%; width:24px; height:24px; font-size:12px; display:flex; align-items:center; justify-content:center;">0</span>
+</button>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/Tienda.js' %}"></script>
+<script src="{% static 'js/producto.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    let carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
+    const carritoFlotante = document.getElementById('carrito-flotante');
+    const carritoItems = document.getElementById('carrito-items');
+    const totalCarrito = document.getElementById('total-carrito');
+    const badgeCarrito = document.getElementById('badge-carrito');
+    const contadorCarrito = document.getElementById('contador-carrito');
+
+    const formatoCLP = (num) => new Intl.NumberFormat('es-CL').format(num);
+    const procesarPrecio = (valor) => {
+        if (!valor) return 0;
+        let num = parseInt(valor.toString().replace(/\D/g, '')) || 0;
+        if (num > 0 && num < 1000) num = num * 1000;
+        return num;
+    };
+
+    function actualizarTodo() {
+        if (carritoItems) carritoItems.innerHTML = '';
+        let totalGeneral = 0, cantidadTotal = 0;
+        carrito.forEach((item, index) => {
+            const precioReal = procesarPrecio(item.precio);
+            const subtotal = precioReal * item.cantidad;
+            totalGeneral += subtotal;
+            cantidadTotal += item.cantidad;
             if (carritoItems) {
-                carritoItems.onclick = (e) => {
-                    if (e.target.classList.contains('btn-eliminar-item')) {
-                        carrito.splice(e.target.dataset.index, 1);
-                        actualizarTodo();
-                    }
-                };
+                const div = document.createElement('div');
+                div.className = 'item-carrito';
+                div.innerHTML = `
+                    <img src="${item.imagen}" alt="${item.nombre}">
+                    <div class="item-info" style="flex:1;">
+                        <div>${item.nombre}</div>
+                        <small>${item.cantidad} x $${formatoCLP(precioReal)}</small>
+                    </div>
+                    <div style="font-weight:700; margin-left:auto;">$${formatoCLP(subtotal)}</div>
+                    <button class="btn-eliminar-item" data-index="${index}">×</button>
+                `;
+                carritoItems.appendChild(div);
             }
-        
-            // Botón Vaciar
-            const btnLimpiar = document.getElementById('limpiar-carrito');
-            if (btnLimpiar) {
-                btnLimpiar.onclick = () => {
-                    carrito = [];
-                    actualizarTodo();
-                    setTimeout(() => carritoFlotante.classList.remove('active'), 500);
-                };
-            }
-        
-            // EJECUCIÓN INICIAL: Al cargar la página, sincroniza lo que ya existe
-            actualizarTodo();
         });
-        </script>
-  
-</body>
-</html>
+        if (totalCarrito) totalCarrito.textContent = formatoCLP(totalGeneral);
+        if (badgeCarrito) badgeCarrito.textContent = cantidadTotal;
+        if (contadorCarrito) contadorCarrito.textContent = cantidadTotal;
+        localStorage.setItem('carrito', JSON.stringify(carrito));
+    }
+
+    const btnAbrir = document.getElementById('abrir-carrito');
+    const btnCerrar = document.getElementById('cerrar-carrito');
+    if (btnAbrir) btnAbrir.onclick = () => carritoFlotante.classList.add('active');
+    if (btnCerrar) btnCerrar.onclick = () => carritoFlotante.classList.remove('active');
+
+    document.querySelectorAll('.btn-agregar-carrito').forEach(btn => {
+        btn.onclick = (e) => {
+            e.preventDefault();
+            const producto = { id: btn.dataset.id, nombre: btn.dataset.nombre, precio: btn.dataset.precio, imagen: btn.dataset.imagen, cantidad: 1 };
+            const index = carrito.findIndex(i => i.id === producto.id);
+            if (index !== -1) carrito[index].cantidad += 1;
+            else carrito.push(producto);
+            actualizarTodo();
+            carritoFlotante.classList.add('active');
+        };
+    });
+
+    if (carritoItems) {
+        carritoItems.onclick = (e) => {
+            if (e.target.classList.contains('btn-eliminar-item')) {
+                carrito.splice(e.target.dataset.index, 1);
+                actualizarTodo();
+            }
+        };
+    }
+
+    const btnLimpiar = document.getElementById('limpiar-carrito');
+    if (btnLimpiar) {
+        btnLimpiar.onclick = () => {
+            carrito = [];
+            actualizarTodo();
+            setTimeout(() => carritoFlotante.classList.remove('active'), 500);
+        };
+    }
+
+    actualizarTodo();
+});
+</script>
+{% endblock %}

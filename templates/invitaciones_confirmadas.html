@@ -1,169 +1,110 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invitaciones Confirmadas - Gimnasio Leblon</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <style>
-        .invitacion-card {
-            border-left: 4px solid #28a745;
-            transition: transform 0.2s;
-        }
-        .invitacion-card:hover {
-            transform: translateX(5px);
-        }
-        .clase-header-card {
-            background: linear-gradient(135deg, #007bff, #0056b3);
-            color: white;
-            border-radius: 10px 10px 0 0;
-        }
-        .badge-invitado {
-            font-size: 0.9rem;
-            padding: 0.5rem 1rem;
-        }
-        .stats-card {
-            background: linear-gradient(135deg, #6c757d, #495057);
-            color: white;
-            border-radius: 15px;
-        }
-    </style>
-</head>
-<body>
-    <!-- Header -->
-    <header class="bg-dark text-white py-3 mb-4">
-        <div class="container">
-            <div class="d-flex justify-content-between align-items-center">
-                <h2 class="mb-0">
-                    <i class="fas fa-clipboard-list me-2"></i>Invitaciones Confirmadas
-                </h2>
-                <div>
-                    <a href="/admin/" class="btn btn-outline-light btn-sm me-2">
-                        <i class="fas fa-cog me-1"></i>Admin
-                    </a>
-                    <a href="/" class="btn btn-outline-light btn-sm">
-                        <i class="fas fa-home me-1"></i>Inicio
-                    </a>
-                </div>
-            </div>
-        </div>
-    </header>
 
-    <div class="container">
-        <!-- Estadísticas -->
-        <div class="row mb-4">
-            <div class="col-md-4 mb-3">
-                <div class="card stats-card shadow">
-                    <div class="card-body text-center">
-                        <i class="fas fa-users fa-3x mb-3"></i>
-                        <h3>{{ total_invitados }}</h3>
-                        <p class="mb-0">Total Invitados</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <div class="card stats-card shadow">
-                    <div class="card-body text-center">
-                        <i class="fas fa-calendar-check fa-3x mb-3"></i>
-                        <h3>{{ total_clases }}</h3>
-                        <p class="mb-0">Clases con Invitados</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <div class="card stats-card shadow">
-                    <div class="card-body text-center">
-                        <i class="fas fa-calendar-day fa-3x mb-3"></i>
-                        <h3>{{ clases_hoy|length }}</h3>
-                        <p class="mb-0">Clases Hoy</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+{% block title %}Invitaciones Confirmadas — Gimnasio Leblon{% endblock %}
 
-        {% if clases_con_invitados %}
-            {% for clase_item in clases_con_invitados %}
-                <div class="card mb-4 shadow-lg">
-                    <div class="clase-header-card p-4">
-                        <div class="row align-items-center">
-                            <div class="col-md-8">
-                                <h3 class="mb-2">
-                                    <i class="fas fa-dumbbell me-2"></i>{{ clase_item.clase.nombre }}
-                                </h3>
-                                <p class="mb-0">
-                                    <i class="fas fa-calendar-alt me-2"></i>{{ clase_item.clase.fecha|date:"d/m/Y" }}
-                                    <span class="ms-3">
-                                        <i class="fas fa-clock me-2"></i>{{ clase_item.clase.fecha|time:"H:i" }} hrs
-                                    </span>
-                                </p>
-                            </div>
-                            <div class="col-md-4 text-end">
-                                <span class="badge bg-light text-dark badge-invitado">
-                                    <i class="fas fa-user-check me-1"></i>{{ clase_item.invitados|length }} Invitado{{ clase_item.invitados|length|pluralize }}
-                                </span>
-                                <span class="badge bg-info badge-invitado ms-2">
-                                    {{ clase_item.invitados|length }} / {{ clase_item.clase.cupos }} Cupos
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="card-body">
-                        <h5 class="mb-3">
-                            <i class="fas fa-list me-2"></i>Lista de Invitados Confirmados:
-                        </h5>
-                        <div class="row">
-                            {% for invitado in clase_item.invitados %}
-                                <div class="col-md-6 mb-3">
-                                    <div class="card invitacion-card h-100">
-                                        <div class="card-body">
-                                            <div class="d-flex justify-content-between align-items-start">
-                                                <div>
-                                                    <h6 class="mb-2">
-                                                        <i class="fas fa-user-check text-success me-2"></i>{{ invitado.nombre }}
-                                                    </h6>
-                                                    <p class="text-muted mb-2 small">
-                                                        <i class="fas fa-envelope me-1"></i>{{ invitado.correo }}
-                                                    </p>
-                                                    <p class="text-muted mb-0 small">
-                                                        <i class="fas fa-calendar-plus me-1"></i>Reservado: {{ invitado.fecha_reserva|date:"d/m/Y H:i" }}
-                                                    </p>
-                                                </div>
-                                                <span class="badge bg-success">
-                                                    <i class="fas fa-check-circle me-1"></i>Confirmado
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        {% else %}
-            <div class="text-center py-5">
-                <i class="fas fa-inbox fa-5x text-muted mb-4"></i>
-                <h3 class="text-muted">No hay invitaciones confirmadas</h3>
-                <p class="text-muted">Las invitaciones confirmadas aparecerán aquí cuando apruebes reservas desde el admin.</p>
-                <a href="/admin/principal/reserva/" class="btn btn-primary">
-                    <i class="fas fa-cog me-2"></i>Ir al Admin
-                </a>
-            </div>
-        {% endif %}
+{% block extra_css %}
+<style>
+    .invitacion-card { border-left:4px solid #28a745; transition:transform 0.2s; }
+    .invitacion-card:hover { transform:translateX(5px); }
+    .clase-header-card { background:linear-gradient(135deg,#007bff,#0056b3); color:white; border-radius:10px 10px 0 0; }
+    .badge-invitado { font-size:0.9rem; padding:0.5rem 1rem; }
+    .stats-card { background:linear-gradient(135deg,#6c757d,#495057); color:white; border-radius:15px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-clipboard-list me-2"></i>Invitaciones Confirmadas</h2>
+        <div>
+            <a href="/admin/" class="btn btn-outline-secondary btn-sm me-2"><i class="fas fa-cog me-1"></i>Admin</a>
+            <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-sm"><i class="fas fa-home me-1"></i>Inicio</a>
+        </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-4 mt-5">
-        <div class="container text-center">
-            <p class="mb-0">&copy; 2024 Gimnasio Leblon. Todos los derechos reservados.</p>
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+            <div class="card stats-card shadow">
+                <div class="card-body text-center">
+                    <i class="fas fa-users fa-3x mb-3"></i>
+                    <h3>{{ total_invitados }}</h3>
+                    <p class="mb-0">Total Invitados</p>
+                </div>
+            </div>
         </div>
-    </footer>
+        <div class="col-md-4 mb-3">
+            <div class="card stats-card shadow">
+                <div class="card-body text-center">
+                    <i class="fas fa-calendar-check fa-3x mb-3"></i>
+                    <h3>{{ total_clases }}</h3>
+                    <p class="mb-0">Clases con Invitados</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card stats-card shadow">
+                <div class="card-body text-center">
+                    <i class="fas fa-calendar-day fa-3x mb-3"></i>
+                    <h3>{{ clases_hoy|length }}</h3>
+                    <p class="mb-0">Clases Hoy</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
-
+    {% if clases_con_invitados %}
+        {% for clase_item in clases_con_invitados %}
+        <div class="card mb-4 shadow-lg">
+            <div class="clase-header-card p-4">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h3 class="mb-2"><i class="fas fa-dumbbell me-2"></i>{{ clase_item.clase.nombre }}</h3>
+                        <p class="mb-0">
+                            <i class="fas fa-calendar-alt me-2"></i>{{ clase_item.clase.fecha|date:"d/m/Y" }}
+                            <span class="ms-3"><i class="fas fa-clock me-2"></i>{{ clase_item.clase.fecha|time:"H:i" }} hrs</span>
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <span class="badge bg-light text-dark badge-invitado">
+                            <i class="fas fa-user-check me-1"></i>{{ clase_item.invitados|length }} Invitado{{ clase_item.invitados|length|pluralize }}
+                        </span>
+                        <span class="badge bg-info badge-invitado ms-2">
+                            {{ clase_item.invitados|length }} / {{ clase_item.clase.cupos }} Cupos
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <h5 class="mb-3"><i class="fas fa-list me-2"></i>Lista de Invitados Confirmados:</h5>
+                <div class="row">
+                    {% for invitado in clase_item.invitados %}
+                    <div class="col-md-6 mb-3">
+                        <div class="card invitacion-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="mb-2"><i class="fas fa-user-check text-success me-2"></i>{{ invitado.nombre }}</h6>
+                                        <p class="text-muted mb-2 small"><i class="fas fa-envelope me-1"></i>{{ invitado.correo }}</p>
+                                        <p class="text-muted mb-0 small"><i class="fas fa-calendar-plus me-1"></i>Reservado: {{ invitado.fecha_reserva|date:"d/m/Y H:i" }}</p>
+                                    </div>
+                                    <span class="badge bg-success"><i class="fas fa-check-circle me-1"></i>Confirmado</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-inbox fa-5x text-muted mb-4"></i>
+        <h3 class="text-muted">No hay invitaciones confirmadas</h3>
+        <p class="text-muted">Las invitaciones confirmadas aparecerán aquí cuando apruebes reservas desde el admin.</p>
+        <a href="/admin/principal/reserva/" class="btn btn-primary"><i class="fas fa-cog me-2"></i>Ir al Admin</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

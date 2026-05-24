@@ -7,12 +7,15 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.db import transaction
 from django.db.utils import NotSupportedError
+from django.db.models import Count
+from django.core import signing
+from django.template.loader import render_to_string
 import json
 import logging
 from .models import Lead
 from django.core.mail import send_mail
 from django.conf import settings
-from .models import Clase, Reserva, SolicitudPlan
+from .models import Clase, Reserva, SolicitudPlan, PlanMembresia
 from .models import Miembro, Asistencia
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -21,28 +24,28 @@ from django.contrib.auth import authenticate, login, logout
 logger = logging.getLogger(__name__)
 
 def home(request):
-    """Vista para mostrar la página principal del gimnasio"""
-    return render(request, 'prueba.html')
+    planes = PlanMembresia.objects.filter(activo=True).order_by('precio')
+    return render(request, 'prueba.html', {'planes': planes})
 
 def listar_clases(request):
     """Vista para listar todas las clases disponibles"""
-    from django.utils import timezone
-    # Mostrar clases de hoy en adelante (comparando por fecha, no por hora exacta)
-    # Esto evita que una clase de hoy a las 9am desaparezca si ya son las 9:05am
     hoy = timezone.now().date()
-    clases = Clase.objects.filter(fecha__date__gte=hoy).order_by('fecha')
-    
-    # Calcular cupos disponibles para cada clase
-    clases_con_cupos = []
-    for clase in clases:
-        reservas_existentes = Reserva.objects.filter(clase=clase).count()
-        cupos_disponibles = clase.cupos - reservas_existentes
-        clases_con_cupos.append({
+    # annotate cuenta las reservas de cada clase en una sola query (evita N+1)
+    clases = (
+        Clase.objects.filter(fecha__date__gte=hoy)
+        .annotate(reservas_count=Count('reserva'))
+        .order_by('fecha')
+    )
+
+    clases_con_cupos = [
+        {
             'clase': clase,
-            'cupos_disponibles': cupos_disponibles,
-            'tiene_cupos': cupos_disponibles > 0
-        })
-    
+            'cupos_disponibles': clase.cupos - clase.reservas_count,
+            'tiene_cupos': clase.cupos > clase.reservas_count,
+        }
+        for clase in clases
+    ]
+
     return render(request, 'listar_clases.html', {
         'clases_con_cupos': clases_con_cupos
     })
@@ -248,16 +251,16 @@ class ComprarPlanView(View):
                     'message': 'Por favor completa todos los campos requeridos'
                 })
             
-            # Determinar precios según el plan
-            precios = {
-                'Plan Trimestral': {'mensualidad': 91000, 'matricula': 0},
-                'Plan Anual': {'mensualidad': 298000, 'matricula': 0},
-                'Plan Semestral': {'mensualidad': 171000, 'matricula': 0},
-            }
-            
-            precio_plan = precios.get(plan, {'mensualidad': 0, 'matricula': 0})
-            total = precio_plan['mensualidad'] + precio_plan['matricula']
-            
+            # Obtener precio desde la base de datos
+            try:
+                plan_obj = PlanMembresia.objects.get(nombre=plan, activo=True)
+                precio_plan = plan_obj.precio
+            except PlanMembresia.DoesNotExist:
+                return JsonResponse({
+                    'success': False,
+                    'message': f'El plan "{plan}" no está disponible en este momento.'
+                })
+
             # Crear compra de plan
             compra = SolicitudPlan.objects.create(
                 plan=plan,
@@ -286,7 +289,7 @@ class ComprarPlanView(View):
 📋 DETALLES DE TU SOLICITUD:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    🎯 Plan: {plan}
-   💰 Precio: ${precio_plan['mensualidad']:,}
+   💰 Precio: ${precio_plan:,}
    📧 Email: {email}
    📱 Teléfono: {telefono}
    📅 Fecha de Solicitud: {compra.fecha_compra.strftime('%d/%m/%Y %H:%M')}
@@ -333,6 +336,55 @@ Este es un correo automático de confirmación.''',
                 'success': False, 
                 'message': 'Error interno del servidor. Por favor intenta nuevamente.'
             })
+
+
+def _enviar_email_verificacion(request, miembro):
+    """Genera un token firmado y envía el email de verificación."""
+    token = signing.dumps({'uid': miembro.pk}, salt='email-verificacion')
+    dominio = request.get_host()
+    protocolo = 'https' if request.is_secure() else 'http'
+    enlace = f"{protocolo}://{dominio}/verificar-email/{token}/"
+    from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@gimnasiolebloncalama.cl')
+
+    html_body = render_to_string('emails/verificar_email.html', {
+        'nombre': miembro.nombre,
+        'enlace': enlace,
+    })
+    plain_body = (
+        f"Hola {miembro.nombre},\n\n"
+        f"Verifica tu correo haciendo clic en el siguiente enlace:\n{enlace}\n\n"
+        "El enlace es válido por 24 horas.\n\nEquipo Leblon Fitness"
+    )
+    send_mail(
+        subject='Verifica tu correo — Gimnasio Leblon',
+        message=plain_body,
+        from_email=from_email,
+        recipient_list=[miembro.email],
+        html_message=html_body,
+        fail_silently=False,
+    )
+
+
+def verificar_email(request, token):
+    """Valida el token firmado y marca el email del miembro como verificado."""
+    try:
+        datos = signing.loads(token, salt='email-verificacion', max_age=86400)
+        miembro = Miembro.objects.get(pk=datos['uid'])
+    except signing.SignatureExpired:
+        messages.error(request, "El enlace de verificación ha expirado. Solicita uno nuevo.")
+        return redirect('home')
+    except (signing.BadSignature, Miembro.DoesNotExist, KeyError):
+        messages.error(request, "Enlace de verificación inválido.")
+        return redirect('home')
+
+    if not miembro.email_verificado:
+        miembro.email_verificado = True
+        miembro.save(update_fields=['email_verificado'])
+        messages.success(request, "¡Tu correo ha sido verificado correctamente!")
+    else:
+        messages.info(request, "Tu correo ya estaba verificado.")
+
+    return redirect('home')
 
 
 def login_view(request):
@@ -402,55 +454,21 @@ def registro_view(request):
                     nombre=nombre
                 )
                 
-                # Enviar correo de bienvenida
+                # Enviar email de verificación
                 try:
-                    from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'noreply@gimnasioleblon.com')
-                    
-                    send_mail(
-                        subject='¡Bienvenido a Leblon Fitness!',
-                        message=f'''╔═══════════════════════════════════════════════════════╗
-║         🏋️ ¡BIENVENIDO A LEBLON FITNESS! 🏋️          ║
-╚═══════════════════════════════════════════════════════╝
-
-¡Hola {nombre}!
-
-🎉 Tu cuenta ha sido creada exitosamente.
-
-📧 Email: {email}
-📱 Teléfono: {telefono}
-
-🚀 PRÓXIMOS PASOS:
-   1. Inicia sesión en nuestra plataforma
-   2. Explora nuestros planes de membresía
-   3. Agenda tu primera clase
-   4. ¡Comienza tu transformación!
-
-💪 INFORMACIÓN DEL GIMNASIO:
-   • Dirección: Av. Granaderos 3037, Calama, Antofagasta
-   • Teléfono: +56 9 7527 4804
-   • WhatsApp: https://wa.me/56975274804
-   • Horario: Lun-Vie 9:00-23:00, Sáb 9:00-22:00, Dom 9:00-13:00
-
-¡Estamos emocionados de ser parte de tu viaje fitness!
-
-Saludos,
-Equipo Leblon Fitness
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━''',
-                        from_email=from_email,
-                        recipient_list=[email],
-                        fail_silently=True,
-                    )
+                    _enviar_email_verificacion(request, miembro)
                 except Exception as e:
-                    logger.error(f"Error al enviar correo de bienvenida: {str(e)}")
-                
-                # Hacer login automático
+                    logger.error(f"Error al enviar email de verificación: {e}")
+
+                # Login automático (sin verificar aún — se muestra banner de aviso)
                 user = authenticate(request, username=email, password=password1)
                 if user is not None:
                     login(request, user)
-                    messages.success(request, f"¡Bienvenido a Leblon Fitness, {nombre}! Tu cuenta ha sido creada exitosamente.")
-                    
-                    # Redirigir al home
+                    messages.success(
+                        request,
+                        f"¡Bienvenido a Leblon Fitness, {nombre}! "
+                        "Revisa tu correo para verificar tu cuenta."
+                    )
                     return redirect('home')
                 
             except Exception as e:
@@ -498,3 +516,137 @@ def checkin_view(request):
         })
     
     return render(request, 'checkin.html')
+
+
+# =====================================================
+# PORTAL DEL MIEMBRO
+# =====================================================
+
+@login_required(login_url='/login/')
+def portal_miembro(request):
+    from tienda.models import Orden
+    miembro = request.user
+
+    reservas = (
+        Reserva.objects.filter(correo=miembro.email)
+        .select_related('clase')
+        .order_by('-fecha_reserva')[:10]
+    )
+
+    solicitudes = SolicitudPlan.objects.filter(
+        email=miembro.email
+    ).order_by('-fecha_compra')[:5]
+
+    ordenes = Orden.objects.filter(
+        email=miembro.email
+    ).order_by('-fecha_creacion')[:5] if miembro.email else []
+
+    return render(request, 'portal_miembro.html', {
+        'miembro': miembro,
+        'reservas': reservas,
+        'solicitudes': solicitudes,
+        'ordenes': ordenes,
+    })
+
+
+def reenviar_verificacion(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    if request.user.email_verificado:
+        messages.info(request, "Tu correo ya está verificado.")
+        return redirect('portal_miembro')
+    try:
+        _enviar_email_verificacion(request, request.user)
+        messages.success(request, "Email de verificación reenviado. Revisa tu correo.")
+    except Exception as e:
+        logger.error(f"Error al reenviar verificación: {e}")
+        messages.error(request, "No se pudo enviar el email. Intenta más tarde.")
+    return redirect('portal_miembro')
+
+
+# =====================================================
+# DASHBOARD DE GESTIÓN (solo staff)
+# =====================================================
+
+@login_required(login_url='/login/')
+def dashboard(request):
+    from principal.roles import _tiene_rol
+    if not _tiene_rol(request.user, 'Recepcionista', 'Instructor'):
+        messages.error(request, "Acceso restringido al personal del gimnasio.")
+        return redirect('home')
+
+    from tienda.models import Orden
+    from django.db.models import Sum
+
+    hoy = timezone.now().date()
+
+    # KPIs principales
+    total_miembros = Miembro.objects.filter(is_active=True).count()
+    nuevos_mes = Miembro.objects.filter(
+        fecha_inicio__year=hoy.year,
+        fecha_inicio__month=hoy.month,
+    ).count()
+
+    reservas_hoy = Reserva.objects.filter(clase__fecha__date=hoy).count()
+    reservas_pendientes = Reserva.objects.filter(aprobado=False).count()
+
+    planes_pendientes = SolicitudPlan.objects.filter(estado='pendiente').count()
+    planes_pagados = SolicitudPlan.objects.filter(estado='pagado').count()
+
+    ordenes_pagadas = Orden.objects.filter(estado='pagado')
+    ingresos_total = ordenes_pagadas.aggregate(total=Sum('total'))['total'] or 0
+
+    # Últimas reservas sin aprobar
+    reservas_recientes = (
+        Reserva.objects.filter(aprobado=False)
+        .select_related('clase')
+        .order_by('-fecha_reserva')[:8]
+    )
+
+    # Últimas solicitudes de plan
+    solicitudes_recientes = SolicitudPlan.objects.filter(
+        estado='pendiente'
+    ).order_by('-fecha_compra')[:8]
+
+    return render(request, 'dashboard.html', {
+        'total_miembros': total_miembros,
+        'nuevos_mes': nuevos_mes,
+        'reservas_hoy': reservas_hoy,
+        'reservas_pendientes': reservas_pendientes,
+        'planes_pendientes': planes_pendientes,
+        'planes_pagados': planes_pagados,
+        'ingresos_total': ingresos_total,
+        'reservas_recientes': reservas_recientes,
+        'solicitudes_recientes': solicitudes_recientes,
+    })
+
+
+# =====================================================
+# PÁGINAS LEGALES Y SEO
+# =====================================================
+
+def privacidad(request):
+    return render(request, 'privacidad.html')
+
+
+def terminos(request):
+    return render(request, 'terminos.html')
+
+
+def robots_txt(request):
+    from django.http import HttpResponse
+    dominio = request.get_host()
+    contenido = (
+        "User-agent: *\n"
+        "Disallow: /Androie/\n"
+        "Disallow: /login/\n"
+        "Disallow: /registro/\n"
+        "Disallow: /checkin/\n"
+        "Disallow: /portal/\n"
+        "Disallow: /dashboard/\n"
+        "Disallow: /confirm/\n"
+        "Allow: /\n"
+        "\n"
+        f"Sitemap: https://{dominio}/sitemap.xml\n"
+    )
+    return HttpResponse(contenido, content_type='text/plain')

@@ -1,170 +1,68 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sin Cupos Disponibles - Gimnasio Leblon</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <style>
-        .warning-icon {
-            width: 120px;
-            height: 120px;
-            background: linear-gradient(135deg, #ffc107, #fd7e14);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 2rem;
-            animation: shake 0.5s ease-in-out;
-        }
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
-        .info-card {
-            border-left: 4px solid #ffc107;
-            background: #fff3cd;
-        }
-    </style>
-</head>
-<body>
-    <!-- Header -->
-    <header class="spartan-hero-section" style="
-        background: url('{% static 'img/img3.png' %}');
-        background-size: cover;
-        background-position: center;
-        height: 30vh;
-        display: flex;
-        align-items: center;
-        position: relative;
-        overflow: hidden;
-        margin: 0;
-        padding: 0;
-        width: 100%;
-    ">
-        <div class="container text-center" style="position: relative; z-index: 2;">
-            <h1 class="display-5 fw-bold mb-4 text-white" style="
-                font-family: 'Arial Black', sans-serif;
-                text-shadow: 3px 3px 8px rgba(0,0,0,0.9);
-            ">CUPOS AGOTADOS</h1>
-        </div>
-    </header>
 
-    <!-- Sección de Sin Cupos -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8 col-md-10">
-                    <div class="card shadow-lg border-0 text-center">
-                        <div class="card-body p-5">
-                            <!-- Icono de advertencia -->
-                            <div class="warning-icon">
-                                <i class="fas fa-exclamation-triangle fa-4x text-white"></i>
-                            </div>
+{% block title %}Sin Cupos — Gimnasio Leblon{% endblock %}
 
-                            <h2 class="text-warning mb-4">
-                                <i class="fas fa-users-slash me-2"></i>
-                                Lo Sentimos, No Hay Cupos Disponibles
-                            </h2>
+{% block extra_css %}
+<style>
+    .page-hero { background: url('{% static 'img/img3.png' %}') center/cover no-repeat; height:30vh; display:flex; align-items:center; position:relative; overflow:hidden; }
+    .page-hero::before { content:''; position:absolute; inset:0; background:rgba(0,0,0,0.5); }
+    .page-hero .inner { position:relative; z-index:2; }
+    .warning-icon { width:120px; height:120px; background:linear-gradient(135deg,#ffc107,#fd7e14); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 2rem; }
+    .info-card { border-left:4px solid #ffc107; background:#fff3cd; }
+</style>
+{% endblock %}
 
-                            <p class="lead mb-4">
-                                La clase <strong>{{ clase.nombre }}</strong> ya ha alcanzado su capacidad máxima.
-                            </p>
+{% block content %}
+<div class="page-hero">
+    <div class="container text-center inner">
+        <h1 class="display-5 fw-bold text-white" style="font-family:'Arial Black',sans-serif; text-shadow:3px 3px 8px rgba(0,0,0,0.9);">CUPOS AGOTADOS</h1>
+    </div>
+</div>
 
-                            <!-- Información de la clase -->
-                            <div class="card info-card mb-4 text-start">
-                                <div class="card-body">
-                                    <h5 class="card-title mb-3">
-                                        <i class="fas fa-info-circle me-2 text-warning"></i>
-                                        Detalles de la Clase
-                                    </h5>
-                                    <hr>
-                                    <div class="row mb-3">
-                                        <div class="col-md-6">
-                                            <p class="mb-2">
-                                                <strong><i class="fas fa-dumbbell me-2"></i>Clase:</strong>
-                                                {{ clase.nombre }}
-                                            </p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <p class="mb-2">
-                                                <strong><i class="fas fa-calendar-alt me-2"></i>Fecha:</strong>
-                                                {{ clase.fecha|date:"d/m/Y" }}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-md-6">
-                                            <p class="mb-2">
-                                                <strong><i class="fas fa-clock me-2"></i>Hora:</strong>
-                                                {{ clase.fecha|time:"H:i" }}
-                                            </p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <p class="mb-2">
-                                                <strong><i class="fas fa-users me-2"></i>Cupos Totales:</strong>
-                                                <span class="badge bg-secondary">{{ clase.cupos }} cupos</span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <p class="mb-0">
-                                                <strong><i class="fas fa-exclamation-circle me-2"></i>Estado:</strong>
-                                                <span class="badge bg-danger">Agotado</span>
-                                            </p>
-                                        </div>
-                                    </div>
+<section class="py-5" style="background:#f8f9fa;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+                <div class="card shadow-lg border-0 text-center">
+                    <div class="card-body p-5">
+                        <div class="warning-icon"><i class="fas fa-exclamation-triangle fa-4x text-white"></i></div>
+                        <h2 class="text-warning mb-4">Lo Sentimos, No Hay Cupos Disponibles</h2>
+                        <p class="lead mb-4">La clase <strong>{{ clase.nombre }}</strong> ya ha alcanzado su capacidad máxima.</p>
+
+                        <div class="card info-card mb-4 text-start">
+                            <div class="card-body">
+                                <h5><i class="fas fa-info-circle me-2 text-warning"></i>Detalles de la Clase</h5>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-6"><p class="mb-2"><strong><i class="fas fa-dumbbell me-2"></i>Clase:</strong> {{ clase.nombre }}</p></div>
+                                    <div class="col-md-6"><p class="mb-2"><strong><i class="fas fa-calendar-alt me-2"></i>Fecha:</strong> {{ clase.fecha|date:"d/m/Y" }}</p></div>
+                                    <div class="col-md-6"><p class="mb-2"><strong><i class="fas fa-clock me-2"></i>Hora:</strong> {{ clase.fecha|time:"H:i" }}</p></div>
+                                    <div class="col-md-6"><p class="mb-0"><strong><i class="fas fa-users me-2"></i>Cupos:</strong> <span class="badge bg-danger">Agotado</span></p></div>
                                 </div>
                             </div>
+                        </div>
 
-                            <!-- Mensaje informativo -->
-                            <div class="alert alert-info mb-4">
-                                <i class="fas fa-info-circle me-2"></i>
-                                <strong>Sin cupos disponibles</strong> - Esta clase ya ha alcanzado su capacidad máxima. Te invitamos a revisar otras clases disponibles en nuestro gimnasio o intentar con otra fecha.
-                            </div>
+                        <div class="alert alert-success text-start">
+                            <h5><i class="fas fa-lightbulb me-2"></i>Te Sugerimos:</h5>
+                            <ul class="mb-0">
+                                <li>Revisar otras clases disponibles</li>
+                                <li>Contactarnos directamente para más información</li>
+                            </ul>
+                        </div>
 
-                            <!-- Alternativas -->
-                            <div class="alert alert-success">
-                                <h5 class="alert-heading">
-                                    <i class="fas fa-lightbulb me-2"></i>
-                                    Te Sugerimos:
-                                </h5>
-                                <ul class="mb-0 text-start">
-                                    <li>Revisar otras clases disponibles en nuestro horario</li>
-                                    <li>Agendar clases con más disponibilidad</li>
-                                    <li>Contactarnos directamente para más información</li>
-                                </ul>
-                            </div>
-
-                            <!-- Botones de acción -->
-                            <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
-                                <a href="/" class="btn btn-primary btn-lg">
-                                    <i class="fas fa-home me-2"></i>Volver al Inicio
-                                </a>
-                                <a href="/#clases" class="btn btn-outline-primary btn-lg">
-                                    <i class="fas fa-calendar me-2"></i>Ver Otras Clases
-                                </a>
-                            </div>
+                        <div class="d-flex justify-content-center gap-3 flex-wrap mt-4">
+                            <a href="{% url 'listar_clases' %}" class="btn btn-primary btn-lg"><i class="fas fa-calendar me-2"></i>Ver Otras Clases</a>
+                            <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-lg"><i class="fas fa-home me-2"></i>Inicio</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-4 mt-5">
-        <div class="container text-center">
-            <p class="mb-0">&copy; 2024 Gimnasio Leblon. Todos los derechos reservados.</p>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
-
+<footer class="bg-dark text-white py-4">
+    <div class="container text-center"><p class="mb-0">&copy; 2025 Gimnasio Leblon.</p></div>
+</footer>
+{% endblock %}

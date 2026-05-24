@@ -116,9 +116,9 @@ def confirmar_pago(request):
         usar_sandbox = getattr(settings, "FLOW_SANDBOX", settings.DEBUG)
         flow_service = FlowService(sandbox=usar_sandbox)
 
-        estado = flow_service.obtener_estado_pago(token)
+        estado = flow_service.get_payment_status(token)
 
-        if "status" not in estado:
+        if not estado or "status" not in estado:
             orden.estado = "error_verificacion"
             orden.save()
             return JsonResponse({"error": True, "message": "Error al verificar pago"}, status=400)
@@ -127,7 +127,6 @@ def confirmar_pago(request):
 
         if status_code == 2:
             orden.estado = "pagado"
-            orden.pagado = True
         elif status_code == 3:
             orden.estado = "rechazado"
         elif status_code == 4:
@@ -222,7 +221,9 @@ def detalle_producto(request, producto_id):
 
 @login_required(login_url='/login/')
 def pago_multiplo(request):
-    # Obtener email dinámicamente; redirigir con mensaje si falta
+    if request.method != 'POST':
+        return HttpResponse("Método no permitido", status=405)
+
     try:
         email = obtener_email_usuario(request)
     except ValueError as e:
@@ -232,23 +233,48 @@ def pago_multiplo(request):
         })
 
     try:
-        amount = int(request.GET.get('amount', 0))
-        subject = request.GET.get('subject', 'Compra en Leblon Gym')
-    except Exception:
-        return HttpResponse("Error en los parámetros")
+        items = json.loads(request.POST.get('items', '[]'))
+    except (json.JSONDecodeError, TypeError):
+        return HttpResponse("Carrito inválido", status=400)
+
+    if not items:
+        return HttpResponse("Carrito vacío", status=400)
+
+    # Recalcular el total desde la base de datos (nunca confiar en el cliente)
+    amount = 0
+    nombres = []
+    for item in items:
+        try:
+            producto_id = int(item['id'])
+            cantidad = int(item['cantidad'])
+            if cantidad < 1:
+                continue
+        except (KeyError, ValueError, TypeError):
+            return HttpResponse("Datos de carrito inválidos", status=400)
+
+        try:
+            producto = Producto.objects.get(id=producto_id, activo=True)
+        except Producto.DoesNotExist:
+            return HttpResponse(f"Producto #{producto_id} no disponible", status=400)
+
+        amount += int(producto.precio) * cantidad
+        nombres.append(f"{producto.nombre} (x{cantidad})")
 
     if amount < 1000:
-        return HttpResponse("Monto mínimo $1.000 CLP")
+        return HttpResponse("Monto mínimo $1.000 CLP", status=400)
+
+    subject = ', '.join(nombres)
+    if len(subject) > 97:
+        subject = subject[:94] + '...'
 
     commerce_order = f"ORD-MULTI-{int(time.time())}"
-
     flow = FlowService()
 
     result = flow.create_payment(
         commerce_order=commerce_order,
         subject=subject,
         amount=amount,
-        email=email,  
+        email=email,
         url_confirmation="https://gimnasiolebloncalama.cl/confirm/",
         url_return="https://gimnasiolebloncalama.cl/tienda/return/",
     )

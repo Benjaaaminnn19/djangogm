@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Política de Privacidad — Gimnasio Leblon{% endblock %}
+
+{% block extra_css %}
+<style>
+    body { background: #f8f9fa; }
+    .legal-header { background: linear-gradient(135deg, #8B4513, #A0522D); color: white; padding: 50px 0; }
+    .legal-content { max-width: 780px; margin: 0 auto; background: white; border-radius: 16px; padding: 48px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+    h2 { font-family: 'Oswald', sans-serif; font-size: 1.2rem; color: #8B4513; margin: 32px 0 12px; }
+    p, li { color: #555; line-height: 1.8; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="legal-header text-center">
+    <div class="container">
+        <h1 style="font-family:'Oswald',sans-serif;font-weight:700;">Política de Privacidad</h1>
+        <p class="opacity-75 mb-0">Última actualización: Mayo 2025</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="legal-content">
+        <p>En <strong>Gimnasio Leblon</strong> (gimnasiolebloncalama.cl) nos comprometemos a proteger la privacidad de nuestros usuarios y clientes, de conformidad con la Ley N° 19.628 sobre Protección de la Vida Privada de Chile.</p>
+
+        <h2>1. Responsable del tratamiento</h2>
+        <p>Gimnasio Leblon, con domicilio en Av. Granaderos 3037, Calama, Región de Antofagasta, Chile. Contacto: <a href="mailto:contacto@gimnasiolebloncalama.cl">contacto@gimnasiolebloncalama.cl</a>.</p>
+
+        <h2>2. Datos que recopilamos</h2>
+        <ul>
+            <li>Nombre completo, correo electrónico y número de teléfono al registrarse.</li>
+            <li>Datos de reservas de clases (nombre, correo).</li>
+            <li>Datos de compras (dirección de correo, historial de órdenes).</li>
+            <li>Información de pago procesada exclusivamente por <strong>Flow</strong> — no almacenamos datos de tarjetas.</li>
+        </ul>
+
+        <h2>3. Finalidad del tratamiento</h2>
+        <ul>
+            <li>Gestionar el acceso y uso de la plataforma.</li>
+            <li>Procesar reservas de clases y solicitudes de membresía.</li>
+            <li>Enviar comunicaciones relacionadas con el servicio.</li>
+            <li>Mejorar la experiencia de usuario.</li>
+        </ul>
+
+        <h2>4. Seguridad</h2>
+        <p>Implementamos medidas técnicas y organizativas para proteger tus datos: cifrado HTTPS, contraseñas almacenadas con hash seguro (PBKDF2), y acceso restringido a la base de datos.</p>
+
+        <h2>5. Tus derechos</h2>
+        <p>Puedes solicitar acceso, rectificación o eliminación de tus datos en cualquier momento escribiendo a <a href="mailto:contacto@gimnasiolebloncalama.cl">contacto@gimnasiolebloncalama.cl</a>.</p>
+
+        <h2>6. Cookies</h2>
+        <p>Usamos cookies de sesión necesarias para el funcionamiento de la plataforma. No usamos cookies de seguimiento de terceros.</p>
+
+        <h2>7. Cambios a esta política</h2>
+        <p>Nos reservamos el derecho de actualizar esta política. Notificaremos cambios significativos por correo a los usuarios registrados.</p>
+
+        <div class="text-center mt-5">
+            <a href="{% url 'home' %}" class="btn" style="background:#8B4513;color:white;border-radius:10px;padding:12px 32px;">
+                <i class="fas fa-arrow-left me-2"></i>Volver al inicio
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

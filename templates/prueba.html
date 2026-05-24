@@ -7,6 +7,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Gimnasio Leblon - Tu centro de fitness premium con equipos de última generación y entrenadores profesionales">
     <title>Gimnasio Leblon - Transforma tu cuerpo</title>
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WLSR37FE2G"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-WLSR37FE2G');
+    </script>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
@@ -479,81 +488,36 @@
     <div class="container">
       <h2 class="text-center mb-5 section-title animate-fade-in-up">NUESTROS PLANES</h2>
       <div class="row justify-content-center">
-        
-        <div class="col-lg-4 col-md-6 mb-4 animate-slide-in-left" style="animation-delay: 0.2s;">
-          <div class="card plan-card plan-azul h-100 animate-hover-lift">
+        {% for plan in planes %}
+        {% with forloop.counter as i %}
+        <div class="col-lg-4 col-md-6 mb-4 animate-slide-in-left" style="animation-delay: {{ i }}00ms;">
+          <div class="card plan-card {% if i == 1 %}plan-azul{% elif i == 2 %}plan-amarillo{% else %}plan-verde{% endif %} h-100 animate-hover-lift">
             <div class="card-header text-center">
-              <h4 class="plan-title">PLAN TRIMESTRAL</h4>
+              <h4 class="plan-title">{{ plan.nombre|upper }}</h4>
               <div class="plan-price">
                 <span class="currency">$</span>
-                <span class="amount">91.000</span>
-                <span class="period"> 3 meses</span>
+                <span class="amount">{{ plan.precio|floatformat:0 }}</span>
               </div>
             </div>
             <div class="card-body">
               <ul class="plan-features">
                 <li><i class="fas fa-list-alt"></i> Rutinas de ejercicios</li>
-                <li><i class="fas fa-user-tie"></i> Apoyo de instructor </li>
+                <li><i class="fas fa-user-tie"></i> Apoyo de instructor</li>
+                {% if plan.descripcion %}<li><i class="fas fa-info-circle"></i> {{ plan.descripcion }}</li>{% endif %}
               </ul>
             </div>
             <div class="card-footer text-center">
-              <button type="button" class="btn btn-plan-azul" 
-                      onclick="abrirModalPlan('Plan Trimestral', 91000, 0, 'https://www.flow.cl/uri/nH6QpyJ8R')">
+              <button type="button" class="btn {% if i == 1 %}btn-plan-azul{% elif i == 2 %}btn-warning{% else %}btn-plan-verde{% endif %}"
+                      onclick="abrirModalPlan('{{ plan.nombre }}', {{ plan.precio }})">
                 <i class="fas fa-check me-2"></i>Elegir Plan
               </button>
             </div>
           </div>
         </div>
-  
-        <div class="col-lg-4 col-md-6 mb-4 animate-slide-in-left" style="animation-delay: 0.4s;">
-          <div class="card plan-card plan-amarillo h-100 animate-hover-lift">
-            <div class="card-header text-center">
-              <h4 class="plan-title">PLAN ANUAL</h4>
-              <div class="plan-price">
-                <span class="currency">$</span>
-                <span class="amount">298.000</span>
-                <span class="period"> 12 meses</span>
-              </div>
-            </div>
-            <div class="card-body">
-              <ul class="plan-features">
-                <li><i class="fas fa-list-alt"></i> Rutinas de ejercicios</li>
-                <li><i class="fas fa-user-tie"></i> Apoyo de instructor </li>
-              </ul>
-            </div>
-            <div class="card-footer text-center">
-              <button type="button" class="btn btn-warning" 
-                      onclick="abrirModalPlan('Plan Anual', 298000, 0, 'https://www.flow.cl/uri/0fvN97Jcb')">
-                <i class="fas fa-check me-2"></i>Elegir Plan
-              </button>
-            </div>
-          </div>
-        </div>
-  
-        <div class="col-lg-4 col-md-6 mb-4 animate-slide-in-left" style="animation-delay: 0.6s;">
-          <div class="card plan-card plan-verde h-100 animate-hover-lift">
-            <div class="card-header text-center">
-              <h4 class="plan-title">PLAN SEMESTRAL</h4>
-              <div class="plan-price">
-                <span class="currency">$</span>
-                <span class="amount">171.000</span>
-                <span class="period"> 6 meses</span> </div>
-            </div>
-            <div class="card-body">
-              <ul class="plan-features">
-                <li><i class="fas fa-list-alt"></i> Rutinas de ejercicios</li>
-                <li><i class="fas fa-user-tie"></i> Apoyo de instructor </li>
-              </ul>
-            </div>
-            <div class="card-footer text-center">
-               <button type="button" class="btn btn-plan-verde" 
-                      onclick="abrirModalPlan('Plan Mensual', 171000, 0, 'https://www.flow.cl/uri/Vg3KTRfLX')">
-                <i class="fas fa-check me-2"></i>Elegir Plan
-              </button>
-            </div>
-          </div>
-        </div>
-  
+        {% endwith %}
+        {% empty %}
+        <div class="col-12 text-center text-muted">No hay planes disponibles en este momento.</div>
+        {% endfor %}
       </div>
     </div>
   </section>
@@ -832,9 +796,9 @@
                                     <label for="planCliente" class="form-label">Plan</label>
                                     <select class="form-select" id="planCliente" required>
                                         <option value="">Seleccionar plan</option>
-                                        <option value="Plan Azul">Plan Azul</option>
-                                        <option value="Plan Amarillo">Plan Amarillo</option>
-                                        <option value="Plan Verde">Plan Verde</option>
+                                        {% for plan in planes %}
+                                        <option value="{{ plan.nombre }}">{{ plan.nombre }} — ${{ plan.precio|floatformat:0 }}</option>
+                                        {% endfor %}
                                     </select>
                                 </div>
                             </div>
@@ -1123,72 +1087,72 @@
     // 1. Variable para guardar el link del plan seleccionado
     let urlPagoActual = '';
 
-    // 2. Función que se activa al hacer clic en "Elegir Plan"
-    function abrirModalPlan(nombrePlan, mensualidad, matricula, urlFlow) {
-        console.log("Abriendo plan:", nombrePlan); // Esto ayuda a saber si el botón funciona
-        
-        // Guardamos el link específico
-        urlPagoActual = urlFlow;
-
-        // Llenamos los datos visuales en el Modal
-        
-        // Título del plan
+    // Abre el modal con los datos del plan seleccionado
+    function abrirModalPlan(nombrePlan, precio) {
         const titulo = document.getElementById('planNombreModal');
-        if(titulo) titulo.textContent = nombrePlan;
-        
-        // Input oculto (para tu base de datos)
-        const inputPlan = document.getElementById('planSeleccionado');
-        if(inputPlan) inputPlan.value = nombrePlan;
+        if (titulo) titulo.textContent = nombrePlan;
 
-        // Precios
+        const inputPlan = document.getElementById('planSeleccionado');
+        if (inputPlan) inputPlan.value = nombrePlan;
+
         const txtMensualidad = document.getElementById('planMensualidad');
-        if(txtMensualidad) txtMensualidad.textContent = '$' + mensualidad.toLocaleString('es-CL');
+        if (txtMensualidad) txtMensualidad.textContent = '$' + precio.toLocaleString('es-CL');
 
         const txtMatricula = document.getElementById('planMatricula');
-        if(txtMatricula) txtMatricula.textContent = '$' + matricula.toLocaleString('es-CL');
+        if (txtMatricula) txtMatricula.textContent = '$0';
 
         const txtTotal = document.getElementById('planTotal');
-        const total = mensualidad + matricula;
-        if(txtTotal) txtTotal.textContent = '$' + total.toLocaleString('es-CL');
+        if (txtTotal) txtTotal.textContent = '$' + precio.toLocaleString('es-CL');
 
-        // FORZAR APERTURA DEL MODAL
-        // Usamos Bootstrap para mostrar la ventana manualmente
         const modalElement = document.getElementById('modalComprarPlan');
         if (modalElement) {
-            const modalInstance = new bootstrap.Modal(modalElement);
-            modalInstance.show();
-        } else {
-            alert("Error: No se encuentra el modal 'modalComprarPlan' en el HTML");
+            new bootstrap.Modal(modalElement).show();
         }
     }
 
-    // 3. Función que se activa al hacer clic en "Ir a Pagar"
+    // Envía la solicitud de plan a la API (sin redirigir a Flow con URL hardcodeada)
     function enviarSolicitudPlan() {
-        // Verificamos si tenemos un link guardado
-        if(!urlPagoActual) {
-            alert("Error: No hay un link de pago cargado. Por favor recarga la página.");
-            return;
-        }
-
-        // Validación visual del formulario (opcional, para que no envíe vacíos)
         const form = document.getElementById('formComprarPlan');
         if (form && !form.checkValidity()) {
             form.classList.add('was-validated');
-            return; // Si faltan datos, no seguimos
+            return;
         }
 
-        // Efecto de carga en el botón
         const btn = document.querySelector('#modalComprarPlan .btn-success');
-        if(btn) {
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Redirigiendo...';
+        if (btn) {
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Enviando...';
             btn.disabled = true;
         }
 
-        // REDIRECCIÓN A FLOW
-        console.log("Redirigiendo a:", urlPagoActual);
-        setTimeout(() => {
-            window.location.href = urlPagoActual;
-        }, 800); // Pequeña espera de 0.8 seg para que el usuario vea que algo pasa
+        const data = {
+            plan: document.getElementById('planSeleccionado')?.value,
+            nombre: document.getElementById('nombrePlan')?.value,
+            telefono: document.getElementById('telefonoPlan')?.value,
+            email: document.getElementById('emailPlan')?.value,
+            mensaje: document.getElementById('mensajePlan')?.value,
+        };
+
+        const csrf = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+
+        fetch('/api/comprar-plan/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrf },
+            body: JSON.stringify(data),
+        })
+        .then(r => r.json())
+        .then(res => {
+            if (res.success) {
+                bootstrap.Modal.getInstance(document.getElementById('modalComprarPlan'))?.hide();
+                alert('✅ ' + res.message);
+            } else {
+                alert('❌ ' + res.message);
+                if (btn) { btn.innerHTML = '<i class="fas fa-shopping-cart me-2"></i>Ir a Pagar'; btn.disabled = false; }
+            }
+        })
+        .catch(() => {
+            alert('Error de conexión. Intenta nuevamente.');
+            if (btn) { btn.innerHTML = '<i class="fas fa-shopping-cart me-2"></i>Ir a Pagar'; btn.disabled = false; }
+        });
     }
 </script>
 

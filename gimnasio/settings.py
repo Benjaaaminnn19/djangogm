@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'principal',
     'tienda',
     'django.contrib.humanize',
+    'django.contrib.sitemaps',
     'participaciones',
 ]
 
@@ -181,6 +182,34 @@ MEDIA_URL = '/media/'
 # ==========================================
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# ==========================================
+# CACHÉ
+# Usa Redis si REDIS_URL está definida (Railway lo inyecta automáticamente
+# cuando agregas el plugin Redis). Si no, usa caché en memoria local.
+# ==========================================
+
+REDIS_URL = config('REDIS_URL', default='')
+
+if REDIS_URL:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+            'LOCATION': REDIS_URL,
+            'OPTIONS': {
+                'socket_connect_timeout': 5,
+                'socket_timeout': 5,
+            },
+            'TIMEOUT': 300,  # 5 minutos por defecto
+        }
+    }
+else:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'LOCATION': 'leblon-cache',
+        }
+    }
 
 # ==========================================
 # EMAIL CONFIGURATION
