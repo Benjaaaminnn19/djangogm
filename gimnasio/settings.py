@@ -222,6 +222,7 @@ EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='benjaminjavier46@gmail.com')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='mgvq uhwb ttwk lhxm')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_TIMEOUT = 10  # segundos — evita que el worker de gunicorn cuelgue esperando SMTP
 
 # ==========================================
 # LOGGING

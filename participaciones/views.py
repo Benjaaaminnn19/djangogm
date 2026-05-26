@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Participacion, Evidencia
+from principal.models import PlanMembresia
 
 def participar(request):
     if request.method == 'POST':
@@ -13,11 +14,12 @@ def participar(request):
             descripcion=descripcion
         )
 
-        # Redirigir a la misma página con el mensaje
+        planes = PlanMembresia.objects.filter(activo=True).order_by('precio')
         return render(request, 'prueba.html', {
             'mensaje': f'✅ ¡Registro exitoso! Tu código es: <strong>{participacion.codigo}</strong>',
             'mostrar_codigo': True,
-            'codigo': participacion.codigo
+            'codigo': participacion.codigo,
+            'planes': planes,
         })
 
     return redirect('home')

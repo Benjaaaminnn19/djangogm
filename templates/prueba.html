@@ -1106,11 +1106,25 @@
 
         const modalElement = document.getElementById('modalComprarPlan');
         if (modalElement) {
-            new bootstrap.Modal(modalElement).show();
+            bootstrap.Modal.getOrCreateInstance(modalElement).show();
         }
     }
 
     // Envía la solicitud de plan a la API (sin redirigir a Flow con URL hardcodeada)
+    function enviarSolicitudClase() {
+        const nombre = document.getElementById('nombreCliente')?.value?.trim();
+        const telefono = document.getElementById('telefonoCliente')?.value?.trim();
+        const email = document.getElementById('emailCliente')?.value?.trim();
+        if (!nombre || !telefono || !email) {
+            alert('Por favor completa todos los campos.');
+            return;
+        }
+        const btn = document.querySelector('#modalAgendarClase .btn-primary');
+        if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Enviando...'; }
+        // Redirige al formulario de clases real
+        window.location.href = '/clases/';
+    }
+
     function enviarSolicitudPlan() {
         const form = document.getElementById('formComprarPlan');
         if (form && !form.checkValidity()) {
